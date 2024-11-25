@@ -51,7 +51,7 @@ const LoginComponent = () => {
                   className="block text-sm font-medium mb-1"
                   htmlFor="password"
                 >
-                  Password
+                  Date Of Birth
                 </label>
                 <div className="relative">
                   <input
@@ -60,6 +60,7 @@ const LoginComponent = () => {
                     id="password"
                     value={credentials.password}
                     onChange={handleChange}
+                    placeholder="yyyymmdd"
                     required
                     className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-500"
                   />
