@@ -1,12 +1,13 @@
-import React from 'react';
-import DepartmentList from './pages/admin/adminDepartments';
+import { useState } from 'react'
+import './index.css'
+function App() {
+  const [count, setCount] = useState(0)
 
-const App = () => {
   return (
-    <div>
-      <DepartmentList />
-    </div>
-  );
-};
+    <>
+      <h1 className='font-sans text-red-600'>Hello</h1>
+    </>
+  )
+}
 
-export default App;
+export default App
