@@ -1,5 +1,6 @@
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState } from "react";
 
+// Create the context
 export const DepartmentContext = createContext();
 
 export const DepartmentProvider = ({ children }) => {
@@ -8,18 +9,9 @@ export const DepartmentProvider = ({ children }) => {
 
   return (
     <DepartmentContext.Provider
-      value={{
-        selectedDepartment,
-        setSelectedDepartment,
-        selectedYear,
-        setSelectedYear,
-      }}
+      value={{ selectedDepartment, setSelectedDepartment, selectedYear, setSelectedYear }}
     >
       {children}
     </DepartmentContext.Provider>
   );
-};
-
-export const useDepartmentContext = () => {
-  return useContext(DepartmentContext);
 };

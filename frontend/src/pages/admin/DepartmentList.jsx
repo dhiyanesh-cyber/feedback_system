@@ -1,14 +1,13 @@
 import React, { useContext, useState, useEffect } from "react";
-import { DepartmentContext } from "../../context/DepartmentContext";
+import { DepartmentContext } from "../../context/DepartmentContext"; // Correct path for context
 import { years } from "../../data/constants";
 import DepartmentButton from "../../components/admin/Departmentbutton";
 import YearButton from "../../components/admin/YearButton";
 import Form from "../../components/admin/Form";
-import { getDepartments } from "../../services/departmentService";
 
 const DepartmentList = () => {
   const { selectedDepartment, setSelectedDepartment, selectedYear, setSelectedYear } =
-    useContext(DepartmentContext);
+    useContext(DepartmentContext); // Accessing context
   const [staffId, setStaffId] = useState("");
   const [subjectId, setSubjectId] = useState("");
   const [departments, setDepartments] = useState([]);
@@ -18,7 +17,9 @@ const DepartmentList = () => {
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
-        const data = await getDepartments();
+        const response = await fetch("http://localhost:3000/departments");
+        if (!response.ok) throw new Error("Failed to fetch departments");
+        const data = await response.json();
         setDepartments(data);
       } catch (err) {
         setError(err.message);
@@ -31,8 +32,10 @@ const DepartmentList = () => {
   }, []);
 
   const handleDepartmentClick = (department) => {
+    console.log(department);
+    
     setSelectedDepartment(department);
-    setSelectedYear(null);
+    setSelectedYear(null); // Reset year selection
   };
 
   const handleYearClick = (year) => {
