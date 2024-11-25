@@ -1,13 +1,12 @@
-import { useState } from 'react'
-import './index.css'
-function App() {
-  const [count, setCount] = useState(0)
+import React from 'react';
+import DepartmentList from './pages/admin/adminDepartments';
 
+const App = () => {
   return (
-    <>
-      <h1 className='font-sans text-red-600'>Hello</h1>
-    </>
-  )
-}
+    <div>
+      <DepartmentList />
+    </div>
+  );
+};
 
-export default App
+export default App;
