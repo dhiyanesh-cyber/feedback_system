@@ -3,7 +3,6 @@ import { getAllDepartments as getAllDepartmentsServicer, getDepartmentByCode as 
 export const getAllDepartments = async (req, res) => {
     try {
         const departments = await getAllDepartmentsServicer();
-        console.log(departments);
         
         res.status(200).json(departments);
     } catch (error) {
@@ -14,7 +13,6 @@ export const getAllDepartments = async (req, res) => {
 export const getDepartmentByCode = async (req, res) => {
     try {
         const department = await getDepartmentByCodeServicer(req.params.code);
-        console.log(req.params.code);
         
         res.status(200).json(department);
     } catch (error) {
