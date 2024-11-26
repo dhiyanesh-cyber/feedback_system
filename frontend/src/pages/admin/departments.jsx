@@ -1,6 +1,6 @@
 import React from 'react';
 import DepartmentList from '../../components/admin/DepartmentList';
-import ClassList from '../../components/admin/ClassList';
+import ClassList from '../../components/admin/AddDetails';
 import { EndpointProvider } from '../../context/EndpointContext';
 
 const Dashboard = () => {

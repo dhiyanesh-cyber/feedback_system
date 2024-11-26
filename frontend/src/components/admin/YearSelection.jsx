@@ -2,8 +2,8 @@ import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const YearSelection = () => {
-  const navigate = useNavigate();
   const { department_id } = useParams();
+  const navigate = useNavigate();
 
   const years = [
     { id: 2, name: "2nd Year" },
@@ -12,23 +12,25 @@ const YearSelection = () => {
   ];
 
   const handleYearClick = (yearId) => {
-    navigate(`/admin/departments/${department_id}/years/${yearId}/classes`);
+    navigate(`/admin/departments/${department_id}/years/${yearId}/add`);
   };
 
   return (
-    <div className="p-4 border border-gray-300 rounded-lg shadow-md">
-      <h2 className="text-xl font-bold mb-4">Select Year</h2>
-      <ul className="space-y-2">
-        {years.map((year) => (
-          <li
-            key={year.id}
-            className="p-2 border rounded cursor-pointer hover:bg-gray-100"
-            onClick={() => handleYearClick(year.id)}
-          >
-            {year.name}
-          </li>
-        ))}
-      </ul>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
+      <div className="w-full max-w-xl bg-white border-2 border-dashed border-gray-400 rounded-lg shadow-lg p-6">
+        <h2 className="text-2xl font-bold mb-6 text-center">Select Year</h2>
+        <div className="flex justify-around">
+          {years.map((year) => (
+            <button
+              key={year.id}
+              onClick={() => handleYearClick(year.id)}
+              className="px-6 py-4 bg-blue-100 border-2 border-dashed border-gray-400 rounded-lg text-gray-700 hover:bg-blue-200 transition duration-200"
+            >
+              {year.name}
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
