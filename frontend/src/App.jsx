@@ -1,16 +1,26 @@
+import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import LoginComponent from "./pages/auth/loginComponent"; // Adjust the path as necessary
+import DepartmentList from "./components/admin/DepartmentList";
+import YearSelection from "./components/admin/YearSelection";
+import ClassList from "./components/admin/ClassList";
+import { EndpointProvider } from "./context/EndpointContext";
 import "./index.css";
 
-function App() {
+const App = () => {
   return (
-    <Router>
-      <Routes>
-        {/* Define the route for /auth */}
-        <Route path="/auth" element={<LoginComponent />} />
-      </Routes>
-    </Router>
+    <EndpointProvider>
+      <Router>
+        <Routes>
+          {/* Route for listing departments */}
+          <Route path="/admin/departments" element={<DepartmentList />} />
+          {/* Route for selecting a year */}
+          <Route path="/admin/departments/:department_id/years" element={<YearSelection />} />
+          {/* Route for selecting a class */}
+          <Route path="/admin/departments/:department_id/years/:yearId/classes" element={<ClassList />} />
+        </Routes>
+      </Router>
+    </EndpointProvider>
   );
-}
+};
 
 export default App;
