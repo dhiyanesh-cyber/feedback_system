@@ -1,23 +1,26 @@
+import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import LoginComponent from "./pages/auth/loginComponent"; // Adjust the path as necessary
-import DepartmentList from "./pages/admin/DepartmentList"; // Adjust the path as necessary
-import { DepartmentProvider } from "./context/DepartmentContext"; // Import the provider
+import DepartmentList from "./components/admin/DepartmentList";
+import YearSelection from "./components/admin/YearSelection";
+import ClassList from "./components/admin/ClassList";
+import { EndpointProvider } from "./context/EndpointContext";
 import "./index.css";
 
-function App() {
+const App = () => {
   return (
-    <DepartmentProvider> {/* Wrap the component tree in the context provider */}
+    <EndpointProvider>
       <Router>
         <Routes>
-          {/* Route for the login page */}
-          <Route path="/auth" element={<LoginComponent />} />
-          
-          {/* Route for department selection page */}
+          {/* Route for listing departments */}
           <Route path="/admin/departments" element={<DepartmentList />} />
+          {/* Route for selecting a year */}
+          <Route path="/admin/departments/:department_id/years" element={<YearSelection />} />
+          {/* Route for selecting a class */}
+          <Route path="/admin/departments/:department_id/years/:yearId/classes" element={<ClassList />} />
         </Routes>
       </Router>
-    </DepartmentProvider>
+    </EndpointProvider>
   );
-}
+};
 
 export default App;
