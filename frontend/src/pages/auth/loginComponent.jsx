@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { validateDateOfBirth } from "../../utils/auth/DobValidation";
+import { validateStudentLogin } from "../../services/auth/studentAuthentication";
 
 const LoginComponent = () => {
   const [isStudentLogin, setIsStudentLogin] = useState(true);
@@ -15,7 +16,7 @@ const LoginComponent = () => {
     setCredentials((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
   
     if (isStudentLogin) {
@@ -28,9 +29,14 @@ const LoginComponent = () => {
       const { valid, message } = validateDateOfBirth(dob);
       if (!valid) {
         return alert(message);
+      } try {
+        const data = await validateStudentLogin(registrationNumber, dob);
+        alert("Login Successful!");
+        console.log("Student Data:", data); 
+      } catch (error) {
+        alert(error.message); 
       }
   
-      console.log("Logging in as Student with:", { registrationNumber, dob });
     } else {
       const { username, password } = credentials;
   
@@ -78,7 +84,6 @@ const LoginComponent = () => {
                 </label>
                 <div className="relative">
                   <input
-                    type={showPassword ? "text" : "password"}
                     name="password"
                     id="password"
                     value={credentials.password}
@@ -87,13 +92,6 @@ const LoginComponent = () => {
                     required
                     className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-500"
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-customGray" // Use custom color here
-                  >
-                    {showPassword ? "Hide" : "Show"}
-                  </button>
                 </div>
               </div>
               <button
