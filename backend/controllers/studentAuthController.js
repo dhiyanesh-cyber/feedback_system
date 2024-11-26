@@ -1,3 +1,5 @@
+// controllers/studentAuthController.js
+
 import { validateStudent as _validateStudent } from "../services/studentAuthService.js";
 
 export const validateStudent = async (req, res) => {

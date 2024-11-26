@@ -1,3 +1,5 @@
+// loginComponent.jsx
+
 import React, { useState } from "react";
 import { validateDateOfBirth } from "../../utils/auth/DobValidation";
 import { validateStudentLogin } from "../../services/auth/studentAuthentication";

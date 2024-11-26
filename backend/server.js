@@ -1,3 +1,5 @@
+// server.js
+
 import express, { json } from "express";
 import departmentRouter from "./routes/departmentRoutes.js"
 import studentRouter from "./routes/studentAuthRoutes.js"

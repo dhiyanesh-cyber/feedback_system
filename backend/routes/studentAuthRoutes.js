@@ -1,3 +1,5 @@
+// routes/studentAuthRoutes.js
+
 import { Router } from "express";
 import { validateStudent } from '../controllers/studentAuthController.js';
 const router = Router();

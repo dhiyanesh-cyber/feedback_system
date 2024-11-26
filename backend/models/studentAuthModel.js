@@ -1,3 +1,5 @@
+// models/studentAuthModel.js
+
 import db from "../config/database.js";
 
 class StudentModel {

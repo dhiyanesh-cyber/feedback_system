@@ -1,3 +1,5 @@
+// services/studentAuthService.js
+
 import StudentModel from "../models/studentAuthModel.js";
 
 export const validateStudent = async (registerNumber, dob) => {

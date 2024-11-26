@@ -5,12 +5,14 @@ import YearSelection from "./components/admin/YearSelection";
 import ClassList from "./components/admin/ClassList";
 import { EndpointProvider } from "./context/EndpointContext";
 import "./index.css";
+import LoginComponent from "./pages/auth/loginComponent";
 
 const App = () => {
   return (
     <EndpointProvider>
       <Router>
         <Routes>
+          <Route path="/auth" element={<LoginComponent />} />
           {/* Route for listing departments */}
           <Route path="/admin/departments" element={<DepartmentList />} />
           {/* Route for selecting a year */}
