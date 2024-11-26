@@ -12,6 +12,8 @@ const DepartmentList = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+
+      
       try {
         const data = await fetchDepartments();
         setDepartments(data);
@@ -38,7 +40,7 @@ const DepartmentList = () => {
       <ul className="space-y-2">
         {departments.map((department) => (
           <li
-            key={department.id}
+            key={department.department_code}
             className="p-2 border rounded cursor-pointer hover:bg-gray-100"
             onClick={() => handleDepartmentClick(department.department_code)}
           >

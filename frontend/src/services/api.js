@@ -1,13 +1,27 @@
+// services/api.js
+
 export const fetchDepartments = async () => {
-  const response = await fetch("http://localhost:3000/departments/");
-  if (!response.ok) {
-    throw new Error("Failed to fetch departments");
+  try {
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/departments/`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch departments");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching departments:", error);
+    throw error;
   }
-  return await response.json();
 };
 
-
 export const fetchDetailsByEndpoint = async (endpoint) => {
-  const response = await fetch(`http://localhost:3000${endpoint}`);
-  return response.json();
+  try {
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}${endpoint}`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch details");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching details by endpoint:", error);
+    throw error;
+  }
 };
