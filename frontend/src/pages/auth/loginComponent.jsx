@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { validateDateOfBirth } from "../../utils/auth/DobValidation";
 
 const LoginComponent = () => {
   const [isStudentLogin, setIsStudentLogin] = useState(true);
@@ -16,9 +17,31 @@ const LoginComponent = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log("Logging in with:", credentials);
+  
+    if (isStudentLogin) {
+      const { registrationNumber, password: dob } = credentials;
+  
+      if (!registrationNumber || !dob) {
+        return alert("Both Registration Number and Date of Birth are required");
+      }
+  
+      const { valid, message } = validateDateOfBirth(dob);
+      if (!valid) {
+        return alert(message);
+      }
+  
+      console.log("Logging in as Student with:", { registrationNumber, dob });
+    } else {
+      const { username, password } = credentials;
+  
+      if (!username || !password) {
+        return alert("Both Username and Password are required");
+      }
+  
+      console.log("Logging in as Admin with:", { username, password });
+    }
   };
+  
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -60,7 +83,7 @@ const LoginComponent = () => {
                     id="password"
                     value={credentials.password}
                     onChange={handleChange}
-                    placeholder="yyyymmdd"
+                    placeholder="yyyy-mm-dd"
                     required
                     className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-500"
                   />
