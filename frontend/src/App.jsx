@@ -1,13 +1,16 @@
-import { useState } from 'react'
-import './index.css'
-function App() {
-  const [count, setCount] = useState(0)
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import LoginComponent from "./pages/auth/loginComponent"; // Adjust the path as necessary
+import "./index.css";
 
+function App() {
   return (
-    <>
-      <h1 className='font-sans text-red-600'>Hello</h1>
-    </>
-  )
+    <Router>
+      <Routes>
+        {/* Define the route for /auth */}
+        <Route path="/auth" element={<LoginComponent />} />
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;
