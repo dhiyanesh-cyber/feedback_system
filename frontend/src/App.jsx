@@ -8,13 +8,18 @@ import  LoginComponent  from "./pages/auth/loginComponent";
 import "./index.css";
 import AddDetails from "./components/admin/AddDetails";
 import PublishPage from "./components/admin/Publishpage";
+import StudentPanel from "./pages/student/StudentPanel";
 
 const App = () => {
   return (
     <EndpointProvider>
       <Router>
         <Routes>
+          
           <Route path="/auth" element={<LoginComponent />} />
+
+          {/* Student routing */}
+          <Route path="/student-panel" element={<StudentPanel />} />
           {/* Route for listing departments */}
           <Route path="/admin/departments" element={<DepartmentList />} />
           {/* Route for selecting a year */}

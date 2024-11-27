@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { validateDateOfBirth } from "../../utils/auth/DobValidation";
 import { validateStudentLogin } from "../../services/auth/studentAuthentication";
+import { useNavigate } from "react-router-dom";
 
 const LoginComponent = () => {
   const [isStudentLogin, setIsStudentLogin] = useState(true);
@@ -11,6 +12,8 @@ const LoginComponent = () => {
     username: "",
   });
 
+  const navigate = useNavigate();
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCredentials((prev) => ({ ...prev, [name]: value }));
@@ -18,36 +21,38 @@ const LoginComponent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (isStudentLogin) {
       const { registrationNumber, password: dob } = credentials;
-  
+
       if (!registrationNumber || !dob) {
         return alert("Both Registration Number and Date of Birth are required");
       }
-  
+
       const { valid, message } = validateDateOfBirth(dob);
       if (!valid) {
         return alert(message);
       } try {
         const data = await validateStudentLogin(registrationNumber, dob);
         alert("Login Successful!");
-        console.log("Student Data:", data); 
+        localStorage.setItem("userRole", "student");
+        localStorage.setItem("registrationNumber", registrationNumber);
+        navigate("/student-panel")
       } catch (error) {
-        alert(error.message); 
+        alert(error.message);
       }
-  
+
     } else {
       const { username, password } = credentials;
-  
+
       if (!username || !password) {
         return alert("Both Username and Password are required");
       }
-  
+
       console.log("Logging in as Admin with:", { username, password });
     }
   };
-  
+
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
