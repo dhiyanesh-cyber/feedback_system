@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 const AddDetails = () => {
-  const { department_id, year_id } = useParams();
+  const { department_id, year_id, class_id } = useParams();
   const [formData, setFormData] = useState({ staff_id: "", subject_id: "" });
   const [entries, setEntries] = useState([]);
   const navigate = useNavigate();
@@ -14,7 +14,10 @@ const AddDetails = () => {
 
   const handleCreate = () => {
     if (formData.staff_id && formData.subject_id) {
-      setEntries((prev) => [...prev, { year: year_id, ...formData }]);
+      setEntries((prev) => [
+        ...prev,
+        { year: year_id, class: class_id, ...formData },
+      ]);
       setFormData({ staff_id: "", subject_id: "" });
     } else {
       alert("Please fill in both fields.");
@@ -29,7 +32,7 @@ const AddDetails = () => {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
       <div className="w-full max-w-xl bg-white border-2 border-dashed border-gray-400 rounded-lg shadow-lg p-6">
         <h2 className="text-2xl font-bold mb-4 text-center">
-          Add Details for Year: {year_id}
+          Add Details for Class: {class_id}
         </h2>
         <div className="space-y-4">
           <div className="flex flex-col">
