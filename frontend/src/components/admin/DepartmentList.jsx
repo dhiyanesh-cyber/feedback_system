@@ -29,24 +29,37 @@ const DepartmentList = () => {
     navigate(`/admin/departments/${departmentId}/years`);
   };
 
-  if (loading) return <p className="text-center mt-6 text-lg">Loading departments...</p>;
-  if (error) return <p className="text-center mt-6 text-red-500">{error}</p>;
+  if (loading)
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-purple-50">
+        <p className="text-center text-lg text-gray-600">Loading departments...</p>
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-purple-50">
+        <p className="text-center text-red-500">{error}</p>
+      </div>
+    );
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50 mt-10 mb-10">
-      <div className="w-full max-w-md p-6 bg-white border border-gray-300 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Departments</h2>
-        <ul className="space-y-4">
+    <div className="flex items-center justify-center min-h-screen bg-grey-dark shadow-10">
+      <div className="w-full max-w-2xl p-10 bg-grey-light rounded-lg shadow-lg">
+        <h2 className="text-xl font-semibold text-center mb-6 text-gray-800">
+          Select a Department
+        </h2>
+        <div className="space-y-4">
           {departments.map((department) => (
-            <li
+            <button
               key={department.department_code}
-              className="p-4 border rounded cursor-pointer hover:bg-gray-100 text-center"
+              className="w-full py-3 px-4 font-medium text-gray-600 bg-gray-200  rounded-md border border-gray-200 shadow-lg text-center  hover:bg-blue-200  focus:border-black focus:ring-opacity-50"
               onClick={() => handleDepartmentClick(department.department_code)}
             >
               {department.department_name}
-            </li>
+            </button>
           ))}
-        </ul>
+        </div>
       </div>
     </div>
   );
