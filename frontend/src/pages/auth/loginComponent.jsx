@@ -71,7 +71,8 @@ const LoginComponent = () => {
                   value={credentials.registrationNumber}
                   onChange={handleChange}
                   required
-                  className="w-full p-2 border border-gray-300 rounded outline-1 focus:outline-customGray"/>
+                  className="w-full p-2 border border-gray-300 rounded outline-1 focus:outline-customGray"
+                />
               </div>
               <div className="mb-4">
                 <label
@@ -80,33 +81,17 @@ const LoginComponent = () => {
                 >
                   Date Of Birth
                 </label>
-                <div className="relative">
-                  <input
-                    name="password"
-                    id="password"
-                    value={credentials.password}
-                    onChange={handleChange}
-                    placeholder="yyyy-mm-dd"
-                    required
-                    className="w-full p-2 border border-gray-300 rounded outline-1 focus:outline-customGray"
-                  />
-                </div>
+                <input
+                  type="text"
+                  name="password"
+                  id="password"
+                  value={credentials.password}
+                  onChange={handleChange}
+                  placeholder="yyyy-mm-dd"
+                  required
+                  className="w-full p-2 border border-gray-300 rounded outline-1 focus:outline-customGray"
+                />
               </div>
-              <button
-                type="submit"
-                className="w-full bg-customGray text-white p-2 rounded hover:bg-gray-700 transition duration-200" // Use custom color here
-              >
-                Login
-              </button>
-              <p className="mt-4 text-sm text-center">
-                <button
-                  type="button"
-                  onClick={() => setIsStudentLogin(false)}
-                  className="text-customGray hover:underline ml-1" // Use custom color here
-                >
-                  Click here if you are an Admin
-                </button>
-              </p>
             </>
           ) : (
             <>
@@ -137,7 +122,7 @@ const LoginComponent = () => {
                 <div className="relative">
                   <input
                     type={showPassword ? "text" : "password"}
-                    name="passwordAdmin"
+                    name="password"
                     id="passwordAdmin"
                     value={credentials.password}
                     onChange={handleChange}
@@ -153,24 +138,26 @@ const LoginComponent = () => {
                   </button>
                 </div>
               </div>
-              <button
-                type="submit"
-                className="w-full bg-customGray text-white p-2 rounded hover:bg-gray-700 transition duration-200" // Use custom color here
-              >
-                Login
-              </button>
-              <p className="mt-4 text-sm text-center">
-                <button
-                  type="button"
-                  onClick={() => setIsStudentLogin(true)}
-                  className="text-customGray hover:underline ml-1" // Use custom color here
-                >
-                  Click here if you are a Student
-                </button>
-              </p>
             </>
           )}
+          <button
+            type="submit"
+            className="w-full bg-customGray text-white p-2 rounded hover:bg-gray-700 transition duration-200"
+          >
+            Login
+          </button>
         </form>
+        <p className="mt-4 text-sm text-center">
+          <button
+            type="button"
+            onClick={() => setIsStudentLogin(!isStudentLogin)}
+            className="text-customGray hover:underline"
+          >
+            {isStudentLogin
+              ? "Click here if you are an Admin"
+              : "Click here if you are a Student"}
+          </button>
+        </p>
       </div>
     </div>
   );
