@@ -20,7 +20,7 @@ const App = () => {
           {/* Route for selecting a year */}
           <Route path="/admin/departments/:department_id/years" element={<YearSelection />} />
           <Route path="/admin/departments/:department_id/years/:year_id/classes" element={<ClassList />} />
-          <Route path="/admin/departments/:department_id/years/:year_id/add" element={<AddDetails />} />
+          <Route path="/admin/departments/:department_id/years/:year_id/classes/:class_id/add" element={<AddDetails />} />
           <Route path="/admin/departments/:department_id/publish" element={<PublishPage />} />
         </Routes>
       </Router>

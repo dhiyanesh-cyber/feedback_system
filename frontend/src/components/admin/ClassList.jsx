@@ -29,8 +29,8 @@ const ClassList = () => {
     fetchClasses();
   }, [department_id, year_id]);
 
-  const handleClassClick = (classId) => {
-    navigate(`/admin/departments/${department_id}/years/${year_id}/classes/${classId}/add`);
+  const handleClassClick = (class_no) => {
+    navigate(`/admin/departments/${department_id}/years/${year_id}/classes/${class_no}/add`);
   };
 
   if (loading) return <p>Loading classes...</p>;
@@ -44,10 +44,10 @@ const ClassList = () => {
           {classes.map((classItem) => (
             <li
               key={classItem.class_id}
-              onClick={() => handleClassClick(classItem.class_id)}
+              onClick={() => handleClassClick(classItem.class)}
               className="p-4 bg-blue-100 border-2 border-dashed border-gray-400 rounded-lg text-gray-700 hover:bg-blue-200 cursor-pointer"
             >
-              {classItem.class_name}
+              {classItem.class}
             </li>
           ))}
         </ul>
