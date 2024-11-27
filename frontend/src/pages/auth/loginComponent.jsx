@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { validateDateOfBirth } from "../../utils/auth/DobValidation";
+import { validateStudentLogin } from "../../services/auth/studentAuthentication";
 
 const LoginComponent = () => {
   const [isStudentLogin, setIsStudentLogin] = useState(true);
@@ -14,11 +16,38 @@ const LoginComponent = () => {
     setCredentials((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log("Logging in with:", credentials);
+  
+    if (isStudentLogin) {
+      const { registrationNumber, password: dob } = credentials;
+  
+      if (!registrationNumber || !dob) {
+        return alert("Both Registration Number and Date of Birth are required");
+      }
+  
+      const { valid, message } = validateDateOfBirth(dob);
+      if (!valid) {
+        return alert(message);
+      } try {
+        const data = await validateStudentLogin(registrationNumber, dob);
+        alert("Login Successful!");
+        console.log("Student Data:", data); 
+      } catch (error) {
+        alert(error.message); 
+      }
+  
+    } else {
+      const { username, password } = credentials;
+  
+      if (!username || !password) {
+        return alert("Both Username and Password are required");
+      }
+  
+      console.log("Logging in as Admin with:", { username, password });
+    }
   };
+  
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -55,22 +84,14 @@ const LoginComponent = () => {
                 </label>
                 <div className="relative">
                   <input
-                    type={showPassword ? "text" : "password"}
                     name="password"
                     id="password"
                     value={credentials.password}
                     onChange={handleChange}
-                    placeholder="yyyymmdd"
+                    placeholder="yyyy-mm-dd"
                     required
                     className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-500"
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-customGray" // Use custom color here
-                  >
-                    {showPassword ? "Hide" : "Show"}
-                  </button>
                 </div>
               </div>
               <button
