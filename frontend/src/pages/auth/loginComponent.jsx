@@ -18,36 +18,35 @@ const LoginComponent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (isStudentLogin) {
       const { registrationNumber, password: dob } = credentials;
-  
+
       if (!registrationNumber || !dob) {
         return alert("Both Registration Number and Date of Birth are required");
       }
-  
+
       const { valid, message } = validateDateOfBirth(dob);
       if (!valid) {
         return alert(message);
-      } try {
+      }
+      try {
         const data = await validateStudentLogin(registrationNumber, dob);
         alert("Login Successful!");
-        console.log("Student Data:", data); 
+        console.log("Student Data:", data);
       } catch (error) {
-        alert(error.message); 
+        alert(error.message);
       }
-  
     } else {
       const { username, password } = credentials;
-  
+
       if (!username || !password) {
         return alert("Both Username and Password are required");
       }
-  
+
       console.log("Logging in as Admin with:", { username, password });
     }
   };
-  
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -72,8 +71,7 @@ const LoginComponent = () => {
                   value={credentials.registrationNumber}
                   onChange={handleChange}
                   required
-                  className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-500"
-                />
+                  className="w-full p-2 border border-gray-300 rounded outline-1 focus:outline-customGray"/>
               </div>
               <div className="mb-4">
                 <label
@@ -90,7 +88,7 @@ const LoginComponent = () => {
                     onChange={handleChange}
                     placeholder="yyyy-mm-dd"
                     required
-                    className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-500"
+                    className="w-full p-2 border border-gray-300 rounded outline-1 focus:outline-customGray"
                   />
                 </div>
               </div>
@@ -126,7 +124,7 @@ const LoginComponent = () => {
                   value={credentials.username}
                   onChange={handleChange}
                   required
-                  className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-500"
+                  className="w-full p-2 border border-gray-300 rounded outline-1 focus:outline-customGray"
                 />
               </div>
               <div className="mb-4">
@@ -144,7 +142,7 @@ const LoginComponent = () => {
                     value={credentials.password}
                     onChange={handleChange}
                     required
-                    className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-500"
+                    className="w-full p-2 border border-gray-300 rounded outline-1 focus:outline-customGray"
                   />
                   <button
                     type="button"

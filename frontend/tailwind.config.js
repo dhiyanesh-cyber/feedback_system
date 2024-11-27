@@ -6,7 +6,8 @@ export default {
     "./src/*.{jsx, js}"
   ],
   theme: {
-    colors: {
+    
+    extend: {colors: {
       transparent: 'transparent',
       current: 'currentColor',
       black: '#000000',
@@ -14,8 +15,7 @@ export default {
       customGray: '#333',
        // Your custom color
       // Add more colors as needed
-    },
-    extend: {},
+    },},
   },
   plugins: [],
 }   
