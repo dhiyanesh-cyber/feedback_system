@@ -10,6 +10,7 @@ import YearSelection from "./components/admin/YearSelection";
 import ClassList from "./components/admin/ClassList";
 import AddDetails from "./components/admin/AddDetails";
 import PublishPage from "./components/admin/Publishpage";
+import Questionnaire from "./components/Questionnaire";
 
 import "./index.css";
 
@@ -17,7 +18,7 @@ import "./index.css";
 const ProtectedRoute = ({ children, role }) => {
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
   console.log("from app : ", userDetails);
-  
+
 
   if (!userDetails) {
     return <Navigate to="/auth" replace />;
@@ -25,7 +26,7 @@ const ProtectedRoute = ({ children, role }) => {
 
   if (role && userDetails.role !== role) {
     console.log("Admin logged");
-    
+
     return <Navigate to="/" replace />;
   }
 
@@ -52,6 +53,13 @@ const App = () => {
                   <StudentPanel />
                 </ProtectedRoute>
               }
+            />
+            <Route
+              path="/questionnaire"
+              element={
+                <ProtectedRoute role="student">
+                  <Questionnaire />
+                </ProtectedRoute>}
             />
 
             {/* Admin routing */}
@@ -95,6 +103,7 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
+
           </Routes>
         </Router>
       </EndpointProvider>
