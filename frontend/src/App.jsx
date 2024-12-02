@@ -92,7 +92,7 @@ const App = () => {
               }
             />
             <Route
-              path="/admin/departments/:department_id/years/:year_id/add"
+              path="/admin/departments/:department_id/years/:year_id/classes/:class_id/add"
               element={
                 <ProtectedRoute role="admin">
                   <AddDetails />
