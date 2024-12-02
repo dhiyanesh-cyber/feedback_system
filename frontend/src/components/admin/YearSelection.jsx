@@ -18,17 +18,19 @@ const YearSelection = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
-      <div className="w-full max-w-xl bg-white border-2 border-dashed border-gray-400 rounded-lg shadow-lg p-6">
-        <h2 className="text-2xl font-bold mb-4 text-center">Select Year</h2>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+      <div className="w-full max-w-lg bg-white rounded-xl shadow-2xl p-8">
+        <h2 className="text-3xl font-extrabold text-center text-black opacity-90 mb-6">
+          Select Year
+        </h2>
         <ul className="space-y-4">
           {years.map((year) => (
             <li
               key={year.id}
               onClick={() => handleYearClick(year.id)}
-              className="p-4 bg-blue-100 border-2 border-dashed border-gray-400 rounded-lg text-gray-700 text-center cursor-pointer hover:bg-blue-200 transition duration-200"
+              className="p-4 bg-white border-2 border-gray-300 rounded-lg text-white-500 text-center cursor-pointer hover:text-white hover:bg-customGray transition duration-200 ease-in-out transform hover:scale-105 w-60 place-self-center"
             >
-              {year.name}
+              <span className="font-medium text-lg">{year.name}</span>
             </li>
           ))}
         </ul>

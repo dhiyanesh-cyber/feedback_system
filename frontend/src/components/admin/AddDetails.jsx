@@ -25,46 +25,46 @@ const AddDetails = () => {
   };
 
   const handleNext = () => {
-    navigate(`/admin/departments/${department_id}/publish`, { state: { entries } });
+    navigate(`/admin/departments/${department_id}/publish, { state: { entries } }`);
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
-      <div className="w-full max-w-xl bg-white border-2 border-dashed border-gray-400 rounded-lg shadow-lg p-6">
-        <h2 className="text-2xl font-bold mb-4 text-center">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+      <div className="w-full max-w-lg bg-white rounded-xl shadow-2xl p-8">
+        <h2 className="text-3xl font-extrabold text-center text-black opacity-90 mb-6">
           Add Details for Class: {class_id}
         </h2>
-        <div className="space-y-4">
+        <div className="space-y-6">
           <div className="flex flex-col">
-            <label className="font-medium mb-2">Staff ID</label>
+            <label className="font-medium text-lg text-gray-900 mb-2">Staff ID</label>
             <input
               type="text"
               name="staff_id"
               value={formData.staff_id}
               onChange={handleInputChange}
-              className="w-full px-4 py-2 border-2 border-dashed border-gray-400 rounded-lg"
+              className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300"
             />
           </div>
           <div className="flex flex-col">
-            <label className="font-medium mb-2">Subject ID</label>
+            <label className="font-medium text-lg text-gray-900 mb-2">Subject ID</label>
             <input
               type="text"
               name="subject_id"
               value={formData.subject_id}
               onChange={handleInputChange}
-              className="w-full px-4 py-2 border-2 border-dashed border-gray-400 rounded-lg"
+              className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300"
             />
           </div>
           <button
             onClick={handleCreate}
-            className="w-full px-4 py-2 bg-green-200 border-2 border-dashed border-gray-400 rounded-lg text-gray-700 hover:bg-green-300 transition duration-200"
+            className="mt-6 w-full px-4 py-3 bg-customGray text-white font-semibold rounded-lg hover:bg-gray-700 transition duration-200"
           >
             Add
           </button>
         </div>
         <button
           onClick={handleNext}
-          className="mt-6 w-full px-4 py-2 bg-blue-200 border-2 border-dashed border-gray-400 rounded-lg text-gray-700 hover:bg-blue-300 transition duration-200"
+          className="mt-6 w-full px-4 py-3 bg-customGray text-white font-semibold rounded-lg hover:bg-gray-700 transition duration-200"
         >
           Next: Publish
         </button>
