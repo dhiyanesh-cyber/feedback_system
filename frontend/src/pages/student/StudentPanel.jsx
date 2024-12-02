@@ -25,7 +25,7 @@ const StudentPanel = () => {
     });
   };
 
-  // Retrieve student's registration number
+  // Retrieve student's registratio n number
   const registrationNumber = localStorage.getItem("registrationNumber");
 
   return (
