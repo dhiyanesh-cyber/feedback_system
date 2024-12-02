@@ -5,7 +5,7 @@ import { EndpointProvider } from "./context/EndpointContext";
 
 import LoginComponent from "./pages/auth/loginComponent";
 import StudentPanel from "./pages/student/StudentPanel";
-import DepartmentList from "./components/admin/DepartmentList";
+// import DepartmentList from "./components/admin/DepartmentList";
 import YearSelection from "./components/admin/YearSelection";
 import ClassList from "./components/admin/ClassList";
 import AddDetails from "./components/admin/AddDetails";
@@ -13,6 +13,7 @@ import PublishPage from "./components/admin/Publishpage";
 import Questionnaire from "./components/Questionnaire";
 
 import "./index.css";
+import DepartmentList from "./components/admin/DepartmentList";
 
 // Protected route for authentication and role-based access
 const ProtectedRoute = ({ children, role }) => {
