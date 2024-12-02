@@ -47,6 +47,7 @@ const LoginComponent = () => {
           name: data.student.student_name,
           department: data.student.student_department,
           year: data.student.student_year,
+          class: data.student.class
         };
   
         localStorage.setItem("userDetails", JSON.stringify(studentDetails));
