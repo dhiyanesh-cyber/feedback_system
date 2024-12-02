@@ -18,7 +18,7 @@ export const validateStudent = async (req, res) => {
     });
   } catch (error) {
     return res.status(401).json({
-      message: error.message, // Send the error message for invalid credentials
+      message: error.message, 
     });
   }
 };
