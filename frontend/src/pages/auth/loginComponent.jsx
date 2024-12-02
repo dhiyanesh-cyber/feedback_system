@@ -2,14 +2,16 @@ import React, { useState } from "react";
 import { validateDateOfBirth } from "../../utils/auth/DobValidation";
 import { validateStudentLogin } from "../../services/auth/studentAuthentication";
 import { useNavigate } from "react-router-dom";
+import { validateAdminLogin } from "../../services/auth/adminAuthentication";
 
 const LoginComponent = () => {
   const [isStudentLogin, setIsStudentLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [credentials, setCredentials] = useState({
     registrationNumber: "",
+    dob: "",
     password: "",
-    username: "",
+    username: ""
   });
 
   const navigate = useNavigate();
@@ -23,7 +25,7 @@ const LoginComponent = () => {
     e.preventDefault();
 
     if (isStudentLogin) {
-      const { registrationNumber, password: dob } = credentials;
+      const { registrationNumber, dob } = credentials;
 
       if (!registrationNumber || !dob) {
         return alert("Both Registration Number and Date of Birth are required");
@@ -35,8 +37,19 @@ const LoginComponent = () => {
       } try {
         const data = await validateStudentLogin(registrationNumber, dob);
         alert("Login Successful!");
-        localStorage.setItem("userRole", "student");
-        localStorage.setItem("registrationNumber", registrationNumber);
+        
+        console.log(data);
+        
+        const studentDetails = {
+          role: "student",
+          registrationNumber,
+          name: data.student.student_name,
+          department: data.student.student_department,
+          year: data.student.student_year,
+        };
+  
+        localStorage.setItem("userDetails", JSON.stringify(studentDetails));
+        
         navigate("/student-panel")
       } catch (error) {
         alert(error.message);
@@ -49,7 +62,19 @@ const LoginComponent = () => {
         return alert("Both Username and Password are required");
       }
 
-      console.log("Logging in as Admin with:", { username, password });
+      try {
+        const data = await validateAdminLogin(username, password);
+        alert("Admin Login Successful!");
+        const adminDetails = {
+          role: "admin",
+          username
+        };
+  
+        localStorage.setItem("userDetails", JSON.stringify(adminDetails));
+        navigate("/admin/departments");
+      } catch (error) {
+        alert(error.message);
+      }
     }
   };
 
@@ -89,9 +114,9 @@ const LoginComponent = () => {
                 </label>
                 <div className="relative">
                   <input
-                    name="password"
-                    id="password"
-                    value={credentials.password}
+                    name="dob"
+                    id="dob"
+                    value={credentials.dob}
                     onChange={handleChange}
                     placeholder="yyyy-mm-dd"
                     required
@@ -144,8 +169,8 @@ const LoginComponent = () => {
                 <div className="relative">
                   <input
                     type={showPassword ? "text" : "password"}
-                    name="passwordAdmin"
-                    id="passwordAdmin"
+                    name="password"
+                    id="password"
                     value={credentials.password}
                     onChange={handleChange}
                     required
