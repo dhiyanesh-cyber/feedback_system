@@ -4,6 +4,7 @@ import studentRouter from "./routes/studentAuthRoutes.js"
 import studentFormRouter from "./routes/studentFormFetchRoutes.js";
 import adminRouter from "./routes/adminAuthRoutes.js"
 import classRouter from "./routes/classRoutes.js"
+import questionsRouter from "./routes/questionRoutes.js"
 import dotenv from "dotenv";
 import cors from "./config/corsConfig.js"
 dotenv.config();
@@ -22,6 +23,7 @@ app.use("/api/students", studentRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/studentForms", studentFormRouter)
 app.use("/api/class", classRouter);
+app.use("/api/questions", questionsRouter);
 
 app.listen(PORT, () => {
     console.log("server started successfully");
