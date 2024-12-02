@@ -12,7 +12,7 @@ const ClassList = () => {
     const fetchClasses = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/departments/${department_id}/years/${year_id}/classes`
+          `http://localhost:3000/api/class/${department_id}/${year_id}`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch classes.");
