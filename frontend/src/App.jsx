@@ -1,5 +1,10 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import { UserProvider } from "./context/UserContext";
 import { EndpointProvider } from "./context/EndpointContext";
 
@@ -17,16 +22,13 @@ import "./index.css";
 // Protected route for authentication and role-based access
 const ProtectedRoute = ({ children, role }) => {
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
-  console.log("from app : ", userDetails);
-
+  console.log("from app : ", userDetails.role);
 
   if (!userDetails) {
     return <Navigate to="/auth" replace />;
   }
 
   if (role && userDetails.role !== role) {
-    console.log("Admin logged");
-
     return <Navigate to="/" replace />;
   }
 
@@ -59,7 +61,8 @@ const App = () => {
               element={
                 <ProtectedRoute role="student">
                   <Questionnaire />
-                </ProtectedRoute>}
+                </ProtectedRoute>
+              }
             />
 
             {/* Admin routing */}
@@ -103,7 +106,6 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
-
           </Routes>
         </Router>
       </EndpointProvider>
