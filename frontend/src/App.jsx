@@ -9,7 +9,8 @@ import DepartmentList from "./components/admin/DepartmentList";
 import YearSelection from "./components/admin/YearSelection";
 import ClassList from "./components/admin/ClassList";
 import AddDetails from "./components/admin/AddDetails";
-import PublishPage from "./components/admin/Publishpage";
+// import PublishPage from "./components/admin/Publishpage";
+import PublishPage from "./components/admin/PublishPage";
 import Questionnaire from "./components/Questionnaire";
 
 import "./index.css";
@@ -88,7 +89,7 @@ const App = () => {
               }
             />
             <Route
-              path="/admin/departments/:department_id/years/:year_id/add"
+              path="/admin/departments/:department_id/years/:year_id/classes/:class_id/add"
               element={
                 <ProtectedRoute role="admin">
                   <AddDetails />

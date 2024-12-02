@@ -9,19 +9,19 @@ const PublishPage = () => {
   const handlePublish = () => {
     console.log("Published Data:", entries);
     alert("Data Published Successfully!");
-    navigate("/admin"); // Redirect to the admin dashboard
+    navigate("/admin"); 
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
-      <div className="w-full max-w-xl bg-white border-2 border-dashed border-gray-400 rounded-lg shadow-lg p-6">
-        <h2 className="text-2xl font-bold mb-4 text-center">Publish Entries</h2>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+      <div className="w-full max-w-lg bg-white rounded-xl shadow-2xl p-8">
+        <h2 className="text-3xl font-extrabold text-center text-black opacity-90 mb-6">Publish Entries</h2>
         {entries.length > 0 ? (
           <ul className="space-y-4">
             {entries.map((entry, index) => (
               <li
                 key={index}
-                className="p-4 bg-gray-100 border-2 border-dashed border-gray-400 rounded-lg"
+                className="p-4 bg-gray-100 border-2 border-gray-400 rounded-lg"
               >
                 Year: {entry.year}, Staff ID: {entry.staff_id}, Subject ID: {entry.subject_id}
               </li>
@@ -32,7 +32,7 @@ const PublishPage = () => {
         )}
         <button
           onClick={handlePublish}
-          className="mt-6 w-full px-4 py-2 bg-green-200 border-2 border-dashed border-gray-400 rounded-lg text-gray-700 hover:bg-green-300 transition duration-200"
+          className="mt-6 w-full px-4 py-3 bg-customGray text-white font-semibold rounded-lg hover:bg-gray-700 transition duration-200"
         >
           Publish
         </button>

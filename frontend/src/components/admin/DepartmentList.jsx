@@ -29,24 +29,37 @@ const DepartmentList = () => {
     navigate(`/admin/departments/${departmentId}/years`);
   };
 
-  if (loading) return <p className="text-center mt-6 text-lg">Loading departments...</p>;
-  if (error) return <p className="text-center mt-6 text-red-500">{error}</p>;
+  if (loading)
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-purple-50">
+        <p className="text-center text-lg text-gray-600">Loading departments...</p>
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-purple-50">
+        <p className="text-center text-red-500">{error}</p>
+      </div>
+    );
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50 mt-10 mb-10">
-      <div className="w-full max-w-md p-6 bg-white border border-gray-300 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Departments</h2>
-        <ul className="space-y-4">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 ">
+      <div className="w-full max-w-4xl p-8 bg-white rounded-xl shadow-2xl transform transition-all duration-300">
+        <h2 className="text-3xl font-extrabold text-center mb-8 text-gray-800 tracking-tight">
+          Select a Department
+        </h2>
+        <div className="grid grid-cols-2 gap-6">
           {departments.map((department) => (
-            <li
+            <button
               key={department.department_code}
-              className="p-4 border rounded cursor-pointer hover:bg-gray-100 text-center"
+              className="w-full py-4 px-6 font-medium text-black bg-white rounded-lg shadow-md hover:bg-customGray hover:text-white focus:outline-none focus:ring-4 focus:ring-indigo-300 transform transition-all hover:scale-105 duration-200"
               onClick={() => handleDepartmentClick(department.department_code)}
             >
               {department.department_name}
-            </li>
+            </button>
           ))}
-        </ul>
+        </div>
       </div>
     </div>
   );
