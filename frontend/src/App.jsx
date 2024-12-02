@@ -4,10 +4,11 @@ import DepartmentList from "./components/admin/DepartmentList";
 import YearSelection from "./components/admin/YearSelection";
 import ClassList from "./components/admin/ClassList";
 import { EndpointProvider } from "./context/EndpointContext";
-import  LoginComponent  from "./pages/auth/loginComponent";
+import LoginComponent from "./pages/auth/loginComponent";
 import "./index.css";
 import AddDetails from "./components/admin/AddDetails";
 import PublishPage from "./components/admin/Publishpage";
+import Questionnaire from "./components/Questionnaire";
 
 const App = () => {
   return (
@@ -18,10 +19,24 @@ const App = () => {
           {/* Route for listing departments */}
           <Route path="/admin/departments" element={<DepartmentList />} />
           {/* Route for selecting a year */}
-          <Route path="/admin/departments/:department_id/years" element={<YearSelection />} />
-          <Route path="/admin/departments/:department_id/years/:year_id/classes" element={<ClassList />} />
-          <Route path="/admin/departments/:department_id/years/:year_id/add" element={<AddDetails />} />
-          <Route path="/admin/departments/:department_id/publish" element={<PublishPage />} />
+
+          <Route
+            path="/admin/departments/:department_id/years"
+            element={<YearSelection />}
+          />
+          <Route
+            path="/admin/departments/:department_id/years/:year_id/classes"
+            element={<ClassList />}
+          />
+          <Route
+            path="/admin/departments/:department_id/years/:year_id/add"
+            element={<AddDetails />}
+          />
+          <Route
+            path="/admin/departments/:department_id/publish"
+            element={<PublishPage />}
+          />
+          <Route path="/questionnaire" element={<Questionnaire />} />
         </Routes>
       </Router>
     </EndpointProvider>
