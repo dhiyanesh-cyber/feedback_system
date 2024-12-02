@@ -18,36 +18,35 @@ const LoginComponent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (isStudentLogin) {
       const { registrationNumber, password: dob } = credentials;
-  
+
       if (!registrationNumber || !dob) {
         return alert("Both Registration Number and Date of Birth are required");
       }
-  
+
       const { valid, message } = validateDateOfBirth(dob);
       if (!valid) {
         return alert(message);
-      } try {
+      }
+      try {
         const data = await validateStudentLogin(registrationNumber, dob);
         alert("Login Successful!");
-        console.log("Student Data:", data); 
+        console.log("Student Data:", data);
       } catch (error) {
-        alert(error.message); 
+        alert(error.message);
       }
-  
     } else {
       const { username, password } = credentials;
-  
+
       if (!username || !password) {
         return alert("Both Username and Password are required");
       }
-  
+
       console.log("Logging in as Admin with:", { username, password });
     }
   };
-  
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -72,7 +71,7 @@ const LoginComponent = () => {
                   value={credentials.registrationNumber}
                   onChange={handleChange}
                   required
-                  className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-500"
+                  className="w-full p-2 border border-gray-300 rounded outline-1 focus:outline-customGray"
                 />
               </div>
               <div className="mb-4">
@@ -82,33 +81,17 @@ const LoginComponent = () => {
                 >
                   Date Of Birth
                 </label>
-                <div className="relative">
-                  <input
-                    name="password"
-                    id="password"
-                    value={credentials.password}
-                    onChange={handleChange}
-                    placeholder="yyyy-mm-dd"
-                    required
-                    className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-500"
-                  />
-                </div>
+                <input
+                  type="text"
+                  name="password"
+                  id="password"
+                  value={credentials.password}
+                  onChange={handleChange}
+                  placeholder="yyyy-mm-dd"
+                  required
+                  className="w-full p-2 border border-gray-300 rounded outline-1 focus:outline-customGray"
+                />
               </div>
-              <button
-                type="submit"
-                className="w-full bg-customGray text-white p-2 rounded hover:bg-gray-700 transition duration-200" // Use custom color here
-              >
-                Login
-              </button>
-              <p className="mt-4 text-sm text-center">
-                <button
-                  type="button"
-                  onClick={() => setIsStudentLogin(false)}
-                  className="text-customGray hover:underline ml-1" // Use custom color here
-                >
-                  Click here if you are an Admin
-                </button>
-              </p>
             </>
           ) : (
             <>
@@ -126,7 +109,7 @@ const LoginComponent = () => {
                   value={credentials.username}
                   onChange={handleChange}
                   required
-                  className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-500"
+                  className="w-full p-2 border border-gray-300 rounded outline-1 focus:outline-customGray"
                 />
               </div>
               <div className="mb-4">
@@ -139,12 +122,12 @@ const LoginComponent = () => {
                 <div className="relative">
                   <input
                     type={showPassword ? "text" : "password"}
-                    name="passwordAdmin"
+                    name="password"
                     id="passwordAdmin"
                     value={credentials.password}
                     onChange={handleChange}
                     required
-                    className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-500"
+                    className="w-full p-2 border border-gray-300 rounded outline-1 focus:outline-customGray"
                   />
                   <button
                     type="button"
@@ -155,24 +138,26 @@ const LoginComponent = () => {
                   </button>
                 </div>
               </div>
-              <button
-                type="submit"
-                className="w-full bg-customGray text-white p-2 rounded hover:bg-gray-700 transition duration-200" // Use custom color here
-              >
-                Login
-              </button>
-              <p className="mt-4 text-sm text-center">
-                <button
-                  type="button"
-                  onClick={() => setIsStudentLogin(true)}
-                  className="text-customGray hover:underline ml-1" // Use custom color here
-                >
-                  Click here if you are a Student
-                </button>
-              </p>
             </>
           )}
+          <button
+            type="submit"
+            className="w-full bg-customGray text-white p-2 rounded hover:bg-gray-700 transition duration-200"
+          >
+            Login
+          </button>
         </form>
+        <p className="mt-4 text-sm text-center">
+          <button
+            type="button"
+            onClick={() => setIsStudentLogin(!isStudentLogin)}
+            className="text-customGray hover:underline"
+          >
+            {isStudentLogin
+              ? "Click here if you are an Admin"
+              : "Click here if you are a Student"}
+          </button>
+        </p>
       </div>
     </div>
   );
