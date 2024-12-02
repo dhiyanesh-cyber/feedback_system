@@ -19,6 +19,7 @@ import Questionnaire from "./components/Questionnaire";
 
 import "./index.css";
 import DepartmentList from "./components/admin/DepartmentList";
+import AdminFormsPage from "./components/admin/AdminFormsPage";
 
 // Protected route for authentication and role-based access
 const ProtectedRoute = ({ children, role }) => {
@@ -92,10 +93,10 @@ const App = () => {
               }
             />
             <Route
-              path="/admin/departments/:department_id/years/:year_id/classes/:class_id/add"
+              path="/admin/departments/:department_id/years/:year_id/classes/:class_id/addForms"
               element={
                 <ProtectedRoute role="admin">
-                  <AddDetails />
+                  <AdminFormsPage />
                 </ProtectedRoute>
               }
             />
