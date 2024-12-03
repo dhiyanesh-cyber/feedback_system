@@ -13,6 +13,7 @@ class StudentFormFetch {
         [department_code, year, class_name]
       );
 
+      
       return forms;
     } catch (error) {
       console.error("Error fetching forms:", error);
