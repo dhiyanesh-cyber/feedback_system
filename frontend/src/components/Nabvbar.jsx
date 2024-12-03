@@ -10,18 +10,24 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-white p-4 flex items-center justify-between">
+    <nav className="bg-white p-4 flex flex-wrap items-center justify-between border-b border-gray-300 shadow-sm">
+      {/* Left Section: Logo and Title */}
       <div className="flex items-center">
-      <img src="/logo.png" alt="SSMIET Logo" className="h-14 ml-20" />
-
-        {/* <span className="text-black text-4xl font-normal ">SSM Institute of Engineering and Technology</span> */}
+        <img src="/logo.png" alt="SSMIET Logo" className="h-10 sm:h-14 ml-4 sm:ml-10" />
+        <span className="hidden sm:block text-black text-lg sm:text-2xl font-semibold ml-4">
+          SSM Institute of Engineering and Technology
+        </span>
       </div>
-      <button
-        onClick={handleLogout}
-        className="text-white bg-customGray px-4 py-2 rounded hover:bg-slate-400 mr-20"
-      >
-        Logout
-      </button>
+
+      {/* Right Section: Logout Button */}
+      <div className="mt-2 sm:mt-0">
+        <button
+          onClick={handleLogout}
+          className="text-white bg-customGray px-4 py-2 rounded hover:bg-slate-400 ml-auto sm:mr-10"
+        >
+          Logout
+        </button>
+      </div>
     </nav>
   );
 };
