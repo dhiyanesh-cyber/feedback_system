@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { fetchForms, createForm } from "../../services/formApi";
-import { fetchFacultyDetails } from "../../services/facultyApi";
 import Navbar from "../../components/Nabvbar";
+import FacultyFormComponent from "./FacultyFormComponent";
 
 const AdminFormsPage = () => {
   const { department_id, year_id, class_id } = useParams();
-  const [forms, setForms] = useState([]);
-  const [facultyMap, setFacultyMap] = useState({}); // Map to store faculty_id -> faculty_name
+  const [forms, setForms] = useState([]); // Map to store faculty_id -> faculty_name
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -23,23 +22,6 @@ const AdminFormsPage = () => {
         const data = await fetchForms(department_id, year_id, class_id);
         setForms(data);
 
-        // Fetch faculty details for all forms
-        const facultyPromises = data.map((form) =>
-          fetchFacultyDetails(form.faculty_id)
-        );
-
-        const facultyDetails = await Promise.all(facultyPromises);
-        
-
-        // Create a map of faculty_id to faculty_name
-        const facultyMap = facultyDetails.reduce((acc, faculty) => {
-          console.log("fac : ",faculty[0]);
-          
-          acc[faculty[0].code] = faculty[0].faculty_name; // Assuming API returns { faculty_id, name }
-          return acc;
-        }, {});
-
-        setFacultyMap(facultyMap);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -48,7 +30,7 @@ const AdminFormsPage = () => {
     };
 
     fetchData();
-  }, [department_id, year_id, class_id]);
+  }, [department_id, year_id, class_id, forms]);
 
   // Handle input change for form data
   const handleInputChange = (e) => {
@@ -67,17 +49,19 @@ const AdminFormsPage = () => {
         formData.subject_id
       );
 
-      // Add new form and fetch faculty name for it
-      const newFaculty = await fetchFacultyDetails(data.faculty_id);
 
       setForms((prevForms) => [...prevForms, data]);
-      setFacultyMap((prevMap) => ({
-        ...prevMap,
-        [newFaculty.faculty_id]: newFaculty.name,
-      }));
+      setFormData({
+        staff_id: "",
+        subject_id: "",
+      })
       setShowModal(false);
     } catch (err) {
       console.error("Error adding form:", err);
+      setFormData({
+        staff_id: "",
+        subject_id: "",
+      })
       setError(err.message);
     }
   };
@@ -95,14 +79,7 @@ const AdminFormsPage = () => {
         </h2>
         <ul className="space-x-4 flex flex-row">
           {forms.map((form) => (
-            <li
-              key={form.form_id}
-              className="p-4 bg-white border-2 border-gray-300 rounded-lg text-black text-center w-60 place-self-center"
-              onClick={() => console.log(form)}
-            >
-              <p>{form.subject_id}</p>
-              <p className="font-semibold">{facultyMap[form.faculty_id] || "Loading faculty..."}</p> <p>({form.faculty_id})</p>
-            </li>
+            <FacultyFormComponent key={form.form_id} form={form}/>
           ))}
         </ul>
       </div>

@@ -5,8 +5,8 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.clear(); // Clear all stored user details
-    navigate("/auth"); // Redirect to the login page
+    localStorage.clear(); 
+    navigate("/auth");
   };
 
   return (

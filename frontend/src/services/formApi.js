@@ -36,6 +36,8 @@ export const fetchForms = async (department_id, year_id, class_id) => {
       }
   
       const data = await response.json();
+      console.log("Create form : ", data);
+      
       return data;
     } catch (err) {
       throw new Error(err.message);

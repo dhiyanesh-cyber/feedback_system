@@ -42,6 +42,17 @@ const StudentPanel = () => {
     fetchFormsData();
   }, [navigate]);
 
+
+  const handleFormClick = async () => {
+    try {
+      navigate("/questionnaire");
+    } catch (error) {
+      console.log("Error while navigating : ", error);
+      
+    }
+  }
+
+
   if (loading) return <p className="text-center text-gray-600">Loading forms...</p>;
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
@@ -66,7 +77,8 @@ const StudentPanel = () => {
             forms.map((form) => (
               <li
                 key={form.form_id}
-                className="p-4 bg-gray-100 border-2 border-gray-300 rounded-lg text-black text-center w-full"
+                className="p-4 bg-gray-100 border-2 border-gray-300 rounded-lg text-black text-center w-full cursor-pointer"
+                onClick={handleFormClick}
               >
                 <p>
                   <strong>Subject Code:</strong> {form.subject_id}
