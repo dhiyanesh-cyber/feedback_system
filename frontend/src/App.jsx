@@ -14,7 +14,7 @@ import StudentPanel from "./pages/student/StudentPanel";
 import YearSelection from "./components/admin/YearSelection";
 import ClassList from "./components/admin/ClassList";
 import AddDetails from "./components/admin/AddDetails";
-import PublishPage from "./components/admin/Publishpage";
+import PublishPage from "./components/admin/PublishPage";
 import Questionnaire from "./components/Questionnaire";
 
 import "./index.css";
@@ -24,7 +24,6 @@ import AdminFormsPage from "./components/admin/AdminFormsPage";
 // Protected route for authentication and role-based access
 const ProtectedRoute = ({ children, role }) => {
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
-  console.log("from app : ", userDetails.role);
 
   if (!userDetails) {
     return <Navigate to="/auth" replace />;

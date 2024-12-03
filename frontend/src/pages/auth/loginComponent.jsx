@@ -4,6 +4,7 @@ import { validateStudentLogin } from "../../services/auth/studentAuthentication"
 import { useNavigate } from "react-router-dom";
 import { validateAdminLogin } from "../../services/auth/adminAuthentication";
 
+
 const LoginComponent = () => {
   const [isStudentLogin, setIsStudentLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
