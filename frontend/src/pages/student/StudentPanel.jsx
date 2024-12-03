@@ -42,9 +42,9 @@ const StudentPanel = () => {
   }, [navigate]);
 
 
-  const handleFormClick = async () => {
+  const handleFormClick = async (form_id) => {
     try {
-      navigate("/questionnaire");
+      navigate(`/student-panel/${JSON.parse(localStorage.getItem("userDetails")).registrationNumber}/form/${form_id}`);
     } catch (error) {
       console.log("Error while navigating : ", error);
       
@@ -75,7 +75,7 @@ const StudentPanel = () => {
               <li
                 key={form.form_id}
                 className="p-4 bg-gray-100 border-2 border-gray-300 rounded-lg text-black text-center w-full cursor-pointer"
-                onClick={handleFormClick}
+                onClick={() => handleFormClick(form.form_id)}
               >
                 <p>
                   <strong>Subject Code:</strong> {form.subject_id}

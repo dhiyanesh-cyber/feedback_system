@@ -14,7 +14,8 @@ import StudentPanel from "./pages/student/StudentPanel";
 import YearSelection from "./components/admin/YearSelection";
 import ClassList from "./components/admin/ClassList";
 import AddDetails from "./components/admin/AddDetails";
-import PublishPage from "./components/admin/Publishpage";
+// import PublishPage from "./components/admin/Publishpage";
+import PublishPage from "./components/admin/PublishPage";
 import Questionnaire from "./components/Questionnaire";
 
 import "./index.css";
@@ -59,7 +60,7 @@ const App = () => {
               }
             />
             <Route
-              path="/questionnaire"
+              path="/student-panel/:student_id/form/:form_id"
               element={
                 <ProtectedRoute role="student">
                   <Questionnaire />
