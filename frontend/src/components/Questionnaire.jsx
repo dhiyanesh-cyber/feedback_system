@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { fetchAllQuestions } from "../services/questionApi";
 import { useNavigate, useParams } from "react-router-dom";
 import { postStudentResponse } from "../services/responseSubmissionApi";
+import Navbar from "../components/Nabvbar";
 
 const Questionnaire = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -74,6 +75,8 @@ const Questionnaire = () => {
   };
 
   return (
+    <>
+    <Navbar/>
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-4xl h-auto min-h-[300px]">
         {/* Progress Bar */}
@@ -135,6 +138,7 @@ const Questionnaire = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

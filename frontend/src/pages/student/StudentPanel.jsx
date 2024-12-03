@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { formResponsePopulate } from "../../utils/FormResponsePopulate";
 import FormCard from "../../components/student/FormCard";
+import Navbar from "../../components/Nabvbar";
 
 const StudentPanel = () => {
   const navigate = useNavigate();
@@ -45,6 +46,8 @@ const StudentPanel = () => {
   const filledForms = forms.filter((form) => form.status === "filled");
 
   return (
+    <>
+    <Navbar/>
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-3xl">
         <h1 className="text-2xl font-bold mb-4 text-center">
@@ -82,6 +85,7 @@ const StudentPanel = () => {
         )}
       </div>
     </div>
+    </>
   );
 };
 

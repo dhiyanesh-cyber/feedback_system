@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import Navbar from "../Nabvbar";
 
 const ClassList = () => {
   const { department_id, year_id } = useParams();
@@ -40,6 +41,8 @@ const ClassList = () => {
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
   return (
+    <>
+    <Navbar/>
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-lg bg-white rounded-xl shadow-2xl p-8">
         <h2 className="text-xl font-normal text-center text-black opacity-90 mb-6">Select Class</h2>
@@ -56,6 +59,7 @@ const ClassList = () => {
         </ul>
       </div>
     </div>
+    </>
   );
 };
 
