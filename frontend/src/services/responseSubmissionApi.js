@@ -33,3 +33,14 @@ export const postStudentResponse = async (student_responses) => {
     throw new Error(error.response?.data?.message || "Unable to post student response data");
   }
 };
+
+export const getFormResponseStatus = async (form_id) => {
+    const student_id = JSON.parse(localStorage.getItem("userDetails")).registrationNumber;
+    console.log(`${BASE_URL}/studentResponse/${student_id}/${form_id}`);
+    
+    const response = await fetch(`${BASE_URL}/studentResponse/${student_id}/${form_id}`);
+    const status = await response.json();
+    console.log("in api: " + status.status);
+    
+    return status;
+}

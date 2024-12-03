@@ -116,7 +116,7 @@ const Questionnaire = () => {
         </div>
 
         {/* Navigation Buttons */}
-        <div className="flex justify-start mt-6">
+        <div className="flex justify-between mt-6">
           <button
             onClick={handlePrevious}
             className={`px-4 py-2 bg-white text-gray-700 border rounded-md hover:bg-gray-100 ${
