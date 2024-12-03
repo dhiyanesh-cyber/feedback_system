@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchForms } from "../../services/formApi";
+import Navbar from "../../components/Nabvbar";
 
 const StudentPanel = () => {
   const navigate = useNavigate();
@@ -45,6 +46,8 @@ const StudentPanel = () => {
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
   return (
+    <>
+    <Navbar/>
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-6 rounded-lg shadow-md">
         <h1 className="text-2xl font-bold mb-4">
@@ -79,6 +82,7 @@ const StudentPanel = () => {
         </ul>
       </div>
     </div>
+    </>
   );
 };
 

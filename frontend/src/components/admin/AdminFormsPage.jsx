@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { fetchForms, createForm } from "../../services/formApi";
-import { fetchFacultyDetails } from "../../services/facultyApi"; // Import the new API function
+import { fetchFacultyDetails } from "../../services/facultyApi";
+import Navbar from "../../components/Nabvbar";
 
 const AdminFormsPage = () => {
   const { department_id, year_id, class_id } = useParams();
@@ -85,6 +86,8 @@ const AdminFormsPage = () => {
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
   return (
+    <>
+    <Navbar/>
     <div className="relative flex flex-col items-start justify-start min-h-screen bg-gray-100 p-10">
       <div className="flex flex-col items-start justify-start p-8">
         <h2 className="text-3xl font-normal text-center text-black opacity-90 mb-6">
@@ -157,6 +160,7 @@ const AdminFormsPage = () => {
         </div>
       )}
     </div>
+    </>
   );
 };
 
