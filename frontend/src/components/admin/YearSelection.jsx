@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import Navbar from "../../components/Nabvbar";
 
 const YearSelection = () => {
   const navigate = useNavigate();
@@ -18,6 +19,8 @@ const YearSelection = () => {
   };
 
   return (
+    <>
+    <Navbar/>
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-lg bg-white rounded-lg shadow-2xl p-8">
         <h2 className="text-xl font-normal text-center text-black opacity-90 mb-6">
@@ -36,6 +39,7 @@ const YearSelection = () => {
         </ul>
       </div>
     </div>
+    </>
   );
 };
 

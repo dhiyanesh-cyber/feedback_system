@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Navbar from "../components/Nabvbar";
 
 const Questionnaire = () => {
   // State to track the current question
@@ -40,6 +41,8 @@ const Questionnaire = () => {
   };
 
   return (
+    <>
+    <Navbar/>
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-4xl h-auto min-h-[300px]">
         {/* Progress Bar */}
@@ -102,6 +105,7 @@ const Questionnaire = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

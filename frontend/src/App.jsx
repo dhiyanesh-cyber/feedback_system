@@ -24,7 +24,6 @@ import AdminFormsPage from "./components/admin/AdminFormsPage";
 // Protected route for authentication and role-based access
 const ProtectedRoute = ({ children, role }) => {
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
-  console.log("from app : ", userDetails.role);
 
   if (!userDetails) {
     return <Navigate to="/auth" replace />;
