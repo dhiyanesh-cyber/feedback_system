@@ -10,7 +10,7 @@ const PublishPage = () => {
   const handlePublish = () => {
     console.log("Published Data:", entries);
     alert("Data Published Successfully!");
-    navigate("/admin"); // Redirect to the admin dashboard
+    navigate("/admin"); 
   };
 
   return (

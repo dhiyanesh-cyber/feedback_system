@@ -42,6 +42,22 @@ class StudentFormFetch {
       throw error;
     }
   }
+
+  static async deleteForm(form_id) {
+    try {
+      const [result] = await db.execute(
+        "DELETE FROM forms WHERE (form_id = ?);",
+        [form_id]
+      );
+
+      return {
+        message : "Form Deleted Successfully"
+      };
+    } catch (error) {
+      console.error("Error deleting form:", error);
+      throw error;
+    }
+  }
 }
 
 export default StudentFormFetch;

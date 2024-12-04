@@ -2,8 +2,10 @@
 
 export const fetchForms = async (department_id, year_id, class_id) => {
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/studentForms/${department_id}/${year_id}/${class_id}`
+      
+      console.log(`${import.meta.env.VITE_API_BASE_URL}`)      
+      const response = await fetch(  
+        `${import.meta.env.VITE_API_BASE_URL}/studentForms/${department_id}/${year_id}/${class_id}`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch forms.");
@@ -17,7 +19,7 @@ export const fetchForms = async (department_id, year_id, class_id) => {
   
   export const createForm = async (department_id, year_id, class_id, staff_id, subject_id) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/studentForms`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/studentForms`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -43,4 +45,26 @@ export const fetchForms = async (department_id, year_id, class_id) => {
       throw new Error(err.message);
     }
   };
+  
+  export const deleteForm = async (form_id) => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/studentForms/${form_id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to delete form.");
+      }
+  
+      const data = await response.json();
+      return data;
+    } catch (err) {
+      throw new Error(err.message);
+    }
+  };
+  
+
   
