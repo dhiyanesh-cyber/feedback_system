@@ -12,6 +12,8 @@ const ClassList = () => {
   useEffect(() => {
     const fetchClasses = async () => {
       try {
+        console.log(department_id);
+        
         const response = await fetch(
           `${import.meta.env.VITE_API_BASE_URL}/class/${department_id}/${year_id}`
         );

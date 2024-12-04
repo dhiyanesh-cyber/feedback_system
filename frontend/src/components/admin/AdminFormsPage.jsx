@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { fetchForms, createForm } from "../../services/formApi";
+import { fetchForms, createForm, deleteForm } from "../../services/formApi";
 import Navbar from "../../components/Nabvbar";
 import FacultyFormComponent from "./FacultyFormComponent";
 
 const AdminFormsPage = () => {
   const { department_id, year_id, class_id } = useParams();
-  const [forms, setForms] = useState([]); // Map to store faculty_id -> faculty_name
+  const [forms, setForms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -15,13 +15,12 @@ const AdminFormsPage = () => {
     subject_id: "",
   });
 
-  // Fetch forms and faculty details when the page loads
+  // Fetch forms when the page loads
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await fetchForms(department_id, year_id, class_id);
         setForms(data);
-
       } catch (err) {
         setError(err.message);
       } finally {
@@ -38,7 +37,7 @@ const AdminFormsPage = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  // Handle the create form action (POST request)
+  // Handle form creation
   const handleCreate = async () => {
     try {
       const data = await createForm(
@@ -66,6 +65,21 @@ const AdminFormsPage = () => {
     }
   };
 
+  // Handle form deletion with confirmation
+  const handleDelete = async (form_id) => {
+    const isConfirmed = window.confirm("Are you sure you want to delete this form?");
+    if (isConfirmed) {
+      try {
+        await deleteForm(form_id); // Proceed with form deletion
+        // Immediately update the UI by removing the form
+        setForms((prevForms) => prevForms.filter((form) => form.form_id !== form_id));
+      } catch (err) {
+        console.error("Error deleting form:", err);
+        setError(err.message); // Handle error
+      }
+    }
+  };
+
   if (loading) return <p className="text-center text-gray-600">Loading forms...</p>;
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
@@ -79,7 +93,7 @@ const AdminFormsPage = () => {
           </h2>
           <ul className="space-x-4 flex flex-row">
             {forms.map((form) => (
-              <FacultyFormComponent key={form.form_id} form={form} />
+              <FacultyFormComponent key={form.form_id} form={form} onDelete={handleDelete} />
             ))}
           </ul>
         </div>

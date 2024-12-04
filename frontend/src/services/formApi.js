@@ -46,3 +46,25 @@ export const fetchForms = async (department_id, year_id, class_id) => {
     }
   };
   
+  export const deleteForm = async (form_id) => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/studentForms/${form_id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to delete form.");
+      }
+  
+      const data = await response.json();
+      return data;
+    } catch (err) {
+      throw new Error(err.message);
+    }
+  };
+  
+
+  
