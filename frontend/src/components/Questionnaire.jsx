@@ -1,43 +1,77 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { fetchAllQuestions } from "../services/questionApi";
+import { useNavigate, useParams } from "react-router-dom";
+import { postStudentResponse } from "../services/responseSubmissionApi";
 import Navbar from "../components/Nabvbar";
 
 const Questionnaire = () => {
-  // State to track the current question
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [questions, setQuestions] = useState([]);
+  const [response, setResponse] = useState([]);
 
-  // Example questions array
-  const questions = [
-    "You need to know code to be a web designer",
-    "Do you have prior experience in web development?",
-    "Are you interested in frontend, backend, or full-stack development?",
-    "Do you prefer working on individual projects or as part of a team?",
-    "What is your preferred programming language?",
-    // Add more questions up to 24
-  ];
+  const { form_id, student_id } = useParams();
+  const navigate = useNavigate();
 
-  // Options for each question (can be customized per question if needed)
-  const options = [
-    "New project",
-    "Existing project",
-    "Ongoing assistance or consultation",
-    "None of the above",
-  ];
+  // Options for each question
+  const options = [1, 2, 3, 4, 5];
 
-  // Total number of questions
+  useEffect(() => {
+    const fetchQuestionsData = async () => {
+      const questionsData = await fetchAllQuestions();
+      setQuestions(questionsData);
+    };
+    fetchQuestionsData();
+  }, []);
+
   const totalQuestions = questions.length;
 
-  // Function to handle going to the next question
   const handleNext = () => {
-    if (currentQuestionIndex < totalQuestions - 1) {
+    if (!response[currentQuestionIndex]) {
+      alert(
+        currentQuestionIndex === totalQuestions - 1
+          ? "Choose an option to submit your response."
+          : "Choose an option to answer the next question."
+      );
+      return;
+    }
+
+    if (currentQuestionIndex === totalQuestions - 1) {
+      handleSubmit();
+    } else {
       setCurrentQuestionIndex((prev) => prev + 1);
     }
   };
 
-  // Function to handle going to the previous question
   const handlePrevious = () => {
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex((prev) => prev - 1);
     }
+  };
+
+  const handleSubmit = async () => {
+    const submitResponse = response.map((element, index) => ({
+      response: element,
+      form_id,
+      student_id,
+      question_id: index + 1,
+    }));
+    console.log(submitResponse);
+    try {
+      await postStudentResponse(submitResponse);
+    } catch (error) {
+      console.log(error);
+      
+    }
+    
+    navigate("/student-panel");
+  };
+
+  const handleOptionSelect = (option) => {
+    setResponse((prev) => {
+      const updatedResponse = [...prev];
+      updatedResponse[currentQuestionIndex] = option;
+      return updatedResponse;
+    });
   };
 
   return (
@@ -64,7 +98,8 @@ const Questionnaire = () => {
 
         {/* Question Text */}
         <div className="text-center text-gray-800 font-semibold mb-6">
-          {questions[currentQuestionIndex]}
+          {questions.length > 0 &&
+            questions[currentQuestionIndex]?.question_text}
         </div>
 
         {/* Options */}
@@ -75,6 +110,8 @@ const Questionnaire = () => {
                 type="radio"
                 name={`question-${currentQuestionIndex}`}
                 className="form-radio text-black"
+                onChange={() => handleOptionSelect(option)}
+                checked={response[currentQuestionIndex] === option}
               />
               <span className="text-gray-700">{option}</span>
             </label>
@@ -94,13 +131,9 @@ const Questionnaire = () => {
           </button>
           <button
             onClick={handleNext}
-            className={`px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 ${
-              currentQuestionIndex === totalQuestions - 1 &&
-              "opacity-50 cursor-not-allowed"
-            }`}
-            disabled={currentQuestionIndex === totalQuestions - 1}
+            className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800"
           >
-            Next
+            {currentQuestionIndex === totalQuestions - 1 ? "Submit" : "Next"}
           </button>
         </div>
       </div>

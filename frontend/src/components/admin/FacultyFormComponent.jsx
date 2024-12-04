@@ -7,6 +7,7 @@ const FacultyFormComponent = ({form}) => {
     useEffect(() => {
 
         const getFacultyDetails = async () => {
+            
             const facultyResponse = await fetchFacultyDetails(form.faculty_id)
             // const facultyData = await facultyResponse.json();
             console.log("Inside cmp : ",facultyResponse);

@@ -21,3 +21,13 @@ export const createFormInDB = async (department_code, year, class_name, subject_
     throw error;
   }
 };
+
+export const deleteFormById = async (form_id) => {
+  try {
+    const deleteResponse = await StudentFormFetch.deleteForm(form_id);
+    return deleteResponse; 
+  } catch (error) {
+    console.error("Error deleting form : ", error)
+    throw error;
+  }
+}
