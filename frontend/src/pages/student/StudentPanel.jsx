@@ -59,7 +59,7 @@ const StudentPanel = () => {
   return (
     <>
     <Navbar/>
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 ">
       <div className="bg-white p-6 rounded-lg shadow-md">
         <h1 className="text-2xl font-bold mb-4">
           Welcome to the Student Panel

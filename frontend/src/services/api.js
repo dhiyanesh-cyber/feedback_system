@@ -13,15 +13,3 @@ export const fetchDepartments = async () => {
   }
 };
 
-export const fetchDetailsByEndpoint = async (endpoint) => {
-  try {
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}${endpoint}`);
-    if (!response.ok) {
-      throw new Error("Failed to fetch details");
-    }
-    return await response.json();
-  } catch (error) {
-    console.error("Error fetching details by endpoint:", error);
-    throw error;
-  }
-};

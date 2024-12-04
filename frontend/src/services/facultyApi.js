@@ -1,7 +1,7 @@
 export const fetchFacultyDetails = async (faculty_id) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/faculty/${faculty_id}`
+        `${import.meta.env.VITE_API_BASE_URL}/faculty/${faculty_id}`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch forms.");
