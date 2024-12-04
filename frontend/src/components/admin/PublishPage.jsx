@@ -1,5 +1,6 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import Navbar from "../Nabvbar";
 
 const PublishPage = () => {
   const location = useLocation();
@@ -13,6 +14,8 @@ const PublishPage = () => {
   };
 
   return (
+    <>
+    <Navbar/>
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-lg bg-white rounded-xl shadow-2xl p-8">
         <h2 className="text-3xl font-extrabold text-center text-black opacity-90 mb-6">Publish Entries</h2>
@@ -38,6 +41,7 @@ const PublishPage = () => {
         </button>
       </div>
     </div>
+    </>
   );
 };
 

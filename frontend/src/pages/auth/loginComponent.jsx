@@ -4,6 +4,7 @@ import { validateStudentLogin } from "../../services/auth/studentAuthentication"
 import { useNavigate } from "react-router-dom";
 import { validateAdminLogin } from "../../services/auth/adminAuthentication";
 
+
 const LoginComponent = () => {
   const [isStudentLogin, setIsStudentLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
@@ -47,6 +48,7 @@ const LoginComponent = () => {
           name: data.student.student_name,
           department: data.student.student_department,
           year: data.student.student_year,
+          class: data.student.class
         };
   
         localStorage.setItem("userDetails", JSON.stringify(studentDetails));
