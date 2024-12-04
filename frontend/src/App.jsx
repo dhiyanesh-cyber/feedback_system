@@ -58,7 +58,7 @@ const App = () => {
               }
             />
             <Route
-              path="/questionnaire"
+              path="/student-panel/:student_id/form/:form_id"
               element={
                 <ProtectedRoute role="student">
                   <Questionnaire />
