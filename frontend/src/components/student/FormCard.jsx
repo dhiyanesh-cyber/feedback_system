@@ -15,7 +15,7 @@ const FormCard = ({form}) => {
     <li
     
     className={`p-4 bg-gray-100 border-2 border-gray-300 rounded-lg text-black text-center w-full  ${form.status === 'filled' ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'} `}
-    onClick={() => handleFormClick(form.form_id)}
+    onClick={() => {form.status !== 'filled' && handleFormClick(form.form_id)}}
     disabled={form.status === 'filled'}
   >
     <p>
