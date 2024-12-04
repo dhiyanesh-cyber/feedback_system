@@ -13,7 +13,10 @@ const Questionnaire = () => {
   const navigate = useNavigate();
 
   // Options for each question
-  const options = [1, 2, 3, 4, 5];
+  const options = ['Poor', 'Not Bad', 'Average', 'Good', 'Excellent'];
+  //value for each options
+  const values = [1, 2, 3, 4, 5];
+
 
   useEffect(() => {
     const fetchQuestionsData = async () => {
@@ -66,10 +69,10 @@ const Questionnaire = () => {
     navigate("/student-panel");
   };
 
-  const handleOptionSelect = (option) => {
+  const handleOptionSelect = (index) => {
     setResponse((prev) => {
       const updatedResponse = [...prev];
-      updatedResponse[currentQuestionIndex] = option;
+      updatedResponse[currentQuestionIndex] = values[index];
       return updatedResponse;
     });
   };
@@ -110,8 +113,8 @@ const Questionnaire = () => {
                 type="radio"
                 name={`question-${currentQuestionIndex}`}
                 className="form-radio text-black"
-                onChange={() => handleOptionSelect(option)}
-                checked={response[currentQuestionIndex] === option}
+                onChange={() => handleOptionSelect(index)}
+                checked={response[currentQuestionIndex] - 1 === index}
               />
               <span className="text-gray-700">{option}</span>
             </label>
