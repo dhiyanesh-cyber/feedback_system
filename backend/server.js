@@ -10,6 +10,8 @@ import studentResponseRouter from "./routes/studentResponseRoutes.js"
 import subjectRouter from "./routes/subjectRoutes.js"
 import dotenv from "dotenv";
 import cors from "./config/corsConfig.js"
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 dotenv.config();
 // const cors = require('cors');
@@ -18,6 +20,11 @@ dotenv.config();
 
 const app = express();
 app.use(cors);
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
 
 
 const PORT = process.env.PORT || 3000;
@@ -31,6 +38,11 @@ app.use("/api/questions", questionsRouter);
 app.use("/api/faculty", facultyRouter);
 app.use("/api/studentResponse", studentResponseRouter)
 app.use("/api/subject",  subjectRouter)
+
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/dist', 'index.html'));
+  });
 
 app.listen(PORT, () => {
     console.log("server started successfully");
