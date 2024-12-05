@@ -26,7 +26,6 @@ const StudentPanel = () => {
         const data = await formResponsePopulate(userDetails);
         setForms(data);
         console.log(data);
-        
       } catch (err) {
         console.error("Error fetching forms:", err);
         setError(err.message);
@@ -47,44 +46,48 @@ const StudentPanel = () => {
 
   return (
     <>
-    <Navbar/>
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-3xl">
-        <h1 className="text-2xl font-bold mb-4 text-center">
-          Welcome to the Student Panel
-        </h1>
-        <p className="text-lg mb-6 text-center">
-          Hello,
-          <strong> {JSON.parse(localStorage.getItem("userDetails")).name} </strong>
-          with Registration Number:{" "}
-          <strong>{JSON.parse(localStorage.getItem("userDetails")).registrationNumber}</strong>
-        </p>
+      <Navbar />
+      <div className="flex flex-col items-center justify-start px-6 pt-14 min-h-screen bg-gray-100">
+        <div className="bg-white p-6 rounded-lg shadow-md  w-full max-w-3xl sm:p-8 md:p-10 m-5">
+          <h1 className="text-xl font-bold mb-4 text-center sm:text-3xl">
+            Welcome to the Student Panel
+          </h1>
+          <p className="text-lg mb-6 text-center">
+            Hello,
+            <strong> {JSON.parse(localStorage.getItem("userDetails")).name} </strong>
+            with Registration Number:{" "}
+            <strong>{JSON.parse(localStorage.getItem("userDetails")).registrationNumber}</strong>
+          </p>
 
-        {/* Not-Filled Forms Section */}
-        <h2 className="text-xl font-semibold mb-4 text-left">Not-Filled Forms:</h2>
-        {notFilledForms.length > 0 ? (
-          <ul className="space-y-4">
-            {notFilledForms.map((form) => (
-              <FormCard key={form.form_id} form={form} />
-            ))}
-          </ul>
-        ) : (
-          <p className="text-gray-600">All forms are filled.</p>
-        )}
-
-        {/* Filled Forms Section */}
-        {filledForms.length > 0 && (
-          <>
-            <h2 className="text-xl font-semibold mt-8 mb-4 text-left">Filled Forms:</h2>
+          {/* Not-Filled Forms Section */}
+          <h2 className="text-lg font-semibold mb-4 text-left sm:text-2xl">
+            Yet to fill :
+          </h2>
+          {notFilledForms.length > 0 ? (
             <ul className="space-y-4">
-              {filledForms.map((form) => (
+              {notFilledForms.map((form) => (
                 <FormCard key={form.form_id} form={form} />
               ))}
             </ul>
-          </>
-        )}
+          ) : (
+            <p className="text-gray-600">All forms are filled.</p>
+          )}
+
+          {/* Filled Forms Section */}
+          {filledForms.length > 0 && (
+            <>
+              <h2 className="text-lg font-semibold mt-8 mb-4 text-left sm:text-2xl">
+                Filled Forms :
+              </h2>
+              <ul className="space-y-4">
+                {filledForms.map((form) => (
+                  <FormCard key={form.form_id} form={form} />
+                ))}
+              </ul>
+            </>
+          )}
+        </div>
       </div>
-    </div>
     </>
   );
 };

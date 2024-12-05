@@ -1,10 +1,10 @@
-export const fetchFacultyDetails = async (faculty_id) => {
+export const fetchSubjectDetails = async (subject_code) => {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/faculty/${faculty_id}`
+        `${import.meta.env.VITE_API_BASE_URL}/subject/${subject_code}`
       );
       if (!response.ok) {
-        throw new Error("Failed to fetch faculty details.");
+        throw new Error("Failed to fetch subject.");
       }
       const data = await response.json();
       return data;
