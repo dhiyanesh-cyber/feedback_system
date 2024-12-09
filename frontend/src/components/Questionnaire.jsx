@@ -80,7 +80,7 @@ const Questionnaire = () => {
   return (
     <>
     <Navbar/>
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex flex-col items-center justify-start pt-28 px-4 min-h-screen bg-gray-100">
       <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-4xl h-auto min-h-[300px]">
         {/* Progress Bar */}
         <div className="text-center font-medium text-gray-700 mb-4">
@@ -106,7 +106,7 @@ const Questionnaire = () => {
         </div>
 
         {/* Options */}
-        <div className="space-y-4">
+        <div className="space-y-4 sm:space-y-0 flex flex-col md:flex-row md:justify-evenly md:space-x-4">
           {options.map((option, index) => (
             <label key={index} className="flex items-center space-x-3">
               <input
