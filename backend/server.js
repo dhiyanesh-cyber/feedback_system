@@ -27,6 +27,7 @@ const __dirname = path.dirname(__filename);
 app.use(express.static(path.join(__dirname, 'dist')));
 
 
+
 const PORT = process.env.PORT || 3000;
 app.use(json());
 app.use("/api/departments", departmentRouter);

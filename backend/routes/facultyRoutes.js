@@ -1,7 +1,8 @@
 import { Router } from "express";
-import { getFaculty } from "../controllers/facultyController.js";
+import { getAllFaculty, getFaculty } from "../controllers/facultyController.js";
 const router = Router();
 
+router.get("/ids", getAllFaculty);
 
 router.get("/:faculty_id", getFaculty);
 

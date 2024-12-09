@@ -8,3 +8,12 @@ export const getSubjectNameService = async (sub_code) => {
         console.error("Error fetching subject name ", error)
     }
 }
+
+export const getAllSubjects = async () => {
+    try {
+        const subjects_id = SubjectModel.getAllSubjects();
+        return subjects_id;
+    } catch (error) {
+        console.error("Error fetching subject ids ", error)
+    }
+}
