@@ -13,7 +13,10 @@ const Questionnaire = () => {
   const navigate = useNavigate();
 
   // Options for each question
-  const options = [1, 2, 3, 4, 5];
+  const options = ['Poor', 'Not Bad', 'Average', 'Good', 'Excellent'];
+  //value for each options
+  const values = [1, 2, 3, 4, 5];
+
 
   useEffect(() => {
     const fetchQuestionsData = async () => {
@@ -66,10 +69,10 @@ const Questionnaire = () => {
     navigate("/student-panel");
   };
 
-  const handleOptionSelect = (option) => {
+  const handleOptionSelect = (index) => {
     setResponse((prev) => {
       const updatedResponse = [...prev];
-      updatedResponse[currentQuestionIndex] = option;
+      updatedResponse[currentQuestionIndex] = values[index];
       return updatedResponse;
     });
   };
@@ -77,7 +80,7 @@ const Questionnaire = () => {
   return (
     <>
     <Navbar/>
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex flex-col items-center justify-start pt-28 px-4 min-h-screen bg-gray-100">
       <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-4xl h-auto min-h-[300px]">
         {/* Progress Bar */}
         <div className="text-center font-medium text-gray-700 mb-4">
@@ -103,15 +106,15 @@ const Questionnaire = () => {
         </div>
 
         {/* Options */}
-        <div className="space-y-4">
+        <div className="space-y-4 sm:space-y-0 flex flex-col md:flex-row md:justify-evenly md:space-x-4">
           {options.map((option, index) => (
             <label key={index} className="flex items-center space-x-3">
               <input
                 type="radio"
                 name={`question-${currentQuestionIndex}`}
                 className="form-radio text-black"
-                onChange={() => handleOptionSelect(option)}
-                checked={response[currentQuestionIndex] === option}
+                onChange={() => handleOptionSelect(index)}
+                checked={response[currentQuestionIndex] - 1 === index}
               />
               <span className="text-gray-700">{option}</span>
             </label>
