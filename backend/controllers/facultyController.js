@@ -1,4 +1,4 @@
-import { getFacultyById } from "../services/facultyService.js";
+import { getAllFaculty as _getAllFaculty, getFacultyById } from "../services/facultyService.js";
 
 export const getFaculty = async (req, res) => {
     try {
@@ -14,3 +14,14 @@ export const getFaculty = async (req, res) => {
       res.status(500).json({ message: "Internal server error" });
     }
   };
+
+  export const getAllFaculty = async (req, res) => {
+    try {
+  
+      const faculty_ids = await _getAllFaculty();
+      res.status(200).json(faculty_ids);
+    } catch (error) {
+      console.error("Error fetching faculty id details:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  };  
