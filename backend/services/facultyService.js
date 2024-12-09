@@ -9,3 +9,13 @@ export const getFacultyById = async (faculty_id) => {
       throw error;
     }
   };
+
+  export const getAllFaculty = async () => {
+    try {
+      const faculty_ids = await FacultyModel.getAllFaculty();
+      return faculty_ids;
+    } catch (error) {
+      console.error("Error fetching faculty id details:", error);
+      throw error;
+    }
+  }; 
