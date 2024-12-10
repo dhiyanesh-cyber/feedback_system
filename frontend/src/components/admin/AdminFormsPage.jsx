@@ -131,7 +131,8 @@ const AdminFormsPage = () => {
                     <ul className="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-lg shadow-md max-h-40 overflow-y-auto z-10">
                       {facultyIds
                         .filter((faculty) =>
-                          faculty.faculty_name.toLowerCase().includes(facultySearch.toLowerCase())
+                          faculty.faculty_name.toLowerCase().includes(facultySearch.toLowerCase()) || 
+                          faculty.code.toString().includes(facultySearch.toLowerCase())
                         )
                         .map((faculty) => (
                           <li
@@ -167,7 +168,8 @@ const AdminFormsPage = () => {
                     <ul className="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-lg shadow-md max-h-40 overflow-y-auto z-10">
                       {subjectIds
                         .filter((subject) =>
-                          subject.sub_name.toLowerCase().includes(subjectSearch.toLowerCase())
+                          subject.sub_name.toLowerCase().includes(subjectSearch.toLowerCase()) || 
+                          subject.sub_code.toLowerCase().includes(subjectSearch.toLowerCase())
                         )
                         .map((subject) => (
                           <li
