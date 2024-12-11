@@ -21,6 +21,24 @@ class StudentFormFetch {
     }
   }
 
+  static async findFormsByFaculty(faculty_id){
+    try {
+      if (!faculty_id) {
+        throw new Error("faculty id is needed");
+      }
+
+      const [forms] = await db.execute(
+        "SELECT * FROM forms WHERE faculty_id = ?",
+        [faculty_id]
+      )
+
+      return forms;
+    } catch (error) {
+      console.error("Error fetching forms:", error);
+      throw error;
+    }
+  }
+
   // Method to insert a new form into the database
   static async insertForm(department_id, year, class_name, subject_id, faculty_id) {
     try {

@@ -8,6 +8,7 @@ import questionsRouter from "./routes/questionRoutes.js"
 import facultyRouter from "./routes/facultyRoutes.js"
 import studentResponseRouter from "./routes/studentResponseRoutes.js"
 import subjectRouter from "./routes/subjectRoutes.js"
+import reportRouter from "./routes/reportRoutes.js"
 import dotenv from "dotenv";
 import cors from "./config/corsConfig.js"
 
@@ -32,6 +33,7 @@ app.use("/api/questions", questionsRouter);
 app.use("/api/faculty", facultyRouter);
 app.use("/api/studentResponse", studentResponseRouter)
 app.use("/api/subject",  subjectRouter)
+app.use("/api/report", reportRouter)
 
 app.listen(PORT, () => {
     console.log("server started successfully");
