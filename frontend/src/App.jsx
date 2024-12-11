@@ -20,6 +20,8 @@ import Questionnaire from "./components/Questionnaire";
 import "./index.css";
 import DepartmentList from "./components/admin/DepartmentList";
 import AdminFormsPage from "./components/admin/AdminFormsPage";
+import ReportPage from "./pages/admin/ReportPage";
+import ReportPageFaculty from "./pages/admin/ReportPageFaculty";
 
 // Protected route for authentication and role-based access
 const ProtectedRoute = ({ children, role }) => {
@@ -75,6 +77,22 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/admin/report/"
+              element={
+                <ProtectedRoute role="admin">
+                  <ReportPage/>
+                </ProtectedRoute>
+              }
+              />
+            <Route
+              path="/admin/report/:faculty_id"
+              element={
+                <ProtectedRoute role="admin">
+                  <ReportPageFaculty/>
+                </ProtectedRoute>
+              }
+              />
             <Route
               path="/admin/departments/:department_id/years"
               element={
