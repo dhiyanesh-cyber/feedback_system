@@ -24,7 +24,7 @@ const FacultyFormComponent = ({ form, onDelete }) => {
 
 
     return (
-        <li className="p-4 bg-white border-2 border-gray-300 rounded-lg text-black text-center w-60 place-self-center">
+        <li className="p-4 pb-0 px-0 bg-white border-2 border-gray-300 rounded-lg text-black text-center w-60 place-self-center">
             <p>{form.subject_id}</p>{
                 facultyDetails ? <><p className="font-semibold">{facultyDetails.faculty_name}</p> <p>({form.faculty_id})</p> </> : <p>Loading faculty...</p>
             }
@@ -32,7 +32,7 @@ const FacultyFormComponent = ({ form, onDelete }) => {
             {onDelete && (
                 <button
                     onClick={() => onDelete(form.form_id)}
-                    className="ml-auto px-2 py-1 rounded bg-red-600 text-white hover:text-red-800 transition"
+                    className="ml-auto mt-3 px-2 w-full py-1 rounded rounded-t-none bg-red-600 text-white hover:bg-red-800 transition"
                     title="Delete Form">
                     Delete
                 </button>

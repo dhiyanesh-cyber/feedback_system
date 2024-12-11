@@ -20,7 +20,7 @@ const AdminFormsPage = () => {
   const [subjectIds, setSubjectIds] = useState([]);
   const [facultySearch, setFacultySearch] = useState("");
   const [subjectSearch, setSubjectSearch] = useState("");
-  const [isfacultySelected, setIsFacultySelected] = useState(false);
+  const [isFacultySelected, setIsFacultySelected] = useState(false);
   const [isSubjectSelected, setIsSubjectSelected] = useState(false);
 
   useEffect(() => {
@@ -72,11 +72,15 @@ const AdminFormsPage = () => {
   };
 
   const handleDelete = async (form_id) => {
-    const isConfirmed = window.confirm("Are you sure you want to delete this form?");
+    const isConfirmed = window.confirm(
+      "Are you sure you want to delete this form?"
+    );
     if (isConfirmed) {
       try {
         await deleteForm(form_id);
-        setForms((prevForms) => prevForms.filter((form) => form.form_id !== form_id));
+        setForms((prevForms) =>
+          prevForms.filter((form) => form.form_id !== form_id)
+        );
       } catch (err) {
         console.error("Error deleting form:", err);
         setError(err.message);
@@ -90,13 +94,21 @@ const AdminFormsPage = () => {
   return (
     <>
       <Navbar />
-      <div className="relative flex flex-col items-start justify-start min-h-screen bg-gray-100 p-10">
+      <div className="relative flex flex-col items-start justify-start min-h-screen bg-gray-100 p-10 max-w-screen">
         <h2 className="text-3xl font-normal text-center text-black opacity-90 mb-6">
-          Forms for <span className="font-bold">{department_id}, {year_id}th Year, Class: {class_id}</span>
+          Forms for{" "}
+          <span className="font-bold">
+            {department_id}, Year :{year_id}, Class: {class_id}
+          </span>
         </h2>
-        <ul className="space-x-4 flex flex-row">
+        <ul className="flex flex-wrap gap-4 overflow-hidden">
           {forms.map((form) => (
-            <FacultyFormComponent key={form.form_id} form={form} onDelete={handleDelete} />
+            <FacultyFormComponent
+              key={form.form_id}
+              form={form}
+              onDelete={handleDelete}
+              className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4"
+            />
           ))}
         </ul>
 
@@ -114,24 +126,27 @@ const AdminFormsPage = () => {
                 Add Details for Class: {class_id}
               </h2>
               <div className="space-y-4">
-                {/* Faculty Search */}
                 <div className="flex flex-col relative">
-                  <label className="font-medium text-md text-gray-900 mb-1">Search Staff</label>
+                  <label className="font-medium text-md text-gray-900 mb-1">
+                    Search Staff
+                  </label>
                   <input
                     type="text"
                     placeholder="Type to search staff"
                     value={facultySearch}
                     onChange={(e) => {
-                      setFacultySearch(e.target.value)
+                      setFacultySearch(e.target.value);
                       setIsFacultySelected(false);
                     }}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300"
                   />
-                  {(facultySearch && !isfacultySelected) && (
+                  {facultySearch && !isFacultySelected && (
                     <ul className="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-lg shadow-md max-h-40 overflow-y-auto z-10">
                       {facultyIds
                         .filter((faculty) =>
-                          faculty.faculty_name.toLowerCase().includes(facultySearch.toLowerCase())
+                          faculty.faculty_name
+                            .toLowerCase()
+                            .includes(facultySearch.toLowerCase())
                         )
                         .map((faculty) => (
                           <li
@@ -150,9 +165,10 @@ const AdminFormsPage = () => {
                   )}
                 </div>
 
-                {/* Subject Search */}
                 <div className="flex flex-col relative">
-                  <label className="font-medium text-md text-gray-900 mb-1">Search Subject</label>
+                  <label className="font-medium text-md text-gray-900 mb-1">
+                    Search Subject
+                  </label>
                   <input
                     type="text"
                     placeholder="Type to search subject"
@@ -163,11 +179,13 @@ const AdminFormsPage = () => {
                     }}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300"
                   />
-                  {(subjectSearch && !isSubjectSelected) && (
+                  {subjectSearch && !isSubjectSelected && (
                     <ul className="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-lg shadow-md max-h-40 overflow-y-auto z-10">
                       {subjectIds
                         .filter((subject) =>
-                          subject.sub_name.toLowerCase().includes(subjectSearch.toLowerCase())
+                          subject.sub_name
+                            .toLowerCase()
+                            .includes(subjectSearch.toLowerCase())
                         )
                         .map((subject) => (
                           <li
