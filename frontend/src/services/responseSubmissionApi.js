@@ -9,7 +9,7 @@ export const postStudentResponse = async (student_responses) => {
         const response = await fetch(`${BASE_URL}/studentResponse`, {
             method: "POST",
             headers: {
-                'Content-Type': 'application/json', // Set the content type to JSON
+                'Content-Type': 'application/json', 
               },
             body: JSON.stringify({
                 student_register_number: student_response.student_id,
@@ -20,7 +20,6 @@ export const postStudentResponse = async (student_responses) => {
         });
 
         const data = await response.json();
-        console.log(data);
     })
 
     
@@ -36,11 +35,9 @@ export const postStudentResponse = async (student_responses) => {
 
 export const getFormResponseStatus = async (form_id) => {
     const student_id = JSON.parse(localStorage.getItem("userDetails")).registrationNumber;
-    console.log(`${BASE_URL}/studentResponse/${student_id}/${form_id}`);
     
     const response = await fetch(`${BASE_URL}/studentResponse/${student_id}/${form_id}`);
     const status = await response.json();
-    console.log("in api: " + status.status);
     
     return status;
 }

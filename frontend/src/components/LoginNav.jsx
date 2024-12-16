@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const Navbar = () => {
+const LoginNav = () => {
   const navigate = useNavigate();
   
 
@@ -23,18 +23,9 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Right Section: Logout Button */}
-
-      <div className="mt-2 sm:mt-0">
-        <button
-          onClick={handleLogout}
-          className="text-white bg-customGray px-4 py-2 rounded hover:bg-slate-400 ml-auto sm:mr-10"
-        >
-          Logout
-        </button>
-      </div>
+      
     </nav>
   );
 };
 
-export default Navbar;
+export default LoginNav;

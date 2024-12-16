@@ -16,6 +16,5 @@ export const formResponsePopulate = async (userDetails) => {
     })
   );
 
-  console.log(populatedData); // Check the populated data
   return populatedData;
 }
