@@ -101,7 +101,7 @@ const AdminFormsPage = () => {
             {department_id}, Year :{year_id}, Class: {class_id}
           </span>
         </h2>
-        <ul className="flex flex-wrap gap-4 overflow-hidden">
+        <ul className="flex flex-wrap flex-row justify-center gap-4 overflow-hidden">
           {forms.map((form) => (
             <FacultyFormComponent
               key={form.form_id}

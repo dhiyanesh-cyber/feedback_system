@@ -3,6 +3,7 @@ import { validateDateOfBirth } from "../../utils/auth/DobValidation";
 import { validateStudentLogin } from "../../services/auth/studentAuthentication";
 import { useNavigate } from "react-router-dom";
 import { validateAdminLogin } from "../../services/auth/adminAuthentication";
+import LoginNav from "../../components/LoginNav";
 
 
 const LoginComponent = () => {
@@ -83,9 +84,12 @@ const LoginComponent = () => {
 
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-6 rounded-lg shadow-md w-80">
-        <h2 className="text-xl font-bold mb-4">
+    <>
+    <LoginNav />
+    <div className="flex flex-col  items-center justify-start pt-32 min-h-screen bg-gray-50">
+      
+      <div className="bg-white p-6 rounded-xl border-2 border-gray-300x w-80">
+        <h2 className="text-xl text-customGray font-medium mb-4">
           {isStudentLogin ? "Student Login" : "Admin Login"}
         </h2>
         <form onSubmit={handleSubmit}>
@@ -93,7 +97,7 @@ const LoginComponent = () => {
             <>
               <div className="mb-4">
                 <label
-                  className="block text-sm font-medium mb-1"
+                  className="block text-customGray text-sm font-normal mb-1"
                   htmlFor="registrationNumber"
                 >
                   Registration Number
@@ -110,7 +114,7 @@ const LoginComponent = () => {
               </div>
               <div className="mb-4">
                 <label
-                  className="block text-sm font-medium mb-1"
+                  className="block text-customGray text-sm font-norma mb-1"
                   htmlFor="password"
                 >
                   Date Of Birth
@@ -132,7 +136,7 @@ const LoginComponent = () => {
             <>
               <div className="mb-4">
                 <label
-                  className="block text-sm font-medium mb-1"
+                  className="block text-customGray text-sm font-normal mb-1"
                   htmlFor="username"
                 >
                   Username
@@ -149,7 +153,7 @@ const LoginComponent = () => {
               </div>
               <div className="mb-4">
                 <label
-                  className="block text-sm font-medium mb-1"
+                  className="block text-sm text-customGray font-normal mb-1"
                   htmlFor="passwordAdmin"
                 >
                   Password
@@ -167,7 +171,7 @@ const LoginComponent = () => {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500"
+                    className="absolute inset-y-0 right-0 text-customGray flex items-center pr-3"
                   >
                     {showPassword ? "Hide" : "Show"}
                   </button>
@@ -186,7 +190,7 @@ const LoginComponent = () => {
           <button
             type="button"
             onClick={() => setIsStudentLogin(!isStudentLogin)}
-            className="text-customGray hover:underline"
+            className="text-customGray font-normal hover:underline"
           >
             {isStudentLogin
               ? "Click here if you are an Admin"
@@ -195,6 +199,7 @@ const LoginComponent = () => {
         </p>
       </div>
     </div>
+    </>
   );
 };
 

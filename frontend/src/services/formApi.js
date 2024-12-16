@@ -1,9 +1,6 @@
-// src/api.js
-
 export const fetchForms = async (department_id, year_id, class_id) => {
     try {
       
-      console.log(`${import.meta.env.VITE_API_BASE_URL}`)      
       const response = await fetch(  
         `${import.meta.env.VITE_API_BASE_URL}/studentForms/${department_id}/${year_id}/${class_id}`
       );

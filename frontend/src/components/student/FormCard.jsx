@@ -12,15 +12,11 @@ const FormCard = ({ form }) => {
 
     const getFacultyDetails = async () => {
       const facultyResponse = await fetchFacultyDetails(form.faculty_id)
-      console.log(facultyResponse[0]);
-
       setFacultyDetails(facultyResponse[0]);
     }
 
     const getSubjectDetails = async () => {
       const subjectResponse = await fetchSubjectDetails(form.subject_id)
-      console.log("Sub res : ", subjectResponse[0]);
-
       setSubjectDetails(subjectResponse[0]);
     }
 

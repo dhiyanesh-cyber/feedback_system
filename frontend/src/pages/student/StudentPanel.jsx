@@ -25,7 +25,6 @@ const StudentPanel = () => {
       try {
         const data = await formResponsePopulate(userDetails);
         setForms(data);
-        console.log(data);
       } catch (err) {
         console.error("Error fetching forms:", err);
         setError(err.message);
