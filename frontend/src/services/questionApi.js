@@ -5,7 +5,6 @@ export const fetchAllQuestions = async () => {
   try {
     const response = await fetch(`${BASE_URL}/questions/all`);
     const data = await response.json();
-    console.log(data);
     
     return data; 
   } catch (error) {

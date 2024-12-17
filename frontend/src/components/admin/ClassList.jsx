@@ -21,7 +21,6 @@ const ClassList = () => {
           throw new Error("Failed to fetch classes.");
         }
         const data = await response.json();
-        console.log("Classes : ", data);
         
         setClasses(data);
       } catch (err) {
@@ -36,7 +35,7 @@ const ClassList = () => {
 
   const handleClassClick = (classId) => {
     console.log("Class list : ", classId);
-    navigate(`/admin/departments/${department_id}/years/${year_id}/classes/${classId}/addForms`);
+    navigate(`/admin/departments/${department_id}/${year_id}/${classId}/`);
   };
 
   if (loading) return <p className="text-center text-gray-600">Loading classes...</p>;
@@ -44,7 +43,7 @@ const ClassList = () => {
 
   return (
     <>
-    <Navbar/>
+    <Navbar />
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-lg bg-white rounded-xl shadow-2xl p-8">
         <h2 className="text-xl font-normal text-center text-black opacity-90 mb-6">Select Class</h2>

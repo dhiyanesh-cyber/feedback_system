@@ -15,7 +15,7 @@ const YearSelection = () => {
 
   const handleYearClick = (yearId) => {
     // Navigate to class list page for the selected year
-    navigate(`/admin/departments/${department_id}/years/${yearId}/classes`);
+    navigate(`/admin/departments/${department_id}/${yearId}/`);
   };
 
   return (
