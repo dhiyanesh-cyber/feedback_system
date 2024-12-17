@@ -106,7 +106,7 @@ const Questionnaire = () => {
         </div>
 
         {/* Options */}
-        <div className="space-y-4">
+        <div className="space-x-4 flex flex-row justify-evenly">
           {options.map((option, index) => (
             <label key={index} className="flex items-center space-x-3">
               <input
