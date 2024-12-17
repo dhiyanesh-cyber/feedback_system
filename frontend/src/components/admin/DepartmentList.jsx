@@ -27,7 +27,7 @@ const DepartmentList = () => {
 
   const handleDepartmentClick = (departmentId) => {
     setCurrentEndpoint(`/departments/${departmentId}`);
-    navigate(`/admin/departments/${departmentId}/years`);
+    navigate(`/admin/departments/${departmentId}/`);
   };
 
   if (loading)

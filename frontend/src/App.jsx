@@ -94,7 +94,7 @@ const App = () => {
               }
               />
             <Route
-              path="/admin/departments/:department_id/years"
+              path="/admin/departments/:department_id/"
               element={
                 <ProtectedRoute role="admin">
                   <YearSelection />
@@ -102,7 +102,7 @@ const App = () => {
               }
             />
             <Route
-              path="/admin/departments/:department_id/years/:year_id/classes"
+              path="/admin/departments/:department_id/:year_id/"
               element={
                 <ProtectedRoute role="admin">
                   <ClassList />
@@ -110,7 +110,7 @@ const App = () => {
               }
             />
             <Route
-              path="/admin/departments/:department_id/years/:year_id/classes/:class_id/addForms"
+              path="/admin/departments/:department_id/:year_id/:class_id/"
               element={
                 <ProtectedRoute role="admin">
                   <AdminFormsPage />

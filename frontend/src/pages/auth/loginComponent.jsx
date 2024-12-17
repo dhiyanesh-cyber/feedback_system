@@ -41,7 +41,6 @@ const LoginComponent = () => {
         const data = await validateStudentLogin(registrationNumber, dob);
         alert("Login Successful!");
         
-        console.log(data);
         
         const studentDetails = {
           role: "student",
