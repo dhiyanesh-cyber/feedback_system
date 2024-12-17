@@ -1,0 +1,27 @@
+[
+    { "question": "Language", "responses": [1, 5, 4, 12, 13] },
+    { "question": "Voice Audibility", "responses": [5, 3, 6, 15, 1] },
+    { "question": "Voice Clarity", "responses": [10, 8, 4, 2, 0] },
+    { "question": "Voice Non-Monotonic", "responses": [11, 4, 5, 3, 1] },
+    { "question": "Written Communication (Legibility)", "responses": [9, 7, 6, 2, 1] },
+    { "question": "Terminology Introduction", "responses": [14, 6, 2, 3, 1] },
+    { "question": "Use of Diagrams", "responses": [13, 5, 3, 2, 1] },
+    { "question": "Equations and Flowcharts", "responses": [10, 7, 4, 2, 1] },
+    { "question": "Usage of LCD/Projector/Relevant Videos", "responses": [12, 6, 4, 1, 1] },
+    { "question": "Hands-on Abilities", "responses": [11, 5, 6, 2, 1] },
+    { "question": "Lab Demonstrations", "responses": [9, 7, 6, 2, 1] },
+    { "question": "Utilization of GCR/LMS/MOOCs", "responses": [14, 4, 5, 2, 0] },
+    { "question": "Questions and Answers Sessions (Interactive)", "responses": [13, 5, 4, 2, 1] },
+    { "question": "Problem-Solving Capability", "responses": [12, 6, 5, 1, 1] },
+    { "question": "Practical Knowledge", "responses": [15, 3, 4, 1, 1] },
+    { "question": "Completion of Five Units", "responses": [10, 7, 5, 1, 1] },
+    { "question": "Depth of Coverage", "responses": [12, 5, 4, 2, 1] },
+    { "question": "Conduct of Tutorials", "responses": [11, 6, 4, 2, 1] },
+    { "question": "Industrial Product Exposure", "responses": [10, 7, 6, 1, 1] },
+    { "question": "Guidance on Higher Studies/Opportunities", "responses": [13, 5, 4, 2, 1] },
+    { "question": "Conduct of special coaching beyond class hours", "responses": [12, 5, 5, 2, 0] },
+    { "question": "Personality - Unbiased", "responses": [14, 6, 3, 1, 0] },
+    { "question": "Personality - Cordial", "responses": [13, 7, 3, 1, 0] },
+    { "question": "Personality - Caring", "responses": [15, 4, 3, 1, 1] }
+  ]
+  
