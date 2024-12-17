@@ -47,8 +47,8 @@ const DepartmentList = () => {
   return (
     <>
     <Navbar/>
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 ">
-      <div className="w-full max-w-4xl p-8 bg-white rounded-xl shadow-2xl transform transition-all duration-300">
+    <div className="flex items-center justify-center min-h-screen bg-gray-50 ">
+      <div className="w-full max-w-4xl p-8 bg-white rounded-xl border-2 border-gray-300x transform transition-all duration-300">
         <h2 className="text-xl font-normal text-center mb-8 text-gray-800 tracking-tight">
           Select a Department
         </h2>
@@ -56,7 +56,7 @@ const DepartmentList = () => {
           {departments.map((department) => (
             <button
               key={department.department_code}
-              className="w-full py-4 px-6 font-normal text-black focus:outline-none bg-white border-2 border-gray-300 rounded-lg  hover:bg-customGray hover:text-white transform transition-all hover:scale-105 duration-200"
+              className="w-full py-4 px-6 font-normal text-black focus:outline-none bg-white border-2 border-gray-300 rounded-lg  hover:bg-customGray hover:text-white transform transition-all  duration-200"
               onClick={() => handleDepartmentClick(department.department_code)}
             >
               {department.department_name}
