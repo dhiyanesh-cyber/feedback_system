@@ -77,22 +77,23 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
+
             <Route
               path="/admin/report/"
               element={
                 <ProtectedRoute role="admin">
-                  <ReportPage/>
+                  <ReportPage />
                 </ProtectedRoute>
               }
-              />
+            />
             <Route
               path="/admin/report/:faculty_id"
               element={
                 <ProtectedRoute role="admin">
-                  <ReportPageFaculty/>
+                  <ReportPageFaculty />
                 </ProtectedRoute>
               }
-              />
+            />
             <Route
               path="/admin/departments/:department_id/"
               element={
