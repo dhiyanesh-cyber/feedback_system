@@ -21,6 +21,25 @@ class StudentFormFetch {
     }
   }
 
+  static async findFormsByYearAndClass(department_code, year, class_name) {
+    try {
+      if (!year || !class_name) {
+        throw new Error("All parameters must be provided");
+      }
+
+      const [forms] = await db.execute(
+        "SELECT * FROM forms WHERE year = ? AND class = ? AND department_id	= ?",
+        [year, class_name, department_code]
+      );
+
+      
+      return forms;
+    } catch (error) {
+      console.error("Error fetching forms:", error);
+      throw error;
+    }
+  }
+
   static async findFormsByFaculty(faculty_id){
     try {
       if (!faculty_id) {
