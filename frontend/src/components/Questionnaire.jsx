@@ -3,6 +3,8 @@ import { fetchAllQuestions } from "../services/questionApi";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { postStudentResponse } from "../services/responseSubmissionApi";
 import Navbar from "../components/Nabvbar";
+import { Card, CardBody } from "@nextui-org/react";
+
 
 const Questionnaire = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -88,8 +90,13 @@ const Questionnaire = () => {
       <div className="flex flex-col  items-center justify-start py-32 px-4 min-h-screen bg-gray-100">
         <div className="w-full flex flex-col items-center justify-center space-y-10 ">
           <div className=" flex flex-col justify-start align-start w-full max-w-4xl">
-            <p className="font-semibold text-lg">{facultyDetails.faculty_name} ({subjectDetails.sub_name})</p>
+            <Card>
+              <CardBody>
+                <p>{facultyDetails.faculty_name} ({subjectDetails.sub_name})</p>
+              </CardBody>
+            </Card>
           </div>
+
           <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-4xl h-auto min-h-[300px]">
             {/* Progress Bar */}
             <div className="text-center font-medium text-gray-700 mb-4">
