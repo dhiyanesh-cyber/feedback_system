@@ -180,7 +180,7 @@ function generatePDF(data) {
     });
 
     // Save the PDF
-    doc.save("ClassReports.pdf");
+    // doc.save("ClassReports.pdf");
     return doc;
 }
 
