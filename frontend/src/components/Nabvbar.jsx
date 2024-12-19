@@ -29,18 +29,18 @@ const Navbar = () => {
           src="/ssmlogo.png"
           onClick={handleLogoClick}
           alt="SSMIET Logo"
-          className="h-10 sm:h-14 ml-4 sm:ml-10 cursor-pointer"
+          className="h-16 sm:h-14 ml-4 sm:ml-10 cursor-pointer"
         />
         <div className="ml-6">
           <span className="hidden sm:block text-black text-lg sm:text-2xl font-semibold">
             SSM Institute of Engineering and Technology
           </span>
-          <span>An Autonomous Institution</span>
+          <span className="hidden sm:block">An Autonomous Institution</span>
         </div>
       </div>
 
       {/* Right Section: Logout Button and Settings Icon */}
-      <div className="flex items-center mt-2 sm:mt-0">
+      <div className="flex items-center sm:mt-0">
         {userDetails?.role === "admin" && (
           <button
             onClick={handleSettingsClick}

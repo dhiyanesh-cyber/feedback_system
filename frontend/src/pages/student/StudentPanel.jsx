@@ -33,6 +33,8 @@ const StudentPanel = () => {
       }
     };
 
+
+
     fetchFormsData();
   }, [navigate]);
 
@@ -47,7 +49,7 @@ const StudentPanel = () => {
     <>
       <Navbar />
       <div className="flex flex-col items-center justify-start px-6 pt-14 min-h-screen bg-gray-100">
-        <div className="bg-white p-6 rounded-lg shadow-md  w-full max-w-3xl sm:p-8 md:p-10 m-5">
+        <div className="bg-gray-50 p-6 rounded-lg border-2 border-gray-300x w-full max-w-3xl sm:p-8 md:p-10 m-5">
           <h1 className="text-xl font-bold mb-4 text-center sm:text-3xl">
             Welcome to the Student Panel
           </h1>

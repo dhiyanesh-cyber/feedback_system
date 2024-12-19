@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { fetchFacultyDetails } from '../../services/facultyApi';
 import { fetchSubjectDetails } from '../../services/subjectApi';
+import StudentPanel from '../../pages/student/StudentPanel';
 
 const FormCard = ({ form }) => {
 
@@ -30,12 +31,19 @@ const FormCard = ({ form }) => {
   const navigate = useNavigate();
   const handleFormClick = async (form_id) => {
     try {
-      navigate(`/student-panel/${JSON.parse(localStorage.getItem("userDetails")).registrationNumber}/form/${form_id}`);
+      navigate(`/student-panel/${JSON.parse(localStorage.getItem("userDetails")).registrationNumber}/form/${form_id}`, {
+        state:{
+          facultyDetails,
+          subjectDetails
+        }
+      });
     } catch (error) {
       console.log("Error while navigating : ", error);
 
     }
   }
+
+
   return (
     <li
 
