@@ -60,7 +60,7 @@ export const generateDepartmentReport = async (department_id) => {
     try {
         // Fetch class details
         const classDetails = await Class.getClassDetailsByDepartment(department_id);
-        console.log(classDetails);
+        // console.log(classDetails);
 
 
         for (const classDetail of classDetails) {
@@ -68,7 +68,7 @@ export const generateDepartmentReport = async (department_id) => {
             classDetail.forms = forms
 
         }
-        console.log(classDetails);
+        // console.log(classDetails);
 
 
         for (const classDetail of classDetails) {
