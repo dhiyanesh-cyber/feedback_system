@@ -21,6 +21,25 @@ class StudentFormFetch {
     }
   }
 
+  static async getFormById(form_id) {
+    try {
+      if (!form_id) {
+        throw new Error("All parameters must be provided");
+      }
+
+      const [form] = await db.execute(
+        "SELECT * FROM forms WHERE form_id = ? ",
+        [form_id]
+      );
+
+      
+      return form[0];
+    } catch (error) {
+      console.error("Error fetching form details:", error);
+      throw error;
+    }
+  }
+
   static async findFormsByFaculty(faculty_id){
     try {
       if (!faculty_id) {
