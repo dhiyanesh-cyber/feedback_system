@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { formResponsePopulate } from "../../utils/FormResponsePopulate";
 import FormCard from "../../components/student/FormCard";
 import Navbar from "../../components/Nabvbar";
+
 
 const StudentPanel = () => {
   const navigate = useNavigate();
@@ -10,7 +11,11 @@ const StudentPanel = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+
+
+
   useEffect(() => {
+
     const userDetails = JSON.parse(localStorage.getItem("userDetails"));
 
     // Check if the user is logged in and is a student
@@ -20,12 +25,14 @@ const StudentPanel = () => {
       return;
     }
 
+
+
+
     // Fetch forms for the student
     const fetchFormsData = async () => {
       try {
         const data = await formResponsePopulate(userDetails);
         setForms(data);
-        console.log(data);
       } catch (err) {
         console.error("Error fetching forms:", err);
         setError(err.message);
@@ -33,6 +40,8 @@ const StudentPanel = () => {
         setLoading(false);
       }
     };
+
+
 
     fetchFormsData();
   }, [navigate]);
@@ -48,7 +57,7 @@ const StudentPanel = () => {
     <>
       <Navbar />
       <div className="flex flex-col items-center justify-start px-6 pt-14 min-h-screen bg-gray-100">
-        <div className="bg-white p-6 rounded-lg shadow-md  w-full max-w-3xl sm:p-8 md:p-10 m-5">
+        <div className="bg-gray-50 p-6 rounded-lg border-2 border-gray-300x w-full max-w-3xl sm:p-8 md:p-10 m-5">
           <h1 className="text-xl font-bold mb-4 text-center sm:text-3xl">
             Welcome to the Student Panel
           </h1>

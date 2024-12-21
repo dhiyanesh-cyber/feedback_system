@@ -8,13 +8,13 @@ import questionsRouter from "./routes/questionRoutes.js"
 import facultyRouter from "./routes/facultyRoutes.js"
 import studentResponseRouter from "./routes/studentResponseRoutes.js"
 import subjectRouter from "./routes/subjectRoutes.js"
+import reportRouter from "./routes/reportRoutes.js"
 import dotenv from "dotenv";
 import cors from "./config/corsConfig.js"
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 dotenv.config();
-// const cors = require('cors');
 
 
 
@@ -38,12 +38,20 @@ app.use("/api/class", classRouter);
 app.use("/api/questions", questionsRouter);
 app.use("/api/faculty", facultyRouter);
 app.use("/api/studentResponse", studentResponseRouter)
-app.use("/api/subject",  subjectRouter)
+app.use("/api/subject", subjectRouter)
+app.use("/api/report", reportRouter)
+
+
+app.get('*', (req, res) => {
+
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
+
 
 
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'index.html'));
-  });
+});
 
 app.listen(PORT, () => {
     console.log("server started successfully");

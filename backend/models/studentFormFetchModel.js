@@ -13,7 +13,63 @@ class StudentFormFetch {
         [department_code, year, class_name]
       );
 
-      
+
+      return forms;
+    } catch (error) {
+      console.error("Error fetching forms:", error);
+      throw error;
+    }
+  }
+
+  static async getFormById(form_id) {
+    try {
+      if (!form_id) {
+        throw new Error("All parameters must be provided");
+      }
+
+      const [form] = await db.execute(
+        "SELECT * FROM forms WHERE form_id = ? ",
+        [form_id]
+      );
+
+
+      return form[0];
+    } catch (error) {
+      console.error("Error fetching form details:", error);
+      throw error;
+    }
+  }
+
+  static async findFormsByYearAndClass(department_code, year, class_name) {
+    try {
+      if (!year || !class_name) {
+        throw new Error("All parameters must be provided");
+      }
+
+      const [forms] = await db.execute(
+        "SELECT * FROM forms WHERE year = ? AND class = ? AND department_id	= ?",
+        [year, class_name, department_code]
+      );
+
+
+      return forms;
+    } catch (error) {
+      console.error("Error fetching forms:", error);
+      throw error;
+    }
+  }
+
+  static async findFormsByFaculty(faculty_id) {
+    try {
+      if (!faculty_id) {
+        throw new Error("faculty id is needed");
+      }
+
+      const [forms] = await db.execute(
+        "SELECT * FROM forms WHERE faculty_id = ?",
+        [faculty_id]
+      )
+
       return forms;
     } catch (error) {
       console.error("Error fetching forms:", error);
@@ -51,7 +107,7 @@ class StudentFormFetch {
       );
 
       return {
-        message : "Form Deleted Successfully"
+        message: "Form Deleted Successfully"
       };
     } catch (error) {
       console.error("Error deleting form:", error);

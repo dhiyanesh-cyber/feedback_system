@@ -25,7 +25,6 @@ export const insertStudentResponseController = async (req, res) => {
       }
   
       const studentResponse = await getStudentResponseByIdService(student_id, form_id);
-      console.log(studentResponse);
       
       res.status(200).json({status : studentResponse});
 

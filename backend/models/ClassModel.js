@@ -9,6 +9,14 @@ class Class {
     return classes;
   }
 
+  static async getClassDetailsByDepartment(code) {
+    const [classes] = await db.execute(
+      'SELECT * FROM class_details WHERE department_code = ?',
+      [code]
+    );
+    return classes;
+  }
+
 }
 
 export default Class;
