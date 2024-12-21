@@ -11,15 +11,21 @@ import subjectRouter from "./routes/subjectRoutes.js"
 import reportRouter from "./routes/reportRoutes.js"
 import dotenv from "dotenv";
 import cors from "./config/corsConfig.js"
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 dotenv.config();
-// const cors = require('cors');
 
 
 
 const app = express();
 app.use(cors);
 
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+app.use(express.static(path.join(__dirname, 'dist')));
 
 
 const PORT = process.env.PORT || 3000;
@@ -32,8 +38,15 @@ app.use("/api/class", classRouter);
 app.use("/api/questions", questionsRouter);
 app.use("/api/faculty", facultyRouter);
 app.use("/api/studentResponse", studentResponseRouter)
-app.use("/api/subject",  subjectRouter)
+app.use("/api/subject", subjectRouter)
 app.use("/api/report", reportRouter)
+
+
+app.get('*', (req, res) => {
+
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
+
 
 app.listen(PORT, () => {
     console.log("server started successfully");

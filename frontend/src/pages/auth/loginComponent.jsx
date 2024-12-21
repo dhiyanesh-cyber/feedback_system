@@ -39,9 +39,8 @@ const LoginComponent = () => {
       }
       try {
         const data = await validateStudentLogin(registrationNumber, dob);
-        alert("Login Successful!");
-        
-        
+
+
         const studentDetails = {
           role: "student",
           registrationNumber,
@@ -50,10 +49,11 @@ const LoginComponent = () => {
           year: data.student.student_year,
           class: data.student.class
         };
-  
+
         localStorage.setItem("userDetails", JSON.stringify(studentDetails));
-        
-        navigate("/student-panel")
+        const locationState = { msg: "Login successful", type: "success" }
+
+        navigate("/student-panel");
       } catch (error) {
         alert(error.message);
       }
@@ -72,7 +72,7 @@ const LoginComponent = () => {
           role: "admin",
           username
         };
-  
+
         localStorage.setItem("userDetails", JSON.stringify(adminDetails));
         navigate("/admin/departments");
       } catch (error) {
@@ -84,120 +84,120 @@ const LoginComponent = () => {
 
   return (
     <>
-    <LoginNav />
-    <div className="flex flex-col  items-center justify-start pt-32 min-h-screen bg-gray-50">
-      
-      <div className="bg-white p-6 rounded-xl border-2 border-gray-300x w-80">
-        <h2 className="text-xl text-customGray font-medium mb-4">
-          {isStudentLogin ? "Student Login" : "Admin Login"}
-        </h2>
-        <form onSubmit={handleSubmit}>
-          {isStudentLogin ? (
-            <>
-              <div className="mb-4">
-                <label
-                  className="block text-customGray text-sm font-normal mb-1"
-                  htmlFor="registrationNumber"
-                >
-                  Registration Number
-                </label>
-                <input
-                  type="text"
-                  name="registrationNumber"
-                  id="registrationNumber"
-                  value={credentials.registrationNumber}
-                  onChange={handleChange}
-                  required
-                  className="w-full p-2 border border-gray-300 rounded outline-1 focus:outline-customGray"
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  className="block text-customGray text-sm font-norma mb-1"
-                  htmlFor="password"
-                >
-                  Date Of Birth
-                </label>
-                <div className="relative">
+      <LoginNav />
+      <div className="flex flex-col  items-center justify-start pt-32 min-h-screen bg-gray-50">
+
+        <div className="bg-white p-6 rounded-xl border-2 border-gray-300x w-80">
+          <h2 className="text-xl text-customGray font-medium mb-4">
+            {isStudentLogin ? "Student Login" : "Admin Login"}
+          </h2>
+          <form onSubmit={handleSubmit}>
+            {isStudentLogin ? (
+              <>
+                <div className="mb-4">
+                  <label
+                    className="block text-customGray text-sm font-normal mb-1"
+                    htmlFor="registrationNumber"
+                  >
+                    Registration Number
+                  </label>
                   <input
-                    name="dob"
-                    id="dob"
-                    value={credentials.dob}
-                    onChange={handleChange}
-                    placeholder="yyyy-mm-dd"
-                    required
-                    className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-500"
-                  />
-                </div>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="mb-4">
-                <label
-                  className="block text-customGray text-sm font-normal mb-1"
-                  htmlFor="username"
-                >
-                  Username
-                </label>
-                <input
-                  type="text"
-                  name="username"
-                  id="username"
-                  value={credentials.username}
-                  onChange={handleChange}
-                  required
-                  className="w-full p-2 border border-gray-300 rounded outline-1 focus:outline-customGray"
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  className="block text-sm text-customGray font-normal mb-1"
-                  htmlFor="passwordAdmin"
-                >
-                  Password
-                </label>
-                <div className="relative">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    name="password"
-                    id="password"
-                    value={credentials.password}
+                    type="text"
+                    name="registrationNumber"
+                    id="registrationNumber"
+                    value={credentials.registrationNumber}
                     onChange={handleChange}
                     required
                     className="w-full p-2 border border-gray-300 rounded outline-1 focus:outline-customGray"
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 text-customGray flex items-center pr-3"
-                  >
-                    {showPassword ? "Hide" : "Show"}
-                  </button>
                 </div>
-              </div>
-            </>
-          )}
-          <button
-            type="submit"
-            className="w-full bg-customGray text-white p-2 rounded hover:bg-gray-700 transition duration-200"
-          >
-            Login
-          </button>
-        </form>
-        <p className="mt-4 text-sm text-center">
-          <button
-            type="button"
-            onClick={() => setIsStudentLogin(!isStudentLogin)}
-            className="text-customGray font-normal hover:underline"
-          >
-            {isStudentLogin
-              ? "Click here if you are an Admin"
-              : "Click here if you are a Student"}
-          </button>
-        </p>
+                <div className="mb-4">
+                  <label
+                    className="block text-customGray text-sm font-norma mb-1"
+                    htmlFor="password"
+                  >
+                    Date Of Birth
+                  </label>
+                  <div className="relative">
+                    <input
+                      name="dob"
+                      id="dob"
+                      value={credentials.dob}
+                      onChange={handleChange}
+                      placeholder="yyyy-mm-dd"
+                      required
+                      className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="mb-4">
+                  <label
+                    className="block text-customGray text-sm font-normal mb-1"
+                    htmlFor="username"
+                  >
+                    Username
+                  </label>
+                  <input
+                    type="text"
+                    name="username"
+                    id="username"
+                    value={credentials.username}
+                    onChange={handleChange}
+                    required
+                    className="w-full p-2 border border-gray-300 rounded outline-1 focus:outline-customGray"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label
+                    className="block text-sm text-customGray font-normal mb-1"
+                    htmlFor="passwordAdmin"
+                  >
+                    Password
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      id="password"
+                      value={credentials.password}
+                      onChange={handleChange}
+                      required
+                      className="w-full p-2 border border-gray-300 rounded outline-1 focus:outline-customGray"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute inset-y-0 right-0 text-customGray flex items-center pr-3"
+                    >
+                      {showPassword ? "Hide" : "Show"}
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
+            <button
+              type="submit"
+              className="w-full bg-customGray text-white p-2 rounded hover:bg-gray-700 transition duration-200"
+            >
+              Login
+            </button>
+          </form>
+          <p className="mt-4 text-sm text-center">
+            <button
+              type="button"
+              onClick={() => setIsStudentLogin(!isStudentLogin)}
+              className="text-customGray font-normal hover:underline"
+            >
+              {isStudentLogin
+                ? "Click here if you are an Admin"
+                : "Click here if you are a Student"}
+            </button>
+          </p>
+        </div>
       </div>
-    </div>
     </>
   );
 };

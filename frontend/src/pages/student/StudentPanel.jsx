@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { formResponsePopulate } from "../../utils/FormResponsePopulate";
 import FormCard from "../../components/student/FormCard";
 import Navbar from "../../components/Nabvbar";
+
 
 const StudentPanel = () => {
   const navigate = useNavigate();
@@ -10,7 +11,11 @@ const StudentPanel = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+
+
+
   useEffect(() => {
+
     const userDetails = JSON.parse(localStorage.getItem("userDetails"));
 
     // Check if the user is logged in and is a student
@@ -19,6 +24,9 @@ const StudentPanel = () => {
       navigate("/auth");
       return;
     }
+
+
+
 
     // Fetch forms for the student
     const fetchFormsData = async () => {

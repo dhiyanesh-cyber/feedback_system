@@ -32,7 +32,7 @@ const FormCard = ({ form }) => {
   const handleFormClick = async (form_id) => {
     try {
       navigate(`/student-panel/${JSON.parse(localStorage.getItem("userDetails")).registrationNumber}/form/${form_id}`, {
-        state:{
+        state: {
           facultyDetails,
           subjectDetails
         }
@@ -45,7 +45,7 @@ const FormCard = ({ form }) => {
 
 
   return (
-    <li
+    <button
 
       className={`p-4 bg-gray-100 border-2 border-gray-300 rounded-lg text-black text-center w-full  ${form.status === 'filled' ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'} `}
       onClick={() => handleFormClick(form.form_id)}
@@ -59,7 +59,7 @@ const FormCard = ({ form }) => {
         <strong>Subject :</strong> {subjectDetails.sub_name} ({form.subject_id})
       </p>
 
-    </li>
+    </button>
   )
 }
 
