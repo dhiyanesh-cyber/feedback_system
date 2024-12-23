@@ -41,6 +41,7 @@ const ProtectedRoute = ({ children, role }) => {
 
 const App = () => {
   return (
+
     <NextUIProvider>
       <UserProvider>
         <EndpointProvider>
