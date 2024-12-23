@@ -1,21 +1,38 @@
+// CustomModal.js
 import React from "react";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+} from "@nextui-org/react";
 
-const CustomModal = ({ message, onClose }) => {
+const CustomModal = ({ isOpen, onClose, backdrop, isLast, placement, radiud }) => {
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
-        <h2 className="text-lg font-semibold mb-4 text-center">Alert</h2>
-        <p className="text-gray-700 text-center">{message}</p>
-        <div className="flex justify-center mt-6">
-          <button
-            onClick={onClose} // Close modal when clicked
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
-          >
-            Close
-          </button>
-        </div>
-      </div>
-    </div>
+    <Modal className="mx-5" backdrop={backdrop} isOpen={isOpen} onClose={onClose} placement={placement}>
+      <ModalContent>
+        {(onClose) => (
+          <>
+            <ModalHeader className="flex flex-col gap-1"></ModalHeader>
+            <ModalBody>
+              <p>
+                {isLast
+                  ? "Choose an option to submit your response."
+                  : "Choose an option to answer the next question."}
+              </p>
+
+            </ModalBody>
+            <ModalFooter>
+              <Button color="danger" variant="light" onPress={onClose}>
+                Close
+              </Button>
+            </ModalFooter>
+          </>
+        )}
+      </ModalContent>
+    </Modal>
   );
 };
 
