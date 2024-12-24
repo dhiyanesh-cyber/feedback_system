@@ -44,15 +44,15 @@ const ClassList = () => {
   return (
     <>
     <Navbar />
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-lg bg-white rounded-xl shadow-2xl p-8">
+    <div className="flex flex-col items-center justify-start pt-32 min-h-screen bg-gray-50">
+      <div className="w-full max-w-lg bg-white rounded-xl border-2 border-gray-300x p-8">
         <h2 className="text-xl font-normal text-center text-black opacity-90 mb-6">Select Class</h2>
         <ul className="space-y-4">
           {classes.map((classItem) => (
             <li
               key={classItem.class_id}
               onClick={() => handleClassClick(classItem.class)}
-              className="p-4 bg-white border-2 border-gray-300 rounded-lg text-white-500 text-center cursor-pointer hover:text-white hover:bg-customGray transition duration-200 ease-in-out transform hover:scale-105 w-60 place-self-center"
+              className="p-4 bg-white border-2 border-gray-300 rounded-lg text-white-500 text-center cursor-pointer hover:text-white hover:bg-customGray transition duration-200 ease-in-out transform  w-60 place-self-center"
             >
               {classItem.class}
             </li>

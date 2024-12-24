@@ -5,7 +5,7 @@
     { "question": "Voice Non-Monotonic", "responses": [11, 4, 5, 3, 1] },
     { "question": "Written Communication (Legibility)", "responses": [9, 7, 6, 2, 1] },
     { "question": "Terminology Introduction", "responses": [14, 6, 2, 3, 1] },
-    { "question": "Use of Diagrams", "responses": [13, 5, 3, 2, 1] },
+    { "question": "Use of Diagrams", "responses": [1, 5, 3, 2, 16   ] },
     { "question": "Equations and Flowcharts", "responses": [10, 7, 4, 2, 1] },
     { "question": "Usage of LCD/Projector/Relevant Videos", "responses": [12, 6, 4, 1, 1] },
     { "question": "Hands-on Abilities", "responses": [11, 5, 6, 2, 1] },

@@ -3,7 +3,9 @@ import { validateDateOfBirth } from "../../utils/auth/DobValidation";
 import { validateStudentLogin } from "../../services/auth/studentAuthentication";
 import { useNavigate } from "react-router-dom";
 import { validateAdminLogin } from "../../services/auth/adminAuthentication";
-import LoginNav from "../../components/LoginNav";
+import Navbar from "../../components/Nabvbar";
+import { Card, CardHeader, Divider } from "@nextui-org/react";
+
 
 
 const LoginComponent = () => {
@@ -39,9 +41,8 @@ const LoginComponent = () => {
       }
       try {
         const data = await validateStudentLogin(registrationNumber, dob);
-        alert("Login Successful!");
-        
-        
+
+
         const studentDetails = {
           role: "student",
           registrationNumber,
@@ -50,10 +51,11 @@ const LoginComponent = () => {
           year: data.student.student_year,
           class: data.student.class
         };
-  
+
         localStorage.setItem("userDetails", JSON.stringify(studentDetails));
-        
-        navigate("/student-panel")
+        const locationState = { msg: "Login successful", type: "success" }
+
+        navigate("/student-panel");
       } catch (error) {
         alert(error.message);
       }
@@ -72,7 +74,7 @@ const LoginComponent = () => {
           role: "admin",
           username
         };
-  
+
         localStorage.setItem("userDetails", JSON.stringify(adminDetails));
         navigate("/admin/departments");
       } catch (error) {
@@ -81,123 +83,127 @@ const LoginComponent = () => {
     }
   };
 
-
   return (
     <>
-    <LoginNav />
-    <div className="flex flex-col  items-center justify-start pt-32 min-h-screen bg-gray-50">
-      
-      <div className="bg-white p-6 rounded-xl border-2 border-gray-300x w-80">
-        <h2 className="text-xl text-customGray font-medium mb-4">
-          {isStudentLogin ? "Student Login" : "Admin Login"}
-        </h2>
-        <form onSubmit={handleSubmit}>
-          {isStudentLogin ? (
-            <>
-              <div className="mb-4">
-                <label
-                  className="block text-customGray text-sm font-normal mb-1"
-                  htmlFor="registrationNumber"
-                >
-                  Registration Number
-                </label>
-                <input
-                  type="text"
-                  name="registrationNumber"
-                  id="registrationNumber"
-                  value={credentials.registrationNumber}
-                  onChange={handleChange}
-                  required
-                  className="w-full p-2 border border-gray-300 rounded outline-1 focus:outline-customGray"
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  className="block text-customGray text-sm font-norma mb-1"
-                  htmlFor="password"
-                >
-                  Date Of Birth
-                </label>
-                <div className="relative">
-                  <input
-                    name="dob"
-                    id="dob"
-                    value={credentials.dob}
-                    onChange={handleChange}
-                    placeholder="yyyy-mm-dd"
-                    required
-                    className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-500"
-                  />
-                </div>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="mb-4">
-                <label
-                  className="block text-customGray text-sm font-normal mb-1"
-                  htmlFor="username"
-                >
-                  Username
-                </label>
-                <input
-                  type="text"
-                  name="username"
-                  id="username"
-                  value={credentials.username}
-                  onChange={handleChange}
-                  required
-                  className="w-full p-2 border border-gray-300 rounded outline-1 focus:outline-customGray"
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  className="block text-sm text-customGray font-normal mb-1"
-                  htmlFor="passwordAdmin"
-                >
-                  Password
-                </label>
-                <div className="relative">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    name="password"
-                    id="password"
-                    value={credentials.password}
-                    onChange={handleChange}
-                    required
-                    className="w-full p-2 border border-gray-300 rounded outline-1 focus:outline-customGray"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 text-customGray flex items-center pr-3"
-                  >
-                    {showPassword ? "Hide" : "Show"}
-                  </button>
-                </div>
-              </div>
-            </>
-          )}
-          <button
-            type="submit"
-            className="w-full bg-customGray text-white p-2 rounded hover:bg-gray-700 transition duration-200"
-          >
-            Login
-          </button>
-        </form>
-        <p className="mt-4 text-sm text-center">
-          <button
-            type="button"
-            onClick={() => setIsStudentLogin(!isStudentLogin)}
-            className="text-customGray font-normal hover:underline"
-          >
-            {isStudentLogin
-              ? "Click here if you are an Admin"
-              : "Click here if you are a Student"}
-          </button>
-        </p>
+      <Navbar isLogin={true} />
+      <div className="h-[calc(100svh-10rem)] w-full dark:bg-black bg-white dark:bg-dot-white/[0.2] bg-dot-black/[0.2] relative flex items-start pt-32 justify-center">
+        <div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
+
+        <Card className="w-full  max-w-sm mx-4 p-3">
+          <CardHeader className="flex flex-col gap-3">
+            <h2 className="text-xl text-customGray font-medium text-left w-full">
+              {isStudentLogin ? "Student Login" : "Admin Login"}
+            </h2>
+
+            <form onSubmit={handleSubmit} className="w-full">
+              {isStudentLogin ? (
+                <>
+                  <div className="mb-4">
+                    <label
+                      className="block text-customGray text-sm font-normal mb-1"
+                      htmlFor="registrationNumber"
+                    >
+                      Registration Number
+                    </label>
+                    <input
+                      type="text"
+                      name="registrationNumber"
+                      id="registrationNumber"
+                      value={credentials.registrationNumber}
+                      onChange={handleChange}
+                      required
+                      className="w-full p-2 border border-gray-300 rounded outline-1 focus:outline-customGray"
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label
+                      className="block text-customGray text-sm font-normal mb-1"
+                      htmlFor="password"
+                    >
+                      Date Of Birth
+                    </label>
+                    <div className="relative">
+                      <input
+                        name="dob"
+                        id="dob"
+                        value={credentials.dob}
+                        onChange={handleChange}
+                        placeholder="yyyy-mm-dd"
+                        required
+                        className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-500"
+                      />
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="mb-4">
+                    <label
+                      className="block text-customGray text-sm font-normal mb-1"
+                      htmlFor="username"
+                    >
+                      Username
+                    </label>
+                    <input
+                      type="text"
+                      name="username"
+                      id="username"
+                      value={credentials.username}
+                      onChange={handleChange}
+                      required
+                      className="w-full p-2 border border-gray-300 rounded outline-1 focus:outline-customGray"
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label
+                      className="block text-sm text-customGray font-normal mb-1"
+                      htmlFor="passwordAdmin"
+                    >
+                      Password
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        name="password"
+                        id="password"
+                        value={credentials.password}
+                        onChange={handleChange}
+                        required
+                        className="w-full p-2 border border-gray-300 rounded outline-1 focus:outline-customGray"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute inset-y-0 right-0 text-customGray flex items-center pr-3"
+                      >
+                        {showPassword ? "Hide" : "Show"}
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
+              <button
+                type="submit"
+                className="w-full bg-customGray text-white p-2 rounded hover:bg-gray-700 transition duration-200"
+              >
+                Login
+              </button>
+            </form>
+
+            <p className="mt-4 text-sm text-center">
+              <button
+                type="button"
+                onClick={() => setIsStudentLogin(!isStudentLogin)}
+                className="text-customGray font-normal hover:underline"
+              >
+                {isStudentLogin
+                  ? "Click here if you are an Admin"
+                  : "Click here if you are a Student"}
+              </button>
+            </p>
+          </CardHeader>
+        </Card>
       </div>
-    </div>
     </>
   );
 };
