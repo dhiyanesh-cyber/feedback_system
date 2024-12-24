@@ -1,0 +1,16 @@
+{
+    "subjects": [
+      {
+        "subject_id": "101",
+        "subject_name": "Mathematics",
+        "responses": [5, 10, 15, 8, 12],
+        "valus": ["Poor","Not bad","Average","Good", "Excellent"]
+      },
+      {
+        "subject_id": "102",
+        "subject_name": "Physics",
+        "responses": [3, 7, 20, 10, 15]
+      }
+    ]
+  }
+  

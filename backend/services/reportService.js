@@ -36,6 +36,7 @@ export const generateReport = async (faculty_id) => {
             // return totalScore.toFixed(2);
 
             const averageResponse = studentCount > 0 ? totalScore / studentCount : 0;
+            
 
             return { ...form, average_response: averageResponse };
         })

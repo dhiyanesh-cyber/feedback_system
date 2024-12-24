@@ -23,6 +23,7 @@ import AdminFormsPage from "./components/admin/AdminFormsPage";
 import ReportPage from "./pages/admin/ReportPage";
 import ReportPageFaculty from "./pages/admin/ReportPageFaculty";
 import ReportPageDepartments from "./pages/admin/ReportPageDepartments";
+import ReportIndex from "./pages/admin/ReportIndex";
 
 // Protected route for authentication and role-based access
 const ProtectedRoute = ({ children, role }) => {
@@ -79,6 +80,14 @@ const App = () => {
               />
               <Route
                 path="/admin/report/"
+                element={
+                  <ProtectedRoute role="admin">
+                    <ReportIndex />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/report/faculty"
                 element={
                   <ProtectedRoute role="admin">
                     <ReportPage />
