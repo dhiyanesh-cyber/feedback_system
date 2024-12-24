@@ -1,4 +1,4 @@
-import { getFormsByCode, createFormInDB, deleteFormById } from "../services/studentFormFetchService.js";
+import { getFormsByCode, createFormInDB, deleteFormById, getFormDetailsById } from "../services/studentFormFetchService.js";
 
 export const getForms = async (req, res) => {
   try {
@@ -34,15 +34,33 @@ export const createForm = async (req, res) => {
 
 export const deleteFormController = async (req, res) => {
   try {
-    const {form_id} = req.params;
-    if(!form_id){
-      return res.status(400).json({message : "All attributes required"})
+    const { form_id } = req.params;
+    if (!form_id) {
+      return res.status(400).json({ message: "All attributes required" })
     }
 
     const deleteRes = await deleteFormById(form_id);
-    res.status(200).json({message: "Form deleted successfully"});
+    res.status(200).json({ message: "Form deleted successfully" });
   } catch (error) {
     console.error("Error deleting form : ", error)
-    res.status(500).json({message: "Internal server error"})
+    res.status(500).json({ message: "Internal server error" })
+  }
+}
+
+
+export const getFormController = async (req, res) => {
+  try {
+    const { form_id } = req.params;
+    console.log("Vandhuruchu");
+
+    if (!form_id) {
+      return res.status(400).json({ message: "All attributes required" })
+    }
+
+    const getFormRes = await getFormDetailsById(form_id);
+    res.status(200).json(getFormRes);
+  } catch (error) {
+    console.error("Error deleting form : ", error)
+    res.status(500).json({ message: "Internal server error" })
   }
 }

@@ -15,14 +15,14 @@ const YearSelection = () => {
 
   const handleYearClick = (yearId) => {
     // Navigate to class list page for the selected year
-    navigate(`/admin/departments/${department_id}/years/${yearId}/classes`);
+    navigate(`/admin/departments/${department_id}/${yearId}/`);
   };
 
   return (
     <>
     <Navbar/>
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-lg bg-white rounded-lg shadow-2xl p-8">
+    <div className="flex flex-col items-center justify-start pt-32 min-h-screen bg-gray-50">
+      <div className="w-full max-w-lg bg-white rounded-lg border-2 border-gray-300x p-8">
         <h2 className="text-xl font-normal text-center text-black opacity-90 mb-6">
           Select Year
         </h2>
@@ -31,7 +31,7 @@ const YearSelection = () => {
             <li
               key={year.id}
               onClick={() => handleYearClick(year.id)}
-              className="p-4 bg-white border-2 border-gray-300 rounded-lg text-white-500 text-center cursor-pointer hover:text-white hover:bg-customGray transition duration-200 ease-in-out transform hover:scale-105 w-60 place-self-center"
+              className="p-4 bg-white border-2 border-gray-300x rounded-lg text-white-500 text-center cursor-pointer hover:text-white hover:bg-customGray transition duration-200 ease-in-out transform  w-60 place-self-center"
             >
               <span className="text-lg font-normal">{year.name}</span>
             </li>
