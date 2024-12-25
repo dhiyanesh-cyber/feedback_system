@@ -22,6 +22,7 @@ import DepartmentList from "./components/admin/DepartmentList";
 import AdminFormsPage from "./components/admin/AdminFormsPage";
 import ReportPage from "./pages/admin/ReportPage";
 import ReportPageFaculty from "./pages/admin/ReportPageFaculty";
+import SettingsPage from "./components/admin/settings/SettingsPage";
 
 // Protected route for authentication and role-based access
 const ProtectedRoute = ({ children, role }) => {
@@ -74,6 +75,14 @@ const App = () => {
               element={
                 <ProtectedRoute role="admin">
                   <DepartmentList />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/settings"
+              element={
+                <ProtectedRoute role="admin">
+                  <SettingsPage />
                 </ProtectedRoute>
               }
             />
