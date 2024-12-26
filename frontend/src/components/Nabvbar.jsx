@@ -22,6 +22,9 @@ const Navbar = (props) => {
   const handleSettingsClick = () => {
     navigate("/admin/settings");
   };
+  const handleReportClick = () => {
+    navigate("/admin/report");
+  };
 
   return (
     <nav className="bg-white p-2 sm:p-4 flex flex-wrap items-center justify-between border-b border-gray-300 shadow-sm"  >
@@ -54,12 +57,20 @@ const Navbar = (props) => {
         <></> :
         <div className="flex items-center sm:mt-0">
           {userDetails?.role === "admin" && (
-            <button
-              onClick={handleSettingsClick}
-              className="text-black hover:text-gray-700 mr-4 sm:mr-6"
-            >
-              <FiSettings size={24} />
-            </button>
+            <>
+             <button
+                onClick={handleReportClick}
+                className="text-black hover:text-gray-700 mr-4 sm:mr-6"
+              >
+                <h1 className="text-black text-xl hover:text-gray-700 mr-4 sm:mr-6">Report</h1>
+              </button>
+              <button
+                onClick={handleSettingsClick}
+                className="text-black hover:text-gray-700 mr-4 sm:mr-6"
+              >
+                <FiSettings size={24} />
+              </button>
+            </>
           )}
           <button
             onClick={handleLogout}

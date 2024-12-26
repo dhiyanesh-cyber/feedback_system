@@ -5,6 +5,8 @@ export const getReportData = async (faculty_id) => {
       throw new Error("Failed to fetch faculty id details.");
     }
     const data = await response.json();
+    console.log(data);
+    
     return data;
   } catch (error) {
     throw new Error(err.message);

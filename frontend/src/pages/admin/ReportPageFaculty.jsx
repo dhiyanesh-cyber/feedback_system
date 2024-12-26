@@ -1,50 +1,41 @@
 import React, { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
+import questionResponses from "./questionResponses.json"; // Import JSON file
+import Navbar from "../../components/Nabvbar";
+import { Pie } from 'react-chartjs-2';
+import { useParams } from 'react-router-dom';
+import { getReportData } from '../../services/reportApi';
+import pieChartData from './pieChartData.json'; // Import your JSON data
+
+// Import necessary components from Chart.js
 import {
   Chart as ChartJS,
   BarElement,
   CategoryScale,
   LinearScale,
+  ArcElement,
   Tooltip,
   Legend,
-} from "chart.js";
-import questionResponses from "./questionResponses.json"; // Import JSON file
-import Navbar from "../../components/Nabvbar";
+} from 'chart.js';
 
 // Register chart.js components
-ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
+ChartJS.register(BarElement, CategoryScale, LinearScale,ArcElement, Tooltip, Legend);
 
 const ReportPageFaculty = () => {
   const [reportData, setReportData] = useState(null); // State to store the report data
   const maxPerformanceScore = 24; // Maximum score for total performance
+  const { faculty_id } = useParams();
 
   // Simulating the fetch of reportData (mocked data for now)
   useEffect(() => {
-    const mockReportData = {
-      subject_performance: [
-        {
-          form_id: 1,
-          faculty_id: 1100016,
-          subject_id: "AD3281",
-          department_id: "BE_CSE",
-          year: 4,
-          class: 1,
-          average_response: 82,
-        },
-        {
-          form_id: 2,
-          faculty_id: 1100016,
-          subject_id: "AD3281",
-          department_id: "BE_ECE",
-          year: 4,
-          class: 1,
-          average_response: 0,
-        },
-      ],
-      total_performance: 41,
-    };
-    setReportData(mockReportData);
-  }, []);
+    const fetchReportData = async () => {
+      const reportData = await getReportData();
+      setReportData(reportData);
+    }
+    fetchReportData();
+    
+  }, [faculty_id]);
+    
 
   if (!reportData) {
     return <div>Loading...</div>;
@@ -69,19 +60,27 @@ const ReportPageFaculty = () => {
       ],
     };
   };
+  const generatePieChartData = (subject) => {
+    const responses = subject.responses;
+    return {
+      labels: ['1', '2', '3', '4', '5'],
+      datasets: [
+        {
+          data: responses,
+          backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
+          hoverBackgroundColor: ['#FF6F91', '#4BA3F9', '#FFDB69', '#52C9C9', '#9A6EFF'],
+        },
+      ],
+    };
+  };
 
   return (
     <>
-    <Navbar />
-      <div className="container pt-16 mx-auto p-4">
-        <h1 className="text-2xl font-bold mb-4 text-center md:text-left">
-          Faculty Performance Report
-        </h1>
+      <div className="container mx-auto p-4">
+        <h1 className="text-2xl font-bold mb-4 text-center md:text-left">Faculty Performance Report</h1>
         {/* Subject Performance Section */}
         <div className="mb-6">
-          <h2 className="text-xl font-semibold text-center md:text-left">
-            Subject Performance
-          </h2>
+          <h2 className="text-xl font-semibold text-center md:text-left">Subject Performance</h2>
           <div className="overflow-x-auto mt-2">
             <table className="table-auto w-full border-collapse border border-gray-200">
               <thead>
@@ -112,6 +111,11 @@ const ReportPageFaculty = () => {
                     <td className="border border-gray-200 px-4 py-2 text-center">
                       {subject.class}
                     </td>
+                    <td className="border border-gray-200 px-4 py-2 text-center">{subject.form_id}</td>
+                    <td className="border border-gray-200 px-4 py-2 text-center">{subject.subject_id}</td>
+                    <td className="border border-gray-200 px-4 py-2 text-center">{subject.department_id}</td>
+                    <td className="border border-gray-200 px-4 py-2 text-center">{subject.year}</td>
+                    <td className="border border-gray-200 px-4 py-2 text-center">{subject.class}</td>
                     <td className="border border-gray-200 px-4 py-2 text-center">
                       {subject.average_response.toFixed(2)}
                     </td>
@@ -137,6 +141,32 @@ const ReportPageFaculty = () => {
             </span>
           </p>
         </div>
+        
+        {/* Pie Chart Section for each Subject */}
+        <div className="mt-6 flex-row flex space-x-28">
+          {pieChartData.subjects.map((subject, index) => (
+            <div key={index} className="mb-6 w-64">
+              <h3 className="text-lg font-semibold text-center">{subject.subject_name} Performance</h3>
+              <Pie
+                data={generatePieChartData(subject)}
+                options={{
+                  responsive: true,
+                  maintainAspectRatio: true, // Ensures the aspect ratio is maintained
+                  plugins: {
+                    tooltip: {
+                      enabled: false, // Disable tooltips to remove the red labels
+                    },
+                    legend: {
+                      display: true, // Optional: Hide the legend if not needed
+                    },
+                  },
+                  aspectRatio: 1, // Decrease aspect ratio to make it smaller
+                }}
+              />
+            </div>
+          ))}
+        </div>
+
         {/* Render the Bar Charts in a Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mt-6">
           {questionResponses.map((questionData, index) => (
@@ -181,6 +211,7 @@ const ReportPageFaculty = () => {
             </div>
           ))}
         </div>
+
       </div>
     </>
   );
