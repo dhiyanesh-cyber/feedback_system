@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAllFaculty } from '../../services/facultyApi';
+import Navbar from '../../components/Nabvbar';
 
 const ReportPage = () => {
   const [facultyData, setFacultyData] = useState([]);
@@ -40,6 +41,8 @@ const ReportPage = () => {
   }
 
   return (
+    <>
+    <Navbar />
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-6">Faculty Details</h1>
 
@@ -73,6 +76,7 @@ const ReportPage = () => {
         <p className="text-center text-gray-500 mt-6">No results found.</p>
       )}
     </div>
+    </>
   );
 };
 

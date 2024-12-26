@@ -42,7 +42,6 @@ const DepartmentList = () => {
 
   return (
     <>
-      <Navbar />
       <div className="flex items-center justify-center min-h-screen bg-gray-50 ">
         <div className="w-full max-w-4xl p-8 bg-white rounded-xl border-2 border-gray-300x transform transition-all duration-300">
           <h2 className="text-xl font-normal text-center mb-8 text-gray-800 tracking-tight">
