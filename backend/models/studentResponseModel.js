@@ -35,6 +35,19 @@ class StudentResponse {
         }
     }
     
+    static async getStudentResponseByClassAndYear(year, class_no){
+        try {
+            const [studentResponse] = await db.execute(
+                "SELECT * FROM student_response WHERE student_register_number = ? AND form_id = ?",
+                [student_id, form_id]
+              );
+
+              return studentResponse;
+        } catch (error) {
+            console.error("Error getting student response :", error);
+            throw error;
+        }
+    }
 
     static async getStudentResponseByFormId(form_id){
         try {

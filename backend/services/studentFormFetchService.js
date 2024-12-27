@@ -25,9 +25,19 @@ export const createFormInDB = async (department_code, year, class_name, subject_
 export const deleteFormById = async (form_id) => {
   try {
     const deleteResponse = await StudentFormFetch.deleteForm(form_id);
-    return deleteResponse; 
+    return deleteResponse;
   } catch (error) {
     console.error("Error deleting form : ", error)
     throw error;
   }
 }
+
+export const getFormDetailsById = async (form_id) => {
+  try {
+    const form = await StudentFormFetch.getFormById(form_id);
+    return form;
+  } catch (error) {
+    console.error("Error fetching forms: inga dha error : ", error);
+    throw error;
+  }
+};
