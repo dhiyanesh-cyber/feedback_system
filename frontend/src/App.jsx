@@ -22,6 +22,7 @@ import DepartmentList from "./components/admin/DepartmentList";
 import AdminFormsPage from "./components/admin/AdminFormsPage";
 import ReportPage from "./pages/admin/ReportPage";
 import ReportPageFaculty from "./pages/admin/ReportPageFaculty";
+import SettingsPage from "./components/admin/settings/SettingsPage";
 import ReportPageDepartments from "./pages/admin/ReportPageDepartments";
 import ReportIndex from "./pages/admin/ReportIndex";
 
@@ -42,7 +43,6 @@ const ProtectedRoute = ({ children, role }) => {
 
 const App = () => {
   return (
-
     <NextUIProvider>
       <UserProvider>
         <EndpointProvider>
@@ -75,6 +75,14 @@ const App = () => {
                 element={
                   <ProtectedRoute role="admin">
                     <DepartmentList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/settings"
+                element={
+                  <ProtectedRoute role="admin">
+                    <SettingsPage />
                   </ProtectedRoute>
                 }
               />
