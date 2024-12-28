@@ -43,7 +43,7 @@ const StudentPanel = () => {
     <>
       <Navbar />
       <div className="flex flex-col items-center justify-start min-h-screen p-6 sm:pt-12">
-        <Card className="w-full max-w-4xl m-5 space-y-5 p-4" radius="lg">
+        <Card className="w-full max-w-2xl m-5 space-y-5 p-4" radius="lg">
           <Skeleton className="rounded-lg">
             <div className="h-24 rounded-lg bg-default-300" />
           </Skeleton>

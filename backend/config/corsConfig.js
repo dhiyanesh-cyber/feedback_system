@@ -1,10 +1,9 @@
-import cors from 'cors';
+import cors from 'cors'
 
 export const corsOptions = {
-  // origin: 'https://feedback-hosting.vercel.app', // Use the base URL without the `/auth` path
-  origin: "*",
+  origin: ['http://localhost:5173'], // Use the base URL without the `/auth` path
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-};
+  allowedHeaders: ['Content-Type', 'Authorization']
+}
 
-export default cors(corsOptions);
+export default cors(corsOptions)
