@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Bar, Pie } from 'react-chartjs-2';
 import { useParams } from 'react-router-dom';
 import { getReportData } from '../../services/reportApi';
-import pieChartData from './pieChartData.json'; // Import your JSON data
 
 // Import necessary components from Chart.js
 import {
