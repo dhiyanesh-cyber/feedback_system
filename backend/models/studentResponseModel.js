@@ -63,6 +63,20 @@ class StudentResponse {
         }
     }
 
+    static async getStudentResponseByQuestionIdAndFormId(question_id, form_id){
+        try {
+            const [studentResponse] = await db.execute(
+                "SELECT * FROM student_response WHERE question_id = ? AND form_id = ?",
+                [question_id, form_id]
+              );
+
+              return studentResponse;
+        } catch (error) {
+            console.error("Error getting student response :", error);
+            throw error;
+        }
+    }
+
     static async getStudentCount(form_id){
         try {
             const [student_count] = await db.execute(
