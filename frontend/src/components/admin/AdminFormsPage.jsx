@@ -60,10 +60,15 @@ const AdminFormsPage = () => {
       );
 
       setForms((prevForms) => [...prevForms, data.form]);
-      setFormData({
-        staff_id: "",
-        subject_id: "",
-      });
+
+      // Reset form and search states
+      setFormData({ staff_id: "", subject_id: "" });
+      setFacultySearch("");
+      setSubjectSearch("");
+      setIsFacultySelected(false);
+      setIsSubjectSelected(false);
+
+      // Close modal
       setShowModal(false);
     } catch (err) {
       console.error("Error adding form:", err);
@@ -88,7 +93,17 @@ const AdminFormsPage = () => {
     }
   };
 
-  if (loading) return <p className="text-center text-gray-600">Loading forms...</p>;
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setFormData({ staff_id: "", subject_id: "" });
+    setFacultySearch("");
+    setSubjectSearch("");
+    setIsFacultySelected(false);
+    setIsSubjectSelected(false);
+  };
+
+  if (loading)
+    return <p className="text-center text-gray-600">Loading forms...</p>;
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
   return (
@@ -143,15 +158,23 @@ const AdminFormsPage = () => {
                   {facultySearch && !isFacultySelected && (
                     <ul className="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-lg shadow-md max-h-40 overflow-y-auto z-10">
                       {facultyIds
-                        .filter((faculty) =>
-                          faculty.faculty_name.toLowerCase().includes(facultySearch.toLowerCase()) || 
-                          faculty.code.toString().includes(facultySearch.toLowerCase())
+                        .filter(
+                          (faculty) =>
+                            faculty.faculty_name
+                              .toLowerCase()
+                              .includes(facultySearch.toLowerCase()) ||
+                            faculty.code
+                              .toString()
+                              .includes(facultySearch.toLowerCase())
                         )
                         .map((faculty) => (
                           <li
                             key={faculty.code}
                             onClick={() => {
-                              setFormData({ ...formData, staff_id: faculty.code });
+                              setFormData({
+                                ...formData,
+                                staff_id: faculty.code,
+                              });
                               setFacultySearch(faculty.faculty_name);
                               setIsFacultySelected(true);
                             }}
@@ -181,15 +204,23 @@ const AdminFormsPage = () => {
                   {subjectSearch && !isSubjectSelected && (
                     <ul className="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-lg shadow-md max-h-40 overflow-y-auto z-10">
                       {subjectIds
-                        .filter((subject) =>
-                          subject.sub_name.toLowerCase().includes(subjectSearch.toLowerCase()) || 
-                          subject.sub_code.toLowerCase().includes(subjectSearch.toLowerCase())
+                        .filter(
+                          (subject) =>
+                            subject.sub_name
+                              .toLowerCase()
+                              .includes(subjectSearch.toLowerCase()) ||
+                            subject.sub_code
+                              .toLowerCase()
+                              .includes(subjectSearch.toLowerCase())
                         )
                         .map((subject) => (
                           <li
                             key={subject.sub_code}
                             onClick={() => {
-                              setFormData({ ...formData, subject_id: subject.sub_code });
+                              setFormData({
+                                ...formData,
+                                subject_id: subject.sub_code,
+                              });
                               setSubjectSearch(subject.sub_name);
                               setIsSubjectSelected(true);
                             }}
@@ -210,8 +241,9 @@ const AdminFormsPage = () => {
                 </button>
               </div>
               <button
-                onClick={() => setShowModal(false)}
-                className="absolute top-8 right-8 flex items-center justify-center w-10 h-10 rounded-full bg-black text-white hover:bg-red-600 text-2xl font-normal"
+                onClick={handleCloseModal}
+                className="absolute flex items-center justify-center w-10 h-10 rounded-full bg-black text-white hover:bg-red-600 text-2xl font-normal"
+                style={{ right: "500px" ,top: "270px" }}
               >
                 ×
               </button>
