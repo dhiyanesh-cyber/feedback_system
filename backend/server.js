@@ -21,11 +21,11 @@ dotenv.config();
 const app = express();
 app.use(cors);
 
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 app.use(express.static(path.join(__dirname, 'dist')));
+
 
 
 const PORT = process.env.PORT || 3000;
@@ -47,6 +47,11 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
+
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
 
 app.listen(PORT, () => {
     console.log("server started successfully");
