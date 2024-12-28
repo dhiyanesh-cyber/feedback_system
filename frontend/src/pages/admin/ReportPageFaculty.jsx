@@ -14,6 +14,7 @@ import {
   Legend,
 } from 'chart.js';
 import Navbar from '../../components/Nabvbar';
+import { fetchFacultyDetails } from '../../services/facultyApi';
 
 // Register the components
 ChartJS.register(
@@ -26,6 +27,7 @@ ChartJS.register(
 
 const ReportPageFaculty = () => {
   const [reportData, setReportData] = useState(null);
+  const [facultyName, setFacultyName] = useState('');
   const { faculty_id } = useParams();
 
   useEffect(() => {
@@ -33,6 +35,11 @@ const ReportPageFaculty = () => {
     const fetchReportData = async () => {
       try {
         const data = await getReportData(faculty_id);
+        // console.log(data);
+        const faculty = await fetchFacultyDetails(faculty_id);
+        console.log(faculty[0].faculty_name);
+        
+        setFacultyName(faculty[0].faculty_name);
         setReportData(data);
       } catch (error) {
         console.error('Error fetching report data:', error);
@@ -48,7 +55,7 @@ const ReportPageFaculty = () => {
   const generatePieChartData = (subject) => {
     const responses = subject.responses;
     return {
-      labels: ['1', '2', '3', '4', '5'],
+      labels: ["Poor","Not bad","Average","Good", "Excellent"],
       datasets: [
         {
           data: responses,
@@ -65,6 +72,7 @@ const ReportPageFaculty = () => {
     <Navbar/>
       <div className="container mx-auto p-4">
         <h1 className="text-2xl font-bold mb-4 text-center md:text-left">Faculty Performance Report</h1>
+        <h2 className="text-xl font-semibold text-center md:text-left">Faculty: {facultyName}</h2>
         {/* Subject Performance Section */}
         <div className="mb-6">
           <h2 className="text-xl font-semibold text-center md:text-left">Subject Performance</h2>
@@ -72,22 +80,22 @@ const ReportPageFaculty = () => {
             <table className="table-auto w-full border-collapse border border-gray-200">
               <thead>
                 <tr className="bg-gray-100">
-                  <th className="border border-gray-200 px-4 py-2">Form ID</th>
-                  <th className="border border-gray-200 px-4 py-2">Subject ID</th>
+                  <th className="border border-gray-200 px-4 py-2">Subject Name</th>
                   <th className="border border-gray-200 px-4 py-2">Department</th>
                   <th className="border border-gray-200 px-4 py-2">Year</th>
                   <th className="border border-gray-200 px-4 py-2">Class</th>
                   <th className="border border-gray-200 px-4 py-2">Response</th>
+                  <th className="border border-gray-200 px-4 py-2">Score</th>
                 </tr>
               </thead>
               <tbody>
                 {reportData.subject_performance.map((subject, index) => (
                   <tr key={index} className="hover:bg-gray-50">
-                    <td className="border border-gray-200 px-4 py-2 text-center">{subject.form_id}</td>
-                    <td className="border border-gray-200 px-4 py-2 text-center">{subject.subject_id}</td>
+                    <td className="border border-gray-200 px-4 py-2 text-center">{subject.subjectName}</td>
                     <td className="border border-gray-200 px-4 py-2 text-center">{subject.department_id}</td>
                     <td className="border border-gray-200 px-4 py-2 text-center">{subject.year}</td>
                     <td className="border border-gray-200 px-4 py-2 text-center">{subject.class}</td>
+                    <td className="border border-gray-200 px-4 py-2 text-center">{subject.studentCount + "/" + subject.maxCount }</td>
                     <td className="border border-gray-200 px-4 py-2 text-center">
                       {subject.average_response.toFixed(2)}
                     </td>
@@ -99,9 +107,11 @@ const ReportPageFaculty = () => {
         </div>
         {/* Pie Chart Section for each Subject */}
         <div className="mt-6 flex-row flex space-x-28">
-          {pieChartData.subjects.map((subject, index) => (
-            <div key={index} className="mb-6 w-64">
-              <h3 className="text-lg font-semibold text-center">{subject.subject_name} Performance</h3>
+          {reportData.subject_performance.map((subject, index) => {
+            if (subject.studentCount > 0) {
+              return (
+                <div key={index} className="mb-6 w-80">
+              <h3 className="text-lg font-semibold text-center">{subject.subjectName} Performance</h3>
               <Pie
                 data={generatePieChartData(subject)}
                 options={{
@@ -119,7 +129,10 @@ const ReportPageFaculty = () => {
                 }}
               />
             </div>
-          ))}
+              )
+            }
+            
+})}
         </div>
         {/* Total Performance Section */}
         <div className="mt-4">
@@ -127,7 +140,7 @@ const ReportPageFaculty = () => {
           <p className="mt-2 text-lg text-center md:text-left">
             Total Performance Score:{" "}
             <span className="font-bold">
-              {(reportData.total_performance / 24 * 24).toFixed(2)} / 24
+              {(reportData.total_performance).toFixed(2)} / 25
             </span>
           </p>
         </div>
