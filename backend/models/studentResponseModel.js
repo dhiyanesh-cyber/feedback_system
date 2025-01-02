@@ -95,6 +95,7 @@ class StudentResponse {
             console.error("Error counting studets");
             throw error;
         }
+    }
 
   static async deleteStudentResponseByFormId (form_id) {
     try {
