@@ -130,7 +130,7 @@ const LoginComponent = () => {
                         onChange={handleChange}
                         placeholder="yyyy-mm-dd"
                         required
-                        className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-500"
+                        className="w-full p-2 border border-gray-300 rounded outline-1 focus:outline-customGray"
                       />
                     </div>
                   </div>
