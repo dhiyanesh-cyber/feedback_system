@@ -33,7 +33,7 @@ export const getFormById = async (form_id) => {
 
 
 
-export const createForm = async (department_id, year_id, class_id, staff_id, subject_id) => {
+export const createForm = async (department_id, year_id, class_id, semester, staff_id, subject_id) => {
   try {
     const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/studentForms`, {
       method: "POST",
@@ -44,6 +44,7 @@ export const createForm = async (department_id, year_id, class_id, staff_id, sub
         department_code: department_id,
         year: year_id,
         class_name: class_id,
+        semester,
         staff_id,
         subject_id,
       }),

@@ -78,11 +78,11 @@ class StudentFormFetch {
   }
 
   // Method to insert a new form into the database
-  static async insertForm(department_id, year, class_name, subject_id, faculty_id) {
+  static async insertForm(department_id, year, class_name, semester, subject_id, faculty_id) {
     try {
       const [result] = await db.execute(
-        "INSERT INTO forms (faculty_id, subject_id, department_id, year, class) VALUES (?, ?, ?, ?, ?)",
-        [faculty_id, subject_id, department_id, year, class_name]
+        "INSERT INTO forms (faculty_id, subject_id, department_id, year, class, semester) VALUES (?, ?, ?, ?, ?)",
+        [faculty_id, subject_id, department_id, year, class_name, semester]
       );
 
       return {
@@ -90,6 +90,7 @@ class StudentFormFetch {
         department_id,
         year,
         class_name,
+        semester,
         subject_id,
         faculty_id,
       };
