@@ -55,6 +55,7 @@ const AdminFormsPage = () => {
         department_id,
         year_id,
         class_id,
+        localStorage.getItem("selectedSemester"),
         formData.staff_id,
         formData.subject_id
       );

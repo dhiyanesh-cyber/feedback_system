@@ -17,13 +17,14 @@ export const getForms = async (req, res) => {
 
 export const createForm = async (req, res) => {
   try {
-    const { department_code, year, class_name, subject_id, staff_id } = req.body;
-    if (!department_code || !year || !class_name || !subject_id || !staff_id) {
+    const { department_code, year, class_name, semester, subject_id, staff_id } = req.body;
+    
+    if (!department_code || !year || !class_name || !semester || !subject_id || !staff_id) {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
     // Call the service to insert the new form
-    const newForm = await createFormInDB(department_code, year, class_name, subject_id, staff_id);
+    const newForm = await createFormInDB(department_code, year, class_name, semester, subject_id, staff_id);
     res.status(201).json({ message: "Form created successfully", form: newForm });
   } catch (error) {
     console.error("Error creating form:", error);

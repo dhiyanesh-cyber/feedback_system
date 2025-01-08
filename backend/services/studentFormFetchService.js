@@ -21,6 +21,7 @@ export const createFormInDB = async (
   department_code,
   year,
   class_name,
+  semester,
   subject_id,
   staff_id
 ) => {
@@ -29,6 +30,7 @@ export const createFormInDB = async (
       department_code,
       year,
       class_name,
+      semester,
       subject_id,
       staff_id
     )
