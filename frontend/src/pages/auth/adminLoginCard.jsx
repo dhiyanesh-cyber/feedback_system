@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Card, CardHeader, Divider } from "@nextui-org/react";
+import { sendAdminOtp } from "../../services/auth/adminAuthentication";
 
 const AdminLoginCard = ({ toggle }) => {
   const [email, setEmail] = useState("");
@@ -14,10 +15,7 @@ const AdminLoginCard = ({ toggle }) => {
 
     setIsLoading(true);
     try {
-      await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/admin/send-otp`,
-        { email }
-      );
+      await sendAdminOtp(email);
 
       alert("OTP sent successfully to your email.");
     } catch (error) {
