@@ -1,6 +1,48 @@
 import React, { useState, useEffect } from "react";
 
+// Toast Component
+const Toast = ({ message, type, onClose }) => (
+  <div
+    className={`fixed top-4 right-4 p-4 rounded shadow-lg ${
+      type === "success" ? "bg-green-500" : "bg-red-500"
+    } text-white animate-fade-in-out`}
+  >
+    {message}
+    <button onClick={onClose} className="ml-2 text-white font-bold">
+      ×
+    </button>
+  </div>
+);
+
+// Confirmation Dialog Component
+const ConfirmDialog = ({ isOpen, message, onConfirm, onCancel }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white p-6 rounded-lg max-w-sm w-full mx-4">
+        <p className="mb-4">{message}</p>
+        <div className="flex justify-end gap-4">
+          <button
+            onClick={onCancel}
+            className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={onConfirm}
+            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+          >
+            Confirm
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const DepartmentSetting = () => {
+  // Existing states
   const [departments, setDepartments] = useState([]);
   const [formData, setFormData] = useState({ code: "", name: "" });
   const [action, setAction] = useState("add");
@@ -8,8 +50,41 @@ const DepartmentSetting = () => {
   const [error, setError] = useState(null);
   const [originalCode, setOriginalCode] = useState("");
 
+  // New states for enhancements
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortField, setSortField] = useState("department_code");
+  const [sortDirection, setSortDirection] = useState("asc");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [validationErrors, setValidationErrors] = useState({});
+  const [toast, setToast] = useState({ show: false, message: "", type: "" });
+  const [confirmDialog, setConfirmDialog] = useState({
+    isOpen: false,
+    message: "",
+    action: null,
+  });
+
+  const itemsPerPage = 10;
   const endpoint = `${import.meta.env.VITE_API_BASE_URL}/departmentsetting`;
 
+  // Toast handler
+  const showToast = (message, type = "success") => {
+    setToast({ show: true, message, type });
+    setTimeout(() => setToast({ show: false, message: "", type: "" }), 3000);
+  };
+
+  // Validation
+  const validateForm = () => {
+    const errors = {};
+    if (!formData.code.trim()) errors.code = "Department code is required";
+    if (!formData.name.trim()) errors.name = "Department name is required";
+    if (formData.code.length > 20)
+      errors.code = "Code must be less than 20 characters";
+    if (formData.name.length > 100)
+      errors.name = "Name must be less than 100 characters";
+    return errors;
+  };
+
+  // Fetch departments
   const fetchDepartments = async () => {
     setLoading(true);
     setError(null);
@@ -23,6 +98,7 @@ const DepartmentSetting = () => {
     } catch (error) {
       console.error("Failed to fetch departments:", error);
       setError("Failed to load departments. Please try again later.");
+      showToast("Failed to load departments", "error");
     } finally {
       setLoading(false);
     }
@@ -32,6 +108,7 @@ const DepartmentSetting = () => {
     fetchDepartments();
   }, []);
 
+  // Handle department selection
   const handleDepartmentSelect = (e) => {
     const selected = departments.find(
       (dep) => dep.department_code === e.target.value
@@ -45,19 +122,30 @@ const DepartmentSetting = () => {
     }
   };
 
+  // Handle submit
   const handleSubmit = async () => {
-    if (!formData.code.trim() || !formData.name.trim()) {
-      alert("Both Department Code and Name are required!");
+    const errors = validateForm();
+    if (Object.keys(errors).length > 0) {
+      setValidationErrors(errors);
+      showToast("Please fix the validation errors", "error");
       return;
     }
 
     if (action === "update" && formData.code !== originalCode) {
-      const confirm = window.confirm(
-        "Changing department code might affect related data. Are you sure you want to continue?"
-      );
-      if (!confirm) return;
+      setConfirmDialog({
+        isOpen: true,
+        message:
+          "Changing department code might affect related data. Are you sure you want to continue?",
+        action: submitForm,
+      });
+      return;
     }
 
+    await submitForm();
+  };
+
+  // Submit form
+  const submitForm = async () => {
     try {
       let response;
       if (action === "add") {
@@ -91,22 +179,68 @@ const DepartmentSetting = () => {
 
       const data = await response.json();
       await fetchDepartments();
-      setFormData({ code: "", name: "" });
-      setOriginalCode("");
-      alert(data.message || "Action completed successfully!");
+      resetForm();
+      showToast(data.message || "Action completed successfully", "success");
     } catch (error) {
       console.error("Error performing action:", error);
-      alert(error.message || "An error occurred while performing the action");
+      showToast(error.message || "An error occurred", "error");
     }
   };
 
+  // Reset form
   const resetForm = () => {
     setFormData({ code: "", name: "" });
     setOriginalCode("");
+    setValidationErrors({});
   };
+
+  // Filter and sort departments
+  const filteredAndSortedDepartments = departments
+    .filter(
+      (dept) =>
+        dept.department_code.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        dept.department_name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .sort((a, b) => {
+      const aValue = a[sortField].toLowerCase();
+      const bValue = b[sortField].toLowerCase();
+      return sortDirection === "asc"
+        ? aValue.localeCompare(bValue)
+        : bValue.localeCompare(aValue);
+    });
+
+  // Pagination
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredAndSortedDepartments.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
 
   return (
     <div className="p-6 bg-white shadow-lg rounded-md">
+      {/* Toast */}
+      {toast.show && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast({ show: false, message: "", type: "" })}
+        />
+      )}
+
+      {/* Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={confirmDialog.isOpen}
+        message={confirmDialog.message}
+        onConfirm={() => {
+          confirmDialog.action();
+          setConfirmDialog({ isOpen: false, message: "", action: null });
+        }}
+        onCancel={() =>
+          setConfirmDialog({ isOpen: false, message: "", action: null })
+        }
+      />
+
       <h1 className="text-2xl font-bold mb-4">Department Settings</h1>
 
       {error && (
@@ -186,22 +320,38 @@ const DepartmentSetting = () => {
                 type="text"
                 placeholder="Department Code"
                 value={formData.code}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, code: e.target.value }))
-                }
-                className="border p-2 rounded"
-                maxLength={20} // Add maxLength to match database constraint
+                onChange={(e) => {
+                  setFormData((prev) => ({ ...prev, code: e.target.value }));
+                  setValidationErrors((prev) => ({ ...prev, code: "" }));
+                }}
+                className={`border p-2 rounded ${
+                  validationErrors.code ? "border-red-500" : ""
+                }`}
+                maxLength={20}
               />
+              {validationErrors.code && (
+                <div className="text-red-500 text-sm mt-1">
+                  {validationErrors.code}
+                </div>
+              )}
               <input
                 type="text"
                 placeholder="Department Name"
                 value={formData.name}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, name: e.target.value }))
-                }
-                className="border p-2 rounded"
-                maxLength={100} // Add maxLength to match database constraint
+                onChange={(e) => {
+                  setFormData((prev) => ({ ...prev, name: e.target.value }));
+                  setValidationErrors((prev) => ({ ...prev, name: "" }));
+                }}
+                className={`border p-2 rounded ${
+                  validationErrors.name ? "border-red-500" : ""
+                }`}
+                maxLength={100}
               />
+              {validationErrors.name && (
+                <div className="text-red-500 text-sm mt-1">
+                  {validationErrors.name}
+                </div>
+              )}
             </>
           )}
         </div>
@@ -223,7 +373,18 @@ const DepartmentSetting = () => {
         </div>
       </div>
 
-      {/* Existing Departments */}
+      {/* Search Bar */}
+      <div className="mb-4">
+        <input
+          type="text"
+          placeholder="Search departments..."
+          className="border p-2 rounded w-full"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
+
+      {/* Departments Table */}
       <div>
         <h2 className="text-lg font-semibold mb-2">Existing Departments</h2>
         {loading ? (
@@ -235,16 +396,42 @@ const DepartmentSetting = () => {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Department Code
+                  <th
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                    onClick={() => {
+                      setSortDirection(
+                        sortField === "department_code" &&
+                          sortDirection === "asc"
+                          ? "desc"
+                          : "asc"
+                      );
+                      setSortField("department_code");
+                    }}
+                  >
+                    Department Code{" "}
+                    {sortField === "department_code" &&
+                      (sortDirection === "asc" ? "↑" : "↓")}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Department Name
+                  <th
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                    onClick={() => {
+                      setSortDirection(
+                        sortField === "department_name" &&
+                          sortDirection === "asc"
+                          ? "desc"
+                          : "asc"
+                      );
+                      setSortField("department_name");
+                    }}
+                  >
+                    Department Name{" "}
+                    {sortField === "department_name" &&
+                      (sortDirection === "asc" ? "↑" : "↓")}
                   </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {departments.map((department) => (
+                {currentItems.map((department) => (
                   <tr key={department.department_code}>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-gray-900">
@@ -262,6 +449,27 @@ const DepartmentSetting = () => {
             </table>
           </div>
         )}
+
+        {/* Pagination */}
+        <div className="mt-4 flex justify-center gap-2">
+          {Array.from({
+            length: Math.ceil(
+              filteredAndSortedDepartments.length / itemsPerPage
+            ),
+          }).map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentPage(index + 1)}
+              className={`px-3 py-1 rounded ${
+                currentPage === index + 1
+                  ? "bg-black text-white"
+                  : "bg-gray-200"
+              }`}
+            >
+              {index + 1}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -41,6 +41,8 @@ app.use("/api/studentResponse", studentResponseRouter)
 app.use("/api/subject", subjectRouter)
 app.use("/api/report", reportRouter)
 app.use('/api/departmentsetting', departmentRouter);
+app.use('/api/facultysettings', facultyRouter);
+
 
 
 
