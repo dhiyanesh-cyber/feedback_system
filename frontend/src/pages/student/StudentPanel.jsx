@@ -18,7 +18,7 @@ const StudentPanel = () => {
 
     if (!userDetails || userDetails.role !== "student" || !userDetails.registrationNumber) {
       console.log("From std panel: Invalid user details", userDetails);
-      navigate("/auth");
+      // navigate("/auth");
       return;
     }
 
