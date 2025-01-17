@@ -6,6 +6,7 @@ export const saveOtp = async (email, otp) => {
 };
 
 export const verifyOtp = async (email, otp) => {
+  
   const query = `SELECT * FROM otp_verification WHERE email = ? AND otp = ? AND expires_at > NOW()`;
   const [rows] = await pool.query(query, [email, otp]);
   return rows.length > 0;

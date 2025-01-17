@@ -7,10 +7,10 @@ export const sendOtp = async (email) => {
 
   // Save OTP to the database55
   await saveOtp(email, otp);
-
+  
   // Send OTP via email
   const mailOptions = {
-    from: 'ssmiet@gmail.com',
+    from: 'dhiyaneshsasi03@gmail.com',
     to: email,
     subject: 'Your OTP Code',
     text: `Your OTP code is ${otp}. It is valid for 10 minutes.`,

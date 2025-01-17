@@ -4,7 +4,7 @@ import { sendOtp, checkOtp } from '../services/otpService.js';
 export const sendOtpHandler = async (req, res) => {
   const { email } = req.body;
 
-  try {
+  try {    
     await sendOtp(email);
     res.status(200).json({ message: 'OTP sent successfully!' });
   } catch (error) {

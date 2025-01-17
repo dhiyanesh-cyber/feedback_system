@@ -15,11 +15,13 @@ export const sendAdminOtp = async (email) => {
   }
 };
 
+
+
 // Function to validate admin OTP
 export const validateAdminOtp = async (email, otp) => {
   try {
     const response = await axios.post(
-      `${import.meta.env.VITE_API_BASE_URL}/admin/validate-otp`,
+      `${import.meta.env.VITE_API_BASE_URL}/admin/verify-otp`,
       { email, otp }
     );
     return response.data; // Contains admin details

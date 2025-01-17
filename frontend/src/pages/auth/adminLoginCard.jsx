@@ -1,25 +1,47 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Card, CardHeader, Divider } from "@nextui-org/react";
-import { sendAdminOtp } from "../../services/auth/adminAuthentication";
+import { sendAdminOtp, validateAdminOtp,  } from "../../services/auth/adminAuthentication";
 
 const AdminLoginCard = ({ toggle }) => {
   const [email, setEmail] = useState("");
+  const [otp, setOtp] = useState("");
+  const [isOtpSent, setIsOtpSent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleAdminLogin = async () => {
     if (!email) {
-      alert("Please enter an email address.");
+      setErrorMessage("Please enter an email address.");
       return;
     }
 
+    setErrorMessage("");
     setIsLoading(true);
     try {
       await sendAdminOtp(email);
-
-      alert("OTP sent successfully to your email.");
+      setIsOtpSent(true);
     } catch (error) {
-      alert(error.response?.data?.message || "Failed to send OTP. Try again.");
+      setErrorMessage(error.response?.data?.message || "Failed to send OTP. Try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleOtpVerification = async () => {
+    if (!otp) {
+      setErrorMessage("Please enter the OTP.");
+      return;
+    }
+
+    setErrorMessage("");
+    setIsLoading(true);
+    try {
+      await validateAdminOtp(email, otp);
+      alert("Login successful!");
+      // Redirect or perform further actions after successful verification
+    } catch (error) {
+      setErrorMessage(error.response?.data?.message || "Invalid OTP. Try again.");
     } finally {
       setIsLoading(false);
     }
@@ -32,31 +54,68 @@ const AdminLoginCard = ({ toggle }) => {
           Admin Login
         </h2>
         <Divider />
-        <div className="mb-4 w-full">
-          <label
-            className="block text-customGray text-sm font-normal mb-1"
-            htmlFor="adminEmail"
-          >
-            Email Address
-          </label>
-          <input
-            type="email"
-            name="email"
-            id="adminEmail"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            className="w-full p-2 border border-gray-300 rounded outline-1 focus:outline-customGray"
-          />
-        </div>
-        <button
-          type="button"
-          onClick={handleAdminLogin}
-          className="w-full bg-customGray text-white p-2 rounded hover:bg-gray-700 transition duration-200"
-          disabled={isLoading}
-        >
-          {isLoading ? "Sending OTP..." : "Send OTP"}
-        </button>
+        {errorMessage && (
+          <div className="w-full bg-red-100 text-red-700 p-2 rounded mb-4 text-sm">
+            {errorMessage}
+          </div>
+        )}
+        {!isOtpSent ? (
+          <>
+            <div className="mb-4 w-full">
+              <label
+                className="block text-customGray text-sm font-normal mb-1"
+                htmlFor="adminEmail"
+              >
+                Email Address
+              </label>
+              <input
+                type="email"
+                name="email"
+                id="adminEmail"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="w-full p-2 border border-gray-300 rounded outline-1 focus:outline-customGray"
+              />
+            </div>
+            <button
+              type="button"
+              onClick={handleAdminLogin}
+              className="w-full bg-customGray text-white p-2 rounded hover:bg-gray-700 transition duration-200"
+              disabled={isLoading}
+            >
+              {isLoading ? "Sending OTP..." : "Send OTP"}
+            </button>
+          </>
+        ) : (
+          <>
+            <div className="mb-4 w-full">
+              <label
+                className="block text-customGray text-sm font-normal mb-1"
+                htmlFor="otp"
+              >
+                Enter OTP
+              </label>
+              <input
+                type="text"
+                name="otp"
+                id="otp"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+                required
+                className="w-full p-2 border border-gray-300 rounded outline-1 focus:outline-customGray"
+              />
+            </div>
+            <button
+              type="button"
+              onClick={handleOtpVerification}
+              className="w-full bg-customGray text-white p-2 rounded hover:bg-gray-700 transition duration-200"
+              disabled={isLoading}
+            >
+              {isLoading ? "Verifying OTP..." : "Verify OTP"}
+            </button>
+          </>
+        )}
         <p className="mt-4 text-sm text-center">
           Not an admin?{" "}
           <a
