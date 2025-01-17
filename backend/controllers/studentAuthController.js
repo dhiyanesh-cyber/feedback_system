@@ -3,7 +3,8 @@ import { validateStudent as _validateStudent } from "../services/studentAuthServ
 export const validateStudent = async (req, res) => {
   try {
     const { registerNumber, dob } = req.body;
-
+    console.log(registerNumber);
+    
     if (!registerNumber || !dob) {
       return res.status(400).json({
         message: "Register Number and Date of Birth are required",
