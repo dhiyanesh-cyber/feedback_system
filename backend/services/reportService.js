@@ -10,6 +10,8 @@ import Department from "../models/departmentModel.js";
 import { getSubjectNameService } from "./subjectService.js";
 import { getDepartmentByCode } from "./departmentServices.js";
 import { getQuestionnById } from "./questionServices.js";
+import { getSemesterInNumber } from "../utils/getSemesterInNumber.js";
+import Semester from "../models/semesterModel.js";
 
 
 
@@ -168,8 +170,8 @@ export const generateDepartmentReport = async (department_id) => {
         // classDetails.forEach(classDetail => {
         //     console.log(classDetail.forms);
         // });
-
-        return generatePDF(classDetails); // Generate the PDF with the report data
+        const semester = Semester.findSemester();
+        return generatePDF({classDetails, semester}); // Generate the PDF with the report data
     } catch (error) {
         throw new Error('Error generating report: ' + error.message);
     }
@@ -188,20 +190,20 @@ function calculateScores(studentResponses) {
 }
 
 // Function to generate PDF
-function generatePDF(data) {
+function generatePDF({data, semester}) {
     const doc = new jsPDF();
 
     // Add title
     doc.setFontSize(24);
     doc.text("SSMIET AN AUTONOMOUS INSTITUTION", 105, 20, { align: "center" });
     doc.setFontSize(18);
-    doc.text("Feedback Consolidation for the EVEN semester 2022-23", 105, 30, { align: "center" });
+    doc.text("Feedback Consolidation for the " + semester + " EVEN semester 2022-23", 105, 30, { align: "center" });
 
     // Iterate through class details
     data.forEach((classDetail, classIndex) => {
         // Add header for each class
         doc.setFontSize(16);
-        doc.text(`Department: ${classDetail.department_code} , Year: ${classDetail.year} / Class: ${classDetail.class}`, 10, 60 + classIndex * 60);
+        doc.text(`Department: ${classDetail.department_code} , Year: ${classDetail.year} / Class: ${classDetail.class}, Sem: ${getSemesterInNumber(classDetail.year, semester)}`, 10, 60 + classIndex * 60);
 
         // Prepare table data
         const tableBody = classDetail.reports.map((report, reportIndex) => [
