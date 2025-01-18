@@ -170,8 +170,10 @@ export const generateDepartmentReport = async (department_id) => {
         // classDetails.forEach(classDetail => {
         //     console.log(classDetail.forms);
         // });
-        const semester = Semester.findSemester();
-        return generatePDF({classDetails, semester}); // Generate the PDF with the report data
+        const semester = await Semester.findSemester();
+        
+        
+        return generatePDF(classDetails, semester); // Generate the PDF with the report data
     } catch (error) {
         throw new Error('Error generating report: ' + error.message);
     }
@@ -190,9 +192,9 @@ function calculateScores(studentResponses) {
 }
 
 // Function to generate PDF
-function generatePDF({data, semester}) {
+function generatePDF(data, semester) {
     const doc = new jsPDF();
-
+    
     // Add title
     doc.setFontSize(24);
     doc.text("SSMIET AN AUTONOMOUS INSTITUTION", 105, 20, { align: "center" });

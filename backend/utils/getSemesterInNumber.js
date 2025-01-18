@@ -1,5 +1,7 @@
 export const getSemesterInNumber = (year, semester) => {
     // Convert semester string to lowercase to make it case-insensitive
+   
+    
     semester = semester.toLowerCase();
 
     // Validate inputs
