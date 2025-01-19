@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Card, CardHeader, Divider } from "@nextui-org/react";
-import { sendAdminOtp, validateAdminOtp,  } from "../../services/auth/adminAuthentication";
+import { sendAdminOtp, validateAdminOtp, } from "../../services/auth/adminAuthentication";
+import { useNavigate } from "react-router-dom";
 
 const AdminLoginCard = ({ toggle }) => {
   const [email, setEmail] = useState("");
@@ -9,6 +10,8 @@ const AdminLoginCard = ({ toggle }) => {
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
+  const navigate = useNavigate();
 
   const handleAdminLogin = async () => {
     if (!email) {
@@ -22,11 +25,24 @@ const AdminLoginCard = ({ toggle }) => {
       await sendAdminOtp(email);
       setIsOtpSent(true);
     } catch (error) {
-      setErrorMessage(error.response?.data?.message || "Failed to send OTP. Try again.");
+      setErrorMessage(error.message || "Failed to send OTP. Try again.");
     } finally {
       setIsLoading(false);
     }
   };
+
+
+  const navigateUser = async (adminDetails) => {
+    console.log(adminDetails);
+
+    if (adminDetails.admin.role === "Admin") {
+      navigate("/admin/departments");
+    }
+    if (adminDetails.admin.role === "Principal") {
+      navigate("/admin/report");
+    }
+  }
+
 
   const handleOtpVerification = async () => {
     if (!otp) {
@@ -37,13 +53,14 @@ const AdminLoginCard = ({ toggle }) => {
     setErrorMessage("");
     setIsLoading(true);
     try {
-      await validateAdminOtp(email, otp);
+      const adminDetails = await validateAdminOtp(email, otp);
+      localStorage.setItem("userDetails", JSON.stringify(adminDetails.admin));
       alert("Login successful!");
-      // Redirect or perform further actions after successful verification
+      navigateUser(adminDetails);
     } catch (error) {
       setErrorMessage(error.response?.data?.message || "Invalid OTP. Try again.");
     } finally {
-      setIsLoading(false);
+      setIsLoading(false); 7
     }
   };
 

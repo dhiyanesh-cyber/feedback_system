@@ -1,4 +1,6 @@
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 
 // Function to send OTP to admin email
 export const sendAdminOtp = async (email) => {
@@ -10,7 +12,7 @@ export const sendAdminOtp = async (email) => {
     return response.data; // Contains success message
   } catch (error) {
     throw new Error(
-      error.response?.data?.message || "Unable to send OTP. Try again later."
+      error.response?.data?.error || "Unable to send OTP. Try again later."
     );
   }
 };
@@ -34,10 +36,10 @@ export const validateAdminOtp = async (email, otp) => {
 
 
 // Function to validate admin login
-export const validateAdminLogin = async (username, password) => {   
+export const validateAdminLogin = async (username, password) => {
   try {
     const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/admin/validate`, { username, password });
-    return response.data; 
+    return response.data;
   } catch (error) {
     throw new Error(error.response?.data?.message || "Unable to login as admin");
   }
