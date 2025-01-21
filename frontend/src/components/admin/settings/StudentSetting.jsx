@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
+import { toast, Toaster } from "react-hot-toast";
 
 const StudentSetting = () => {
+  // State Management
   const [students, setStudents] = useState([]);
   const [formData, setFormData] = useState({
-    id: null,
     student_id: "",
     student_name: "",
     student_department: "",
@@ -11,48 +12,142 @@ const StudentSetting = () => {
     student_year: "",
     class: "",
   });
-  const [action, setAction] = useState("add"); // "add", "update", "delete", "bulkAdd", "bulkDelete"
+  const [action, setAction] = useState("add");
   const [loading, setLoading] = useState(false);
+  const [csvFile, setCsvFile] = useState(null);
+  const [uploadResult, setUploadResult] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortConfig, setSortConfig] = useState({
+    key: "student_id",
+    direction: "ascending",
+  });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [validationErrors, setValidationErrors] = useState({});
+  const [selectedYear, setSelectedYear] = useState("");
+  const [selectedDepartment, setSelectedDepartment] = useState("");
 
-  const [yearList, setYearList] = useState([]); // Dropdown options for years
-  const [departmentList, setDepartmentList] = useState([]); // Dropdown options for departments
-  const [selectedYear, setSelectedYear] = useState(""); // Selected year for bulk delete
-  const [selectedDepartment, setSelectedDepartment] = useState(""); // Selected department for bulk delete
+  // Configuration
+  const endpoint = `${import.meta.env.VITE_API_BASE_URL}/studentsettings`;
+  const itemsPerPage = 10;
 
-  const endpoint = "/api/studentsettings"; // Replace with your actual API endpoint
+  // Fetch students
+  const fetchStudents = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(endpoint);
+      if (!response.ok) throw new Error("Failed to fetch");
+      const data = await response.json();
+      setStudents(data);
+    } catch (error) {
+      toast.error("Failed to fetch students");
+      console.error("Fetch error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     fetchStudents();
   }, []);
 
-  useEffect(() => {
-    // Populate dropdown lists for year and department
-    const uniqueYears = [...new Set(students.map((stu) => stu.student_year))];
-    const uniqueDepartments = [
-      ...new Set(students.map((stu) => stu.student_department)),
-    ];
-    setYearList(uniqueYears);
-    setDepartmentList(uniqueDepartments);
-  }, [students]);
+  // Validation
+  const validateForm = () => {
+    const errors = {};
 
-  // Fetch all students
-  const fetchStudents = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch(endpoint);
-      const data = await response.json();
-      setStudents(data);
-    } catch (error) {
-      console.error("Failed to fetch students:", error);
+    if (!formData.student_id) {
+      errors.student_id = "Student ID is required";
     }
-    setLoading(false);
+    if (!formData.student_name) {
+      errors.student_name = "Student name is required";
+    }
+    if (formData.student_dob) {
+      const dob = new Date(formData.student_dob);
+      if (dob > new Date()) {
+        errors.student_dob = "Date of birth cannot be in the future";
+      }
+    }
+
+    return errors;
   };
 
-  // Handle form submission
-  const handleSubmit = async () => {
-    if (action !== "delete" && !formData.student_id.trim()) {
-      alert("Student ID is required!");
+  // Handle CSV Upload
+  const handleCsvUpload = async (e) => {
+    e.preventDefault();
+
+    if (!csvFile) {
+      toast.error("Please select a CSV file");
       return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", csvFile);
+
+    try {
+      const response = await fetch(`${endpoint}/bulk-upload`, {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setUploadResult(result);
+        fetchStudents();
+        toast.success(
+          `${result.successfulInserts} students uploaded successfully`
+        );
+        setCsvFile(null);
+      } else {
+        toast.error(result.message || "Failed to upload students");
+      }
+    } catch (error) {
+      console.error("Upload error:", error);
+      toast.error("An error occurred during upload");
+    }
+  };
+
+  // Handle Bulk Delete
+  const handleBulkDelete = async () => {
+    if (!selectedYear || !selectedDepartment) {
+      toast.error("Please select both year and department for bulk deletion");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${endpoint}/bulk-delete`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          year: selectedYear,
+          department: selectedDepartment,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        fetchStudents();
+        toast.success(`${data.deletedCount} students deleted successfully`);
+        setSelectedYear("");
+        setSelectedDepartment("");
+      } else {
+        toast.error(data.message || "Failed to delete students");
+      }
+    } catch (error) {
+      console.error("Bulk delete error:", error);
+      toast.error("An error occurred during bulk deletion");
+    }
+  };
+
+  // Handle Submit (Add/Update/Delete)
+  const handleSubmit = async () => {
+    if (action !== "delete") {
+      const errors = validateForm();
+      if (Object.keys(errors).length > 0) {
+        setValidationErrors(errors);
+        toast.error("Please fix the validation errors");
+        return;
+      }
     }
 
     try {
@@ -75,121 +170,112 @@ const StudentSetting = () => {
         });
       }
 
+      const data = await response.json();
+
       if (response.ok) {
         fetchStudents();
-        setFormData({
-          id: null,
-          student_id: "",
-          student_name: "",
-          student_department: "",
-          student_dob: "",
-          student_year: "",
-          class: "",
-        });
-        alert("Action completed successfully!");
+        resetForm();
+        toast.success(data.message || "Action completed successfully");
       } else {
-        console.error("Failed to perform the action");
+        toast.error(data.message || "Failed to perform action");
       }
     } catch (error) {
-      console.error("Error performing action:", error);
+      console.error("Submit error:", error);
+      toast.error("An error occurred");
     }
   };
 
-  // Handle bulk delete
-  const handleBulkDelete = async () => {
-    if (!selectedYear || !selectedDepartment) {
-      alert("Please select both year and department for bulk deletion!");
-      return;
-    }
+  // Reset Form
+  const resetForm = () => {
+    setFormData({
+      student_id: "",
+      student_name: "",
+      student_department: "",
+      student_dob: "",
+      student_year: "",
+      class: "",
+    });
+    setValidationErrors({});
+  };
 
-    try {
-      const response = await fetch(`${endpoint}/bulk-delete`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          year: selectedYear,
-          department: selectedDepartment,
-        }),
+  // Filtered and Sorted Students
+  const processedStudents = useMemo(() => {
+    return students
+      .filter(
+        (student) =>
+          student.student_name
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
+          student.student_id.toString().includes(searchTerm.toLowerCase())
+      )
+      .sort((a, b) => {
+        const aValue = a[sortConfig.key]?.toString().toLowerCase() || "";
+        const bValue = b[sortConfig.key]?.toString().toLowerCase() || "";
+        return sortConfig.direction === "ascending"
+          ? aValue.localeCompare(bValue)
+          : bValue.localeCompare(aValue);
       });
+  }, [students, searchTerm, sortConfig]);
 
-      if (response.ok) {
-        fetchStudents();
-        alert("Bulk deletion successful!");
-      } else {
-        console.error("Bulk deletion failed");
-      }
-    } catch (error) {
-      console.error("Error during bulk deletion:", error);
-    }
-  };
+  // Pagination
+  const paginatedStudents = useMemo(() => {
+    const firstPageIndex = (currentPage - 1) * itemsPerPage;
+    const lastPageIndex = firstPageIndex + itemsPerPage;
+    return processedStudents.slice(firstPageIndex, lastPageIndex);
+  }, [processedStudents, currentPage]);
+
+  // Get unique departments and years for dropdowns
+  const departments = useMemo(
+    () => [...new Set(students.map((s) => s.student_department))],
+    [students]
+  );
+  const years = useMemo(
+    () => [...new Set(students.map((s) => s.student_year))],
+    [students]
+  );
 
   return (
     <div className="p-6 bg-white shadow-lg rounded-md">
+      <Toaster position="top-right" />
+
       <h1 className="text-2xl font-bold mb-4">Student Settings</h1>
 
       {/* Action Selector */}
       <div className="mb-6">
         <h2 className="text-lg font-semibold mb-2">Select Action</h2>
-        <div className="flex gap-4">
-          <button
-            onClick={() => setAction("add")}
-            className={`px-4 py-2 rounded ${
-              action === "add" ? "bg-black text-white" : "bg-gray-200"
-            }`}
-          >
-            Add Student
-          </button>
-          <button
-            onClick={() => setAction("update")}
-            className={`px-4 py-2 rounded ${
-              action === "update" ? "bg-black text-white" : "bg-gray-200"
-            }`}
-          >
-            Update Student
-          </button>
-          <button
-            onClick={() => setAction("delete")}
-            className={`px-4 py-2 rounded ${
-              action === "delete" ? "bg-black text-white" : "bg-gray-200"
-            }`}
-          >
-            Delete Student
-          </button>
-          <button
-            onClick={() => setAction("bulkAdd")}
-            className={`px-4 py-2 rounded ${
-              action === "bulkAdd" ? "bg-black text-white" : "bg-gray-200"
-            }`}
-          >
-            Bulk Add Students
-          </button>
-          <button
-            onClick={() => setAction("bulkDelete")}
-            className={`px-4 py-2 rounded ${
-              action === "bulkDelete" ? "bg-black text-white" : "bg-gray-200"
-            }`}
-          >
-            Bulk Delete Students
-          </button>
+        <div className="flex flex-wrap gap-4">
+          {["add", "update", "delete", "bulkAdd", "bulkDelete"].map(
+            (actionType) => (
+              <button
+                key={actionType}
+                onClick={() => {
+                  setAction(actionType);
+                  resetForm();
+                }}
+                className={`px-4 py-2 rounded capitalize ${action === actionType ? "bg-black text-white" : "bg-gray-200"
+                  }`}
+              >
+                {actionType.replace(/([A-Z])/g, " $1").trim()}
+              </button>
+            )
+          )}
         </div>
       </div>
 
-      {/* Form Section */}
-      {action !== "bulkAdd" && action !== "bulkDelete" && (
+      {/* Regular Form */}
+      {["add", "update", "delete"].includes(action) && (
         <div className="mb-6">
           <h2 className="text-lg font-semibold mb-2">
-            {action === "add" && "Add New Student"}
-            {action === "update" && "Update Existing Student"}
-            {action === "delete" && "Delete Student"}
+            {action.charAt(0).toUpperCase() + action.slice(1)} Student
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {action !== "add" && (
               <select
                 onChange={(e) => {
                   const selected = students.find(
                     (stu) => stu.id === Number(e.target.value)
                   );
-                  setFormData(selected || {});
+                  if (selected) setFormData(selected);
                 }}
                 value={formData.id || ""}
                 className="border p-2 rounded"
@@ -197,13 +283,14 @@ const StudentSetting = () => {
                 <option value="" disabled>
                   Select Student
                 </option>
-                {students.map((stu) => (
-                  <option key={stu.id} value={stu.id}>
-                    {stu.student_id} - {stu.student_name}
+                {students.map((student) => (
+                  <option key={student.id} value={student.id}>
+                    {student.student_id} - {student.student_name}
                   </option>
                 ))}
               </select>
             )}
+
             {action !== "delete" && (
               <>
                 <input
@@ -216,8 +303,15 @@ const StudentSetting = () => {
                       student_id: e.target.value,
                     }))
                   }
-                  className="border p-2 rounded"
+                  className={`border p-2 rounded ${validationErrors.student_id ? "border-red-500" : ""
+                    }`}
                 />
+                {validationErrors.student_id && (
+                  <p className="text-red-500 text-sm">
+                    {validationErrors.student_id}
+                  </p>
+                )}
+
                 <input
                   type="text"
                   placeholder="Student Name"
@@ -228,8 +322,15 @@ const StudentSetting = () => {
                       student_name: e.target.value,
                     }))
                   }
-                  className="border p-2 rounded"
+                  className={`border p-2 rounded ${validationErrors.student_name ? "border-red-500" : ""
+                    }`}
                 />
+                {validationErrors.student_name && (
+                  <p className="text-red-500 text-sm">
+                    {validationErrors.student_name}
+                  </p>
+                )}
+
                 <input
                   type="text"
                   placeholder="Department"
@@ -242,6 +343,7 @@ const StudentSetting = () => {
                   }
                   className="border p-2 rounded"
                 />
+
                 <input
                   type="date"
                   value={formData.student_dob}
@@ -251,8 +353,15 @@ const StudentSetting = () => {
                       student_dob: e.target.value,
                     }))
                   }
-                  className="border p-2 rounded"
+                  className={`border p-2 rounded ${validationErrors.student_dob ? "border-red-500" : ""
+                    }`}
                 />
+                {validationErrors.student_dob && (
+                  <p className="text-red-500 text-sm">
+                    {validationErrors.student_dob}
+                  </p>
+                )}
+
                 <input
                   type="number"
                   placeholder="Year"
@@ -265,6 +374,7 @@ const StudentSetting = () => {
                   }
                   className="border p-2 rounded"
                 />
+
                 <input
                   type="number"
                   placeholder="Class"
@@ -282,16 +392,55 @@ const StudentSetting = () => {
           </div>
           <button
             onClick={handleSubmit}
-            className="mt-4 bg-black text-white px-4 py-2 rounded hover:bg-black"
+            className="mt-4 bg-black text-white px-4 py-2 rounded hover:bg-gray-800"
           >
-            {action === "add" && "Add Student"}
-            {action === "update" && "Update Student"}
-            {action === "delete" && "Delete Student"}
+            {action.charAt(0).toUpperCase() + action.slice(1)} Student
           </button>
         </div>
       )}
 
-      {/* Bulk Delete Section */}
+      {/* Bulk Add (CSV Upload) */}
+      {action === "bulkAdd" && (
+        <div className="mb-6">
+          <h2 className="text-lg font-semibold mb-2">Bulk Add Students</h2>
+          <div className="space-y-4">
+            <input
+              type="file"
+              accept=".csv"
+              onChange={(e) => setCsvFile(e.target.files[0])}
+              className="border p-2 rounded w-full"
+            />
+            <button
+              onClick={handleCsvUpload}
+              className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800"
+            >
+              Upload CSV
+            </button>
+
+            {uploadResult && (
+              <div className="mt-4 bg-gray-100 p-4 rounded">
+                <h3 className="font-bold">Upload Results</h3>
+                <p>Total Students: {uploadResult.totalStudents}</p>
+                <p>Successfully Added: {uploadResult.successfulInserts}</p>
+                {uploadResult.failedInserts.length > 0 && (
+                  <div className="text-red-600">
+                    <h4>Failed Inserts:</h4>
+                    <ul>
+                      {uploadResult.failedInserts.map((fail, index) => (
+                        <li key={index}>
+                          Student ID: {fail.student.student_id} - {fail.error}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Bulk Delete */}
       {action === "bulkDelete" && (
         <div className="mb-6">
           <h2 className="text-lg font-semibold mb-2">Bulk Delete Students</h2>
@@ -301,10 +450,8 @@ const StudentSetting = () => {
               onChange={(e) => setSelectedYear(e.target.value)}
               className="border p-2 rounded"
             >
-              <option value="" disabled>
-                Select Year
-              </option>
-              {yearList.map((year) => (
+              <option value="">Select Year</option>
+              {years.map((year) => (
                 <option key={year} value={year}>
                   {year}
                 </option>
@@ -315,10 +462,8 @@ const StudentSetting = () => {
               onChange={(e) => setSelectedDepartment(e.target.value)}
               className="border p-2 rounded"
             >
-              <option value="" disabled>
-                Select Department
-              </option>
-              {departmentList.map((dept) => (
+              <option value="">Select Department</option>
+              {departments.map((dept) => (
                 <option key={dept} value={dept}>
                   {dept}
                 </option>
@@ -327,32 +472,100 @@ const StudentSetting = () => {
           </div>
           <button
             onClick={handleBulkDelete}
-            className="mt-4 bg-black text-white px-4 py-2 rounded hover:bg-black"
+            className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
           >
             Bulk Delete Students
           </button>
         </div>
       )}
 
-      {/* Existing Students */}
-      <div>
-        <h2 className="text-lg font-semibold mb-2">Existing Students</h2>
-        {loading ? (
-          <p>Loading...</p>
-        ) : (
-          <ul className="divide-y divide-gray-200">
-            {students.map((student) => (
-              <li
-                key={student.id}
-                className="flex justify-between py-2 items-center"
-              >
-                <span>
-                  <strong>{student.student_id}</strong>: {student.student_name}
-                </span>
-              </li>
+      {/* Search */}
+      <div className="mb-4">
+        <input
+          type="text"
+          placeholder="Search students..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="border p-2 rounded w-full"
+        />
+      </div>
+
+      {/* Students Table */}
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              {[
+                { key: "student_id", label: "ID" },
+                { key: "student_name", label: "Name" },
+                { key: "student_department", label: "Department" },
+                { key: "student_dob", label: "DOB" },
+                { key: "student_year", label: "Year" },
+                { key: "class", label: "Class" },
+              ].map(({ key, label }) => (
+                <th
+                  key={key}
+                  onClick={() =>
+                    setSortConfig({
+                      key,
+                      direction:
+                        sortConfig.key === key &&
+                          sortConfig.direction === "ascending"
+                          ? "descending"
+                          : "ascending",
+                    })
+                  }
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                >
+                  {label}
+                  {sortConfig.key === key && (
+                    <span>
+                      {sortConfig.direction === "ascending" ? " ▲" : " ▼"}
+                    </span>
+                  )}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {paginatedStudents.map((student) => (
+              <tr key={student.id}>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {student.student_id}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {student.student_name}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {student.student_department}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {new Date(student.student_dob).toLocaleDateString()}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {student.student_year}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">{student.class}</td>
+              </tr>
             ))}
-          </ul>
-        )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Pagination */}
+      <div className="mt-4 flex justify-center gap-2">
+        {Array.from({
+          length: Math.ceil(processedStudents.length / itemsPerPage),
+        }).map((_, index) => (
+          <button
+            key={index}
+            onClick={() => setCurrentPage(index + 1)}
+            className={`px-3 py-1 rounded ${currentPage === index + 1 ? "bg-black text-white" : "bg-gray-200"
+              }`}
+          >
+            {index + 1}
+          </button>
+        ))}
       </div>
     </div>
   );

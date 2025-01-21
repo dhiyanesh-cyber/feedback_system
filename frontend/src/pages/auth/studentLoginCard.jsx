@@ -22,6 +22,8 @@ const StudentLoginCard = ({ toggle }) => {
     }
 
     const formattedDOB = formatDateToYYYYMMDD(dateOfBirth);
+    console.log(formattedDOB);
+
 
     setIsLoading(true);
     setErrorMessage(""); // Clear any previous error message

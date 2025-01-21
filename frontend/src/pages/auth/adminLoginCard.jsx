@@ -35,7 +35,7 @@ const AdminLoginCard = ({ toggle }) => {
   const navigateUser = async (adminDetails) => {
     console.log(adminDetails);
 
-    if (adminDetails.admin.role === "Admin") {
+    if (adminDetails.admin.role.toLowerCase() === "admin") {
       navigate("/admin/departments");
     }
     if (adminDetails.admin.role === "Principal") {

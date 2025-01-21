@@ -3,6 +3,7 @@ import DepartmentSetting from "./DepartmentSetting";
 import Navbar from "../../Nabvbar";
 import StudentSetting from "./StudentSetting";
 import FacultySetting from "./FacultySetting";
+import SemesterComponent from "./SemesterComponent";
 
 const SettingsPage = () => {
   const [activeTab, setActiveTab] = useState("departments"); // Default tab
@@ -15,6 +16,8 @@ const SettingsPage = () => {
         return <StudentSetting />;
       case "faculties":
         return <FacultySetting />;
+      case "semester":
+        return <SemesterComponent />;
       default:
         return <div>Select a category from the left menu</div>;
     }
@@ -30,11 +33,10 @@ const SettingsPage = () => {
             <li>
               <button
                 onClick={() => setActiveTab("departments")}
-                className={`block w-full text-left px-4 py-2 rounded ${
-                  activeTab === "departments"
-                    ? "bg-black text-white"
-                    : "hover:bg-gray-200"
-                }`}
+                className={`block w-full text-left px-4 py-2 rounded ${activeTab === "departments"
+                  ? "bg-black text-white"
+                  : "hover:bg-gray-200"
+                  }`}
               >
                 Departments
               </button>
@@ -42,11 +44,10 @@ const SettingsPage = () => {
             <li>
               <button
                 onClick={() => setActiveTab("students")}
-                className={`block w-full text-left px-4 py-2 rounded ${
-                  activeTab === "students"
-                    ? "bg-black text-white"
-                    : "hover:bg-gray-200"
-                }`}
+                className={`block w-full text-left px-4 py-2 rounded ${activeTab === "students"
+                  ? "bg-black text-white"
+                  : "hover:bg-gray-200"
+                  }`}
               >
                 Students
               </button>
@@ -54,13 +55,23 @@ const SettingsPage = () => {
             <li>
               <button
                 onClick={() => setActiveTab("faculties")}
-                className={`block w-full text-left px-4 py-2 rounded ${
-                  activeTab === "faculties"
-                    ? "bg-black text-white"
-                    : "hover:bg-gray-200"
-                }`}
+                className={`block w-full text-left px-4 py-2 rounded ${activeTab === "faculties"
+                  ? "bg-black text-white"
+                  : "hover:bg-gray-200"
+                  }`}
               >
                 Faculties
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => setActiveTab("semester")}
+                className={`block w-full text-left px-4 py-2 rounded ${activeTab === "semester"
+                  ? "bg-black text-white"
+                  : "hover:bg-gray-200"
+                  }`}
+              >
+                Semester
               </button>
             </li>
           </ul>

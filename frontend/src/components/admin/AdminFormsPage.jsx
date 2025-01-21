@@ -136,7 +136,7 @@ const AdminFormsPage = () => {
 
         {showModal && (
           <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-            <div className="w-full max-w-md bg-white rounded-lg shadow-xl p-6">
+            <div className="w-full max-w-md bg-white rounded-lg shadow-xl p-6 relative">
               <h2 className="text-2xl font-bold text-center text-black opacity-90 mb-4">
                 Add Details for Class: {class_id}
               </h2>
@@ -242,8 +242,7 @@ const AdminFormsPage = () => {
               </div>
               <button
                 onClick={handleCloseModal}
-                className="absolute flex items-center justify-center w-10 h-10 rounded-full bg-black text-white hover:bg-red-600 text-2xl font-normal"
-                style={{ right: "500px" ,top: "270px" }}
+                className="absolute top-2 right-2 flex items-center justify-center w-10 h-10 rounded-full bg-black text-white hover:bg-red-600 text-2xl font-normal"
               >
                 ×
               </button>
