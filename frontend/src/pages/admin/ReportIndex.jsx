@@ -23,16 +23,16 @@ const ReportIndex = () => {
             Select Report
           </h2>
           <ul className="space-y-4">
-            <li className="flex justify-between">
+            <li className="flex gap-2 justify-between">
               <button
                 onClick={handleDeptClick}
-                className="px-4 py-2 text-white bg-customGray hover:bg-gray-700 rounded-md shadow-md transition duration-200"
+                className="px-4 py-2 w-full text-white bg-customGray hover:bg-gray-700 rounded-md shadow-md transition duration-200"
               >
                 Departments
               </button>
               <button
                 onClick={handleFacultyClick}
-                className="px-4 py-2 text-white bg-customGray hover:bg-gray-700 rounded-md shadow-md transition duration-200"
+                className="px-4 py-2 w-full text-white bg-customGray hover:bg-gray-700 rounded-md shadow-md transition duration-200"
               >
                 Faculty
               </button>

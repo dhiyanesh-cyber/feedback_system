@@ -10,7 +10,6 @@ import { EndpointProvider } from "./context/EndpointContext";
 
 import LoginComponent from "./pages/auth/loginComponent";
 import StudentPanel from "./pages/student/StudentPanel";
-// import DepartmentList from "./components/admin/DepartmentList";
 import YearSelection from "./components/admin/YearSelection";
 import ClassList from "./components/admin/ClassList";
 import AddDetails from "./components/admin/AddDetails";
@@ -26,15 +25,17 @@ import SettingsPage from "./components/admin/settings/SettingsPage";
 import ReportPageDepartments from "./pages/admin/ReportPageDepartments";
 import ReportIndex from "./pages/admin/ReportIndex";
 
-// Protected route for authentication and role-based access
-const ProtectedRoute = ({ children, role }) => {
+// Enhanced ProtectedRoute for role-based access
+const ProtectedRoute = ({ children, allowedRoles }) => {
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+  console.log("From local storage : ", userDetails.role.toLowerCase());
+
 
   if (!userDetails) {
     return <Navigate to="/auth" replace />;
   }
 
-  if (role && userDetails.role !== role) {
+  if (!allowedRoles.includes(userDetails.role.toLowerCase())) {
     return <Navigate to="/" replace />;
   }
 
@@ -52,11 +53,12 @@ const App = () => {
               <Route path="/" element={<Navigate to="/auth" replace />} />
               {/* Authentication route */}
               <Route path="/auth" element={<LoginComponent />} />
+
               {/* Student routing */}
               <Route
                 path="/student-panel"
                 element={
-                  <ProtectedRoute role="student">
+                  <ProtectedRoute allowedRoles={["student"]}>
                     <StudentPanel />
                   </ProtectedRoute>
                 }
@@ -64,25 +66,34 @@ const App = () => {
               <Route
                 path="/student-panel/:student_id/form/:form_id"
                 element={
-                  <ProtectedRoute role="student">
+                  <ProtectedRoute allowedRoles={["student"]}>
                     <Questionnaire />
                   </ProtectedRoute>
                 }
               />
-              {/* Admin routing */}
+
+              {/* Admin and Principal routing */}
               <Route
                 path="/admin/departments"
                 element={
-                  <ProtectedRoute role="admin">
+                  <ProtectedRoute allowedRoles={["admin"]}>
                     <DepartmentList />
                   </ProtectedRoute>
                 }
               />
-              <Route path="/admin/settings" element={<SettingsPage />} />
+
               <Route
-                path="/admin/report/"
+                path="/admin/settings"
                 element={
-                  <ProtectedRoute role="admin">
+                  <ProtectedRoute allowedRoles={["admin"]}>
+                    <SettingsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/report"
+                element={
+                  <ProtectedRoute allowedRoles={["admin", "principal"]}>
                     <ReportIndex />
                   </ProtectedRoute>
                 }
@@ -90,7 +101,7 @@ const App = () => {
               <Route
                 path="/admin/report/faculty"
                 element={
-                  <ProtectedRoute role="admin">
+                  <ProtectedRoute allowedRoles={["admin", "principal"]}>
                     <ReportPage />
                   </ProtectedRoute>
                 }
@@ -98,7 +109,7 @@ const App = () => {
               <Route
                 path="/admin/report/departments"
                 element={
-                  <ProtectedRoute role="admin">
+                  <ProtectedRoute allowedRoles={["admin", "principal"]}>
                     <ReportPageDepartments />
                   </ProtectedRoute>
                 }
@@ -106,31 +117,31 @@ const App = () => {
               <Route
                 path="/admin/report/:faculty_id"
                 element={
-                  <ProtectedRoute role="admin">
+                  <ProtectedRoute allowedRoles={["admin", "principal"]}>
                     <ReportPageFaculty />
                   </ProtectedRoute>
                 }
               />
               <Route
-                path="/admin/departments/:department_id/"
+                path="/admin/departments/:department_id"
                 element={
-                  <ProtectedRoute role="admin">
+                  <ProtectedRoute allowedRoles={["admin"]}>
                     <YearSelection />
                   </ProtectedRoute>
                 }
               />
               <Route
-                path="/admin/departments/:department_id/:year_id/"
+                path="/admin/departments/:department_id/:year_id"
                 element={
-                  <ProtectedRoute role="admin">
+                  <ProtectedRoute allowedRoles={["admin"]}>
                     <ClassList />
                   </ProtectedRoute>
                 }
               />
               <Route
-                path="/admin/departments/:department_id/:year_id/:class_id/"
+                path="/admin/departments/:department_id/:year_id/:class_id"
                 element={
-                  <ProtectedRoute role="admin">
+                  <ProtectedRoute allowedRoles={["admin"]}>
                     <AdminFormsPage />
                   </ProtectedRoute>
                 }
@@ -138,7 +149,7 @@ const App = () => {
               <Route
                 path="/admin/departments/:department_id/publish"
                 element={
-                  <ProtectedRoute role="admin">
+                  <ProtectedRoute allowedRoles={["admin"]}>
                     <PublishPage />
                   </ProtectedRoute>
                 }
