@@ -81,6 +81,7 @@ const App = () => {
                   </ProtectedRoute>
                 }
               />
+
               <Route
                 path="/admin/settings"
                 element={
