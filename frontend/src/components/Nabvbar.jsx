@@ -12,11 +12,15 @@ const Navbar = (props) => {
   };
 
   const handleLogoClick = () => {
-    console.log("Clicked ", props.isLogin);
 
-    userDetails.role === "admin"
-      ? navigate("/admin/departments")
-      : navigate("/student-panel");
+
+    if (userDetails.role === "Principal") {
+      navigate("/admin/report");
+    } else if (userDetails.role === "Admin") {
+      navigate("/admin/departments");
+    } else {
+      navigate("/student-panel");
+    }
   };
 
   const handleSettingsClick = () => {
@@ -24,6 +28,9 @@ const Navbar = (props) => {
   };
   const handleReportClick = () => {
     navigate("/admin/report");
+  };
+  const handleDashboardClick = () => {
+    navigate("/admin/departments");
   };
 
   return (
@@ -58,7 +65,14 @@ const Navbar = (props) => {
         <div className="flex items-center sm:mt-0">
           {userDetails?.role === "Admin" && (
             <>
-             <button
+
+              <button
+                onClick={handleDashboardClick}
+                className="text-black hover:text-gray-700 mr-4 sm:mr-6"
+              >
+                <h1 className="text-black text-xl hover:text-gray-700 mr-4 sm:mr-6">Dashboard</h1>
+              </button>
+              <button
                 onClick={handleReportClick}
                 className="text-black hover:text-gray-700 mr-4 sm:mr-6"
               >

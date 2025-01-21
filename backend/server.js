@@ -9,6 +9,7 @@ import facultyRouter from "./routes/facultyRoutes.js"
 import studentResponseRouter from "./routes/studentResponseRoutes.js"
 import subjectRouter from "./routes/subjectRoutes.js"
 import reportRouter from "./routes/reportRoutes.js"
+import studentRoutes from "./routes/studentRoutes.js"
 import dotenv from "dotenv";
 import cors from "./config/corsConfig.js"
 import path from 'path';
@@ -28,6 +29,7 @@ app.use(express.static(path.join(__dirname, 'dist')));
 
 
 
+
 const PORT = process.env.PORT || 3000;
 app.use(json());
 app.use("/api/departments", departmentRouter);
@@ -42,7 +44,7 @@ app.use("/api/subject", subjectRouter)
 app.use("/api/report", reportRouter)
 app.use('/api/departmentsetting', departmentRouter);
 app.use('/api/facultysettings', facultyRouter);
-
+app.use('/api/studentsettings', studentRoutes);
 
 
 
