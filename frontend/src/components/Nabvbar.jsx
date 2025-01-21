@@ -56,7 +56,7 @@ const Navbar = (props) => {
       {props.isLogin == true ?
         <></> :
         <div className="flex items-center sm:mt-0">
-          {userDetails?.role === "admin" && (
+          {userDetails?.role === "Admin" && (
             <>
              <button
                 onClick={handleReportClick}
