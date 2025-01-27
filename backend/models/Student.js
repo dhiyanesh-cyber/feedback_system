@@ -109,7 +109,7 @@ class Student {
     static async delete(id) {
         try {
             const [result] = await db.query(
-                'DELETE FROM student_details WHERE id = ?',
+                'DELETE FROM student_details WHERE student_id = ?',
                 [id]
             );
             return result;
