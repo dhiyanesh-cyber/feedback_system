@@ -37,6 +37,8 @@ const StudentSetting = () => {
       const response = await fetch(endpoint);
       if (!response.ok) throw new Error("Failed to fetch");
       const data = await response.json();
+      console.log(data[0].student_id);
+
       setStudents(data);
     } catch (error) {
       toast.error("Failed to fetch students");
@@ -269,22 +271,29 @@ const StudentSetting = () => {
             {action.charAt(0).toUpperCase() + action.slice(1)} Student
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+            {/* Add student does not need the dropdown */}
             {action !== "add" && (
               <select
                 onChange={(e) => {
                   const selected = students.find(
-                    (stu) => stu.id === Number(e.target.value)
+                    (student) => {
+                      return student.student_id === Number(e.target.value)
+                    }
                   );
-                  if (selected) setFormData(selected);
+                  if (selected) {
+                    console.log(e.target.value);
+                    setFormData(selected)
+                  };
                 }}
-                value={formData.id || ""}
+                value={formData.student_id || ""}
                 className="border p-2 rounded"
               >
                 <option value="" disabled>
                   Select Student
                 </option>
                 {students.map((student) => (
-                  <option key={student.id} value={student.id}>
+                  <option key={student.student_id} value={student.student_id}>
                     {student.student_id} - {student.student_name}
                   </option>
                 ))}

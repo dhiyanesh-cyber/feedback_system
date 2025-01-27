@@ -172,7 +172,8 @@ const FacultySetting = () => {
   const handleFacultySelect = (selectedCode) => {
     // Find the selected faculty
     const selected = faculties.find(
-      (faculty) => faculty.code === Number(selectedCode)
+
+      (faculty) => { return faculty.code === Number(selectedCode) }
     );
 
     // If faculty found, set the form data
@@ -238,9 +239,8 @@ const FacultySetting = () => {
               setAction(currentAction);
               resetForm();
             }}
-            className={`px-4 py-2 rounded capitalize ${
-              action === currentAction ? "bg-black text-white" : "bg-gray-200"
-            }`}
+            className={`px-4 py-2 rounded capitalize ${action === currentAction ? "bg-black text-white" : "bg-gray-200"
+              }`}
           >
             {currentAction} Faculty
           </button>
@@ -288,9 +288,8 @@ const FacultySetting = () => {
                       code: e.target.value,
                     }))
                   }
-                  className={`border p-2 rounded w-full ${
-                    validationErrors.code ? "border-red-500" : ""
-                  }`}
+                  className={`border p-2 rounded w-full ${validationErrors.code ? "border-red-500" : ""
+                    }`}
                 />
                 {validationErrors.code && (
                   <p className="text-red-500 text-sm mt-1">
@@ -311,9 +310,8 @@ const FacultySetting = () => {
                       faculty_name: e.target.value,
                     }))
                   }
-                  className={`border p-2 rounded w-full ${
-                    validationErrors.faculty_name ? "border-red-500" : ""
-                  }`}
+                  className={`border p-2 rounded w-full ${validationErrors.faculty_name ? "border-red-500" : ""
+                    }`}
                 />
                 {validationErrors.faculty_name && (
                   <p className="text-red-500 text-sm mt-1">
@@ -336,9 +334,8 @@ const FacultySetting = () => {
                       age: selectedDate ? calculateAge(selectedDate) : "",
                     }));
                   }}
-                  className={`border p-2 rounded w-full ${
-                    validationErrors.dob ? "border-red-500" : ""
-                  }`}
+                  className={`border p-2 rounded w-full ${validationErrors.dob ? "border-red-500" : ""
+                    }`}
                 />
                 {validationErrors.dob && (
                   <p className="text-red-500 text-sm mt-1">
@@ -470,9 +467,8 @@ const FacultySetting = () => {
           <button
             key={`page-${index + 1}`}
             onClick={() => setCurrentPage(index + 1)}
-            className={`px-3 py-1 rounded ${
-              currentPage === index + 1 ? "bg-black text-white" : "bg-gray-200"
-            }`}
+            className={`px-3 py-1 rounded ${currentPage === index + 1 ? "bg-black text-white" : "bg-gray-200"
+              }`}
           >
             {index + 1}
           </button>
