@@ -8,7 +8,8 @@ import {
     updateStudent,
     deleteStudent,
     bulkDeleteStudents,
-    bulkUploadStudents
+    bulkUploadStudents,
+    getStudentController
 } from '../controllers/studentController.js';
 
 
@@ -50,5 +51,8 @@ router.delete('/:student_id', deleteStudent);
 // Bulk Operations Routes
 router.post('/bulk-delete', bulkDeleteStudents);
 router.post('/bulk-upload', upload.single('file'), bulkUploadStudents);
+
+
+
 
 export default router;

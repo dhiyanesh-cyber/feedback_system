@@ -5,6 +5,7 @@ import { getAllSubjects } from "../../services/subjectApi";
 import { getAllFaculty } from "../../services/facultyApi";
 import Navbar from "../../components/Nabvbar";
 import FacultyFormComponent from "./FacultyFormComponent";
+import { getStudents } from "../../services/studentApi";
 
 const AdminFormsPage = () => {
   const { department_id, year_id, class_id } = useParams();
@@ -22,12 +23,19 @@ const AdminFormsPage = () => {
   const [subjectSearch, setSubjectSearch] = useState("");
   const [isFacultySelected, setIsFacultySelected] = useState(false);
   const [isSubjectSelected, setIsSubjectSelected] = useState(false);
+  const [students, setStudents] = useState([]);
+  const [selectedStudents, setSelectedStudents] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const formData = await fetchForms(department_id, year_id, class_id);
         setForms(formData);
+
+        const studentsData = await getStudents(department_id, year_id, class_id);
+        setStudents(studentsData);
+        console.log(studentsData);
+
 
         const facultyData = await getAllFaculty();
         setFacultyIds(facultyData);
@@ -44,32 +52,56 @@ const AdminFormsPage = () => {
     fetchData();
   }, [department_id, year_id, class_id]);
 
+  const handleStudentSelection = (studentId) => {
+    setSelectedStudents((prev) => {
+      if (prev.includes(studentId)) {
+        return prev.filter((id) => id !== studentId);
+      } else {
+        return [...prev, studentId];
+      }
+    });
+  };
+
+  const handleSelectAllStudents = () => {
+    if (selectedStudents.length === students.length) {
+      setSelectedStudents([]);
+    } else {
+      setSelectedStudents(students.map((student) => student.student_id));
+    }
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
   const handleCreate = async () => {
+    if (!formData.staff_id || !formData.subject_id || selectedStudents.length === 0) {
+      setError("Please fill all required fields and select at least one student");
+      return;
+    }
+
     try {
       const data = await createForm(
         department_id,
         year_id,
         class_id,
         formData.staff_id,
-        formData.subject_id
+        formData.subject_id,
+        selectedStudents
       );
 
       setForms((prevForms) => [...prevForms, data.form]);
 
-      // Reset form and search states
+      // Reset all states
       setFormData({ staff_id: "", subject_id: "" });
       setFacultySearch("");
       setSubjectSearch("");
       setIsFacultySelected(false);
       setIsSubjectSelected(false);
-
-      // Close modal
+      setSelectedStudents([]);
       setShowModal(false);
+      setError(null);
     } catch (err) {
       console.error("Error adding form:", err);
       setError(err.message);
@@ -100,7 +132,52 @@ const AdminFormsPage = () => {
     setSubjectSearch("");
     setIsFacultySelected(false);
     setIsSubjectSelected(false);
+    setSelectedStudents([]);
+    setError(null);
   };
+
+  const renderStudentSelection = () => (
+    <div className="mt-4">
+      <div className="flex items-center justify-between mb-2">
+        <label className="font-medium text-md text-gray-900">
+          Select Students
+        </label>
+        <button
+          onClick={handleSelectAllStudents}
+          className="text-sm text-gray-600 hover:text-gray-900 px-3 py-1 rounded-md border border-gray-300 hover:bg-gray-100"
+        >
+          {selectedStudents.length === students.length
+            ? "Deselect All"
+            : "Select All"}
+        </button>
+      </div>
+      <div className="max-h-40 overflow-y-auto border border-gray-300 rounded-lg">
+        {students.map((student) => (
+          <div
+            key={student.student_id}
+            className="flex items-center p-2 hover:bg-gray-100"
+          >
+            <input
+              type="checkbox"
+              id={`student-${student.student_id}`}
+              checked={selectedStudents.includes(student.student_id)}
+              onChange={() => handleStudentSelection(student.student_id)}
+              className="mr-2 h-4 w-4 text-gray-600 focus:ring-gray-500 border-gray-300 rounded"
+            />
+            <label
+              htmlFor={`student-${student.student_id}`}
+              className="flex-1 cursor-pointer"
+            >
+              {student.student_name} ({student.roll_no})
+            </label>
+          </div>
+        ))}
+      </div>
+      <p className="text-sm text-gray-600 mt-1">
+        {selectedStudents.length} students selected
+      </p>
+    </div>
+  );
 
   if (loading)
     return <p className="text-center text-gray-600">Loading forms...</p>;
@@ -113,7 +190,7 @@ const AdminFormsPage = () => {
         <h2 className="text-3xl font-normal text-center text-black opacity-90 mb-6">
           Forms for{" "}
           <span className="font-bold">
-            {department_id}, Year :{year_id}, Class: {class_id}
+            {department_id}, Year: {year_id}, Class: {class_id}
           </span>
         </h2>
         <ul className="flex flex-wrap flex-row justify-center gap-4 overflow-hidden">
@@ -140,6 +217,11 @@ const AdminFormsPage = () => {
               <h2 className="text-2xl font-bold text-center text-black opacity-90 mb-4">
                 Add Details for Class: {class_id}
               </h2>
+              {error && (
+                <div className="mb-4 p-2 bg-red-100 text-red-700 rounded-lg">
+                  {error}
+                </div>
+              )}
               <div className="space-y-4">
                 <div className="flex flex-col relative">
                   <label className="font-medium text-md text-gray-900 mb-1">
@@ -232,6 +314,8 @@ const AdminFormsPage = () => {
                     </ul>
                   )}
                 </div>
+
+                {renderStudentSelection()}
 
                 <button
                   onClick={handleCreate}
