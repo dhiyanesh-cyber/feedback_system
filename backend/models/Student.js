@@ -95,7 +95,7 @@ class Student {
             } = studentData;
 
             const [result] = await db.query(
-                'UPDATE student_details SET student_id = ?, student_name = ?, student_department = ?, student_dob = ?, student_year = ?, class = ? WHERE id = ?',
+                'UPDATE student_details SET student_id = ?, student_name = ?, student_department = ?, student_dob = ?, student_year = ?, class = ? WHERE student_id = ?',
                 [student_id, student_name, student_department, student_dob, student_year, studentClass, id]
             );
             return result;
@@ -106,18 +106,46 @@ class Student {
     }
 
     // Delete a student
+    // static async delete(id) {
+    //     try {
+    //         const [result] = await db.query(
+    //             'DELETE FROM student_details WHERE student_id = ?',
+    //             [id]
+    //         );
+    //         return result;
+    //     } catch (error) {
+    //         console.error('Delete Student Error:', error);
+    //         throw error;
+    //     }
+    // }
+
     static async delete(id) {
+        const connection = await db.getConnection();
         try {
-            const [result] = await db.query(
-                'DELETE FROM student_details WHERE student_id = ?',
-                [id]
-            );
-            return result;
+          await connection.beginTransaction();
+      
+          // Step 1: Delete related records in student_forms
+          await connection.query(
+            'DELETE FROM student_forms WHERE student_forms_student_id = ?',
+            [id]
+          );
+      
+          // Step 2: Delete the student from student_details
+          const [result] = await connection.query(
+            'DELETE FROM student_details WHERE student_id = ?',
+            [id]
+          );
+      
+          await connection.commit();
+          return result;
         } catch (error) {
-            console.error('Delete Student Error:', error);
-            throw error;
+          await connection.rollback();
+          console.error('Delete Student Error:', error);
+          throw error;
+        } finally {
+          connection.release();
         }
-    }
+      }
 
     // Bulk delete students
     static async bulkDelete(year, department) {
