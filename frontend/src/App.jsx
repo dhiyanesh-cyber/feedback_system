@@ -28,7 +28,6 @@ import ReportIndex from "./pages/admin/ReportIndex";
 // Enhanced ProtectedRoute for role-based access
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
-  console.log("From local storage : ", userDetails.role.toLowerCase());
 
 
   if (!userDetails) {

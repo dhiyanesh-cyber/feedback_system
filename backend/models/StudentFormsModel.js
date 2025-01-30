@@ -33,6 +33,20 @@ class StudentForm {
 
         }
     }
+
+    static async deleteFormByFormId(form_id) {
+        try {
+            const [result] = await db.execute(
+                "DELETE FROM student_forms WHERE form_id = ?",
+                [form_id]
+            );
+
+            return result;
+        } catch (error) {
+            console.error("Error deleting form:", error);
+            throw error;
+        }
+    }
 }
 
 

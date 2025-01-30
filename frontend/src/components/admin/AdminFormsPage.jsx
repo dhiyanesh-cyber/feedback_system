@@ -25,6 +25,7 @@ const AdminFormsPage = () => {
   const [isSubjectSelected, setIsSubjectSelected] = useState(false);
   const [students, setStudents] = useState([]);
   const [selectedStudents, setSelectedStudents] = useState([]);
+  const [studentSearch, setStudentSearch] = useState(""); // New state for student search
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,8 +35,6 @@ const AdminFormsPage = () => {
 
         const studentsData = await getStudents(department_id, year_id, class_id);
         setStudents(studentsData);
-        console.log(studentsData);
-
 
         const facultyData = await getAllFaculty();
         setFacultyIds(facultyData);
@@ -136,48 +135,67 @@ const AdminFormsPage = () => {
     setError(null);
   };
 
-  const renderStudentSelection = () => (
-    <div className="mt-4">
-      <div className="flex items-center justify-between mb-2">
-        <label className="font-medium text-md text-gray-900">
-          Select Students
-        </label>
-        <button
-          onClick={handleSelectAllStudents}
-          className="text-sm text-gray-600 hover:text-gray-900 px-3 py-1 rounded-md border border-gray-300 hover:bg-gray-100"
-        >
-          {selectedStudents.length === students.length
-            ? "Deselect All"
-            : "Select All"}
-        </button>
-      </div>
-      <div className="max-h-40 overflow-y-auto border border-gray-300 rounded-lg">
-        {students.map((student) => (
-          <div
-            key={student.student_id}
-            className="flex items-center p-2 hover:bg-gray-100"
+  const renderStudentSelection = () => {
+    // Filter students based on the search term
+    const filteredStudents = students.filter(
+      (student) =>
+        student.student_name.toLowerCase().includes(studentSearch.toLowerCase()) ||
+        student.student_id.includes(studentSearch.toLowerCase())
+    );
+
+    return (
+      <div className="mt-4">
+        <div className="flex items-center justify-between mb-2">
+          <label className="font-medium text-md text-gray-900">
+            Select Students
+          </label>
+          <button
+            onClick={handleSelectAllStudents}
+            className="text-sm text-gray-600 hover:text-gray-900 px-3 py-1 rounded-md border border-gray-300 hover:bg-gray-100"
           >
-            <input
-              type="checkbox"
-              id={`student-${student.student_id}`}
-              checked={selectedStudents.includes(student.student_id)}
-              onChange={() => handleStudentSelection(student.student_id)}
-              className="mr-2 h-4 w-4 text-gray-600 focus:ring-gray-500 border-gray-300 rounded"
-            />
-            <label
-              htmlFor={`student-${student.student_id}`}
-              className="flex-1 cursor-pointer"
+            {selectedStudents.length === students.length
+              ? "Deselect All"
+              : "Select All"}
+          </button>
+        </div>
+        {/* Add search input for students */}
+        <input
+          type="text"
+          placeholder="Search students..."
+          value={studentSearch}
+          onChange={(e) =>
+            setStudentSearch(e.target.value)
+          }
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300"
+        />
+        <div className="max-h-40 overflow-y-auto border border-gray-300 rounded-lg">
+          {filteredStudents.map((student) => (
+            <div
+              key={student.student_id}
+              className="flex items-center p-2 hover:bg-gray-100"
             >
-              {student.student_name} ({student.roll_no})
-            </label>
-          </div>
-        ))}
+              <input
+                type="checkbox"
+                id={`student-${student.student_id}`}
+                checked={selectedStudents.includes(student.student_id)}
+                onChange={() => handleStudentSelection(student.student_id)}
+                className="mr-2 h-4 w-4 text-gray-600 focus:ring-gray-500 border-gray-300 rounded"
+              />
+              <label
+                htmlFor={`student-${student.student_id}`}
+                className="flex-1 cursor-pointer"
+              >
+                {student.student_name} ({student.student_id})
+              </label>
+            </div>
+          ))}
+        </div>
+        <p className="text-sm text-gray-600 mt-1">
+          {selectedStudents.length} students selected
+        </p>
       </div>
-      <p className="text-sm text-gray-600 mt-1">
-        {selectedStudents.length} students selected
-      </p>
-    </div>
-  );
+    );
+  };
 
   if (loading)
     return <p className="text-center text-gray-600">Loading forms...</p>;

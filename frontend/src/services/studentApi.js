@@ -8,7 +8,6 @@ export const getStudents = async (department_code, year, class_no) => {
         if (!response.ok) {
             throw new Error("Failed to fetch student details.");
         }
-        console.log("Response", response);
 
         const data = await response.json();
         return data;

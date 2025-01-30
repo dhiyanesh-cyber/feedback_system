@@ -45,8 +45,7 @@ export const createForm = async (req, res) => {
     }
 
     // Call the service to insert the new form
-    const newForm = await createFormInDB(department_code, year, class_name, subject_id, staff_id);
-    console.log("Selected students : " + selectedStudents);
+    const newForm = await createFormInDB(department_code, year, class_name, subject_id, staff_id, selectedStudents.length);
 
     selectedStudents.map(async (student_id) => {
       await createStudentForm(student_id, newForm.form_id);
