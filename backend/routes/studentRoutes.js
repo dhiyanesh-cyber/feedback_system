@@ -27,15 +27,25 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({
-    storage: storage,
+
+    dest: 'uploads/',
+
     fileFilter: (req, file, cb) => {
-        const ext = path.extname(file.originalname).toLowerCase();
-        if (ext !== '.csv') {
-            return cb(new Error('Only CSV files are allowed'));
+
+        // Accept only CSV files
+
+        if (file.mimetype === 'text/csv' || file.mimetype === 'application/vnd.ms-excel') {
+
+            cb(null, true);
+
+        } else {
+
+            cb(new Error('Please upload a CSV file'));
+
         }
-        cb(null, true);
-    },
-    limits: { fileSize: 5 * 1024 * 1024 } // 5MB file size limit
+
+    }
+
 });
 
 // Route for validating student details

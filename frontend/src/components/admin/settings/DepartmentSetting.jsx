@@ -3,9 +3,8 @@ import React, { useState, useEffect } from "react";
 // Toast Component
 const Toast = ({ message, type, onClose }) => (
   <div
-    className={`fixed top-4 right-4 p-4 rounded shadow-lg ${
-      type === "success" ? "bg-green-500" : "bg-red-500"
-    } text-white animate-fade-in-out`}
+    className={`fixed top-4 right-4 p-4 rounded shadow-lg ${type === "success" ? "bg-green-500" : "bg-red-500"
+      } text-white animate-fade-in-out`}
   >
     {message}
     <button onClick={onClose} className="ml-2 text-white font-bold">
@@ -258,31 +257,28 @@ const DepartmentSetting = () => {
               setAction("add");
               resetForm();
             }}
-            className={`px-4 py-2 rounded ${
-              action === "add" ? "bg-black text-white" : "bg-gray-200"
-            }`}
+            className={`px-4 py-2 rounded ${action === "add" ? "bg-black text-white" : "bg-gray-200"
+              }`}
           >
             Add Department
           </button>
-          <button
+          {/* <button
             onClick={() => {
               setAction("update");
               resetForm();
             }}
-            className={`px-4 py-2 rounded ${
-              action === "update" ? "bg-black text-white" : "bg-gray-200"
-            }`}
+            className={`px-4 py-2 rounded ${action === "update" ? "bg-black text-white" : "bg-gray-200"
+              }`}
           >
             Update Department
-          </button>
+          </button> */}
           <button
             onClick={() => {
               setAction("delete");
               resetForm();
             }}
-            className={`px-4 py-2 rounded ${
-              action === "delete" ? "bg-black text-white" : "bg-gray-200"
-            }`}
+            className={`px-4 py-2 rounded ${action === "delete" ? "bg-black text-white" : "bg-gray-200"
+              }`}
           >
             Delete Department
           </button>
@@ -324,9 +320,8 @@ const DepartmentSetting = () => {
                   setFormData((prev) => ({ ...prev, code: e.target.value }));
                   setValidationErrors((prev) => ({ ...prev, code: "" }));
                 }}
-                className={`border p-2 rounded ${
-                  validationErrors.code ? "border-red-500" : ""
-                }`}
+                className={`border p-2 rounded ${validationErrors.code ? "border-red-500" : ""
+                  }`}
                 maxLength={20}
               />
               {validationErrors.code && (
@@ -342,9 +337,8 @@ const DepartmentSetting = () => {
                   setFormData((prev) => ({ ...prev, name: e.target.value }));
                   setValidationErrors((prev) => ({ ...prev, name: "" }));
                 }}
-                className={`border p-2 rounded ${
-                  validationErrors.name ? "border-red-500" : ""
-                }`}
+                className={`border p-2 rounded ${validationErrors.name ? "border-red-500" : ""
+                  }`}
                 maxLength={100}
               />
               {validationErrors.name && (
@@ -460,11 +454,10 @@ const DepartmentSetting = () => {
             <button
               key={index}
               onClick={() => setCurrentPage(index + 1)}
-              className={`px-3 py-1 rounded ${
-                currentPage === index + 1
-                  ? "bg-black text-white"
-                  : "bg-gray-200"
-              }`}
+              className={`px-3 py-1 rounded ${currentPage === index + 1
+                ? "bg-black text-white"
+                : "bg-gray-200"
+                }`}
             >
               {index + 1}
             </button>
