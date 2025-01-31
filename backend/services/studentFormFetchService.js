@@ -59,7 +59,18 @@ export const getFormDetailsById = async form_id => {
     const form = await StudentFormFetch.getFormById(form_id)
     return form
   } catch (error) {
-    console.error('Error fetching forms: inga dha error : ', error)
+    console.error('Error fetching forms : ', error)
     throw error
   }
 }
+
+export const toggleFormStatusService = async (department_code, year, status_code) => {
+  try {
+    const form = await StudentFormFetch.toggleFormLiveStatus(department_code, year, status_code)
+    return form
+  } catch (error) {
+    console.error('Error toggling forms live status : ', error)
+    throw error
+  }
+}
+

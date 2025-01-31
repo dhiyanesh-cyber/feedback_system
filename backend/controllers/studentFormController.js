@@ -1,4 +1,4 @@
-import { getFormsByCode, createFormInDB, deleteFormById, getFormDetailsById } from "../services/studentFormFetchService.js";
+import { getFormsByCode, createFormInDB, deleteFormById, getFormDetailsById, toggleFormStatusService } from "../services/studentFormFetchService.js";
 import { createStudentForm, getForm } from "../services/studentFormsService.js";
 
 
@@ -11,7 +11,6 @@ export const getFormsByStudentId = async (req, res) => {
       return res.status(400).json({ message: "Missing required parameters" });
     }
     const forms = await getForm(student_id)
-    console.log("Forms : " + forms);
 
     res.status(200).json(forms);
   } catch (error) {
@@ -87,6 +86,23 @@ export const getFormController = async (req, res) => {
     res.status(200).json(getFormRes);
   } catch (error) {
     console.error("Error deleting form : ", error)
+    res.status(500).json({ message: "Internal server error" })
+  }
+}
+
+
+export const toggleFormController = async (req, res) => {
+  try {
+    const { department_code, year, status_code } = req.params;
+
+    if (!department_code || !year || !status_code) {
+      return res.status(400).json({ message: "All attributes required" })
+    }
+
+    const toggleFormRes = await toggleFormStatusService(department_code, year, status_code);
+    res.status(200).json(toggleFormRes);
+  } catch (error) {
+    console.error("Error toggling form live status : ", error)
     res.status(500).json({ message: "Internal server error" })
   }
 }

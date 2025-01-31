@@ -42,6 +42,28 @@ class StudentFormFetch {
     }
   }
 
+  // Method to fetch forms based on department code and year
+  static async toggleFormLiveStatus(department_code, year, status_code) {
+    try {
+      if (!year || !department_code || !status_code) {
+        throw new Error("All parameters must be provided");
+      }
+
+      const [forms] = await db.execute(
+        "UPDATE forms SET is_live = ? WHERE year = ? AND department_id	= ?",
+        [status_code, year, department_code]
+      );
+
+
+      return forms;
+    } catch (error) {
+      console.error("Error fetching forms:", error);
+      throw error;
+    }
+  }
+
+
+
   static async findFormsByYearAndClass(department_code, year, class_name) {
     try {
       if (!year || !class_name) {
