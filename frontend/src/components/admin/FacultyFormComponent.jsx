@@ -8,8 +8,7 @@ const FacultyFormComponent = ({ form, onDelete }) => {
     const [subjectDetails, setSubjectDetails] = useState(null)
 
     useEffect(() => {
-        console.log(form);
-        
+
 
         const getFacultyDetails = async () => {
             const facultyResponse = await fetchFacultyDetails(form.faculty_id)
@@ -18,12 +17,12 @@ const FacultyFormComponent = ({ form, onDelete }) => {
 
         const getSubjectDetails = async () => {
             const subjectResponse = await fetchSubjectDetails(form.subject_id)
-            
+
             setSubjectDetails(subjectResponse[0]);
         }
 
-  
-  
+
+
         getFacultyDetails();
         getSubjectDetails();
 

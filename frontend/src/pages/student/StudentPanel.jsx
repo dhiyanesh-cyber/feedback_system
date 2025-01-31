@@ -5,11 +5,13 @@ import FormCard from "../../components/student/FormCard";
 import Navbar from "../../components/Nabvbar";
 import { Card, CardHeader, CardBody, Divider } from "@nextui-org/react";
 import { Skeleton } from "@nextui-org/skeleton";
+import { checkLiveStatus } from "../../services/classApi";
 
 const StudentPanel = () => {
   const navigate = useNavigate();
   const [forms, setForms] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isLive, setIsLive] = useState(true);
   const [error, setError] = useState(null);
   const [visibility, setVisibility] = useState('hidden');
 
@@ -24,6 +26,23 @@ const StudentPanel = () => {
 
     const fetchFormsData = async () => {
       try {
+        // First check the live status
+        const isClassLive = await checkLiveStatus(
+          userDetails.department, // Make sure these fields exist in userDetails
+          userDetails.year,
+          userDetails.class
+        );
+
+        setIsLive(isClassLive);
+
+        // Only fetch form responses if class is live
+        if (isClassLive) {
+          const data = await formResponsePopulate(userDetails);
+          setForms(data);
+        }
+
+
+
         const data = await formResponsePopulate(userDetails);
         setForms(data);
         await new Promise(resolve => setTimeout(resolve, 100));
@@ -64,15 +83,42 @@ const StudentPanel = () => {
   );
 
   const MainContent = () => {
+
+    if (!isLive) {
+      return (
+        <>
+          <Navbar />
+          <div className="h-[40rem] w-full dark:bg-black bg-white dark:bg-dot-white/[0.2] bg-dot-black/[0.2] relative flex items-start sm:pt-6 justify-center">
+            <div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
+            <div className="flex flex-col items-center min-w-full justify-start p-6 min-h-screen">
+              <Card className="w-full max-w-4xl m-5">
+                <CardHeader className="flex flex-col gap-3 p-6">
+                  <h1 className="text-md font-semibold text-left w-full sm:text-xl">
+                    Access Closed
+                  </h1>
+                  <p className="text-sm text-default-500 text-left w-full">
+                    The form access for your class is currently closed. Please contact your administrator for more information.
+                  </p>
+                </CardHeader>
+              </Card>
+            </div>
+          </div>
+        </>
+      );
+    }
+
+
+
     const notFilledForms = forms.filter((form) => form.status === "not-filled");
     const filledForms = forms.filter((form) => form.status === "filled");
 
     return (
+
       <>
         <Navbar />
         <div className="h-[40rem] w-full dark:bg-black bg-white dark:bg-dot-white/[0.2] bg-dot-black/[0.2] relative flex items-start sm:pt-6 justify-center">
           <div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
-          <div className="flex flex-col items-center justify-start p-6 min-h-screen">
+          <div className="flex flex-col items-center min-w-full justify-start p-6 min-h-screen">
             <Card className="w-full max-w-4xl m-5">
               <CardHeader className="flex flex-col gap-3 p-6">
                 <h1 className="text-md font-semibold text-left w-full sm:text-xl">

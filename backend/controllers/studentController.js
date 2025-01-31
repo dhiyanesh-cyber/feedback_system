@@ -3,6 +3,7 @@ import { parse } from 'csv-parse';
 import { createReadStream } from 'fs';
 import { unlink } from 'fs/promises';
 import path from 'path';
+import { getStudentService } from '../services/studentFormsService.js';
 
 // Utility function to parse CSV
 // const parseCSV = (filePath) => {
@@ -40,6 +41,29 @@ export const getAllStudents = async (req, res) => {
         });
     }
 };
+
+// Get 
+export const getStudentController = async (req, res) => {
+    try {
+        console.log(req.params);
+
+        const { year, department, class: class_no } = req.params;
+
+        if (!year || !department || !class_no) {
+            return res.status(400).json({
+                message: 'Year and department are required'
+            });
+        }
+
+        const students = await getStudentService(department, year, class_no);
+        res.json(students);
+    } catch (error) {
+        res.status(500).json({
+            message: 'Error fetching students',
+            error: error.message
+        });
+    }
+}
 
 // Create a single student
 export const createStudent = async (req, res) => {

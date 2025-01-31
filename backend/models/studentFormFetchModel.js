@@ -21,6 +21,8 @@ class StudentFormFetch {
     }
   }
 
+
+  // Get form details by form id
   static async getFormById(form_id) {
     try {
       if (!form_id) {
@@ -39,6 +41,28 @@ class StudentFormFetch {
       throw error;
     }
   }
+
+  // Method to fetch forms based on department code and year
+  static async toggleFormLiveStatus(department_code, year, status_code) {
+    try {
+      if (!year || !department_code || !status_code) {
+        throw new Error("All parameters must be provided");
+      }
+
+      const [forms] = await db.execute(
+        "UPDATE forms SET is_live = ? WHERE year = ? AND department_id	= ?",
+        [status_code, year, department_code]
+      );
+
+
+      return forms;
+    } catch (error) {
+      console.error("Error fetching forms:", error);
+      throw error;
+    }
+  }
+
+
 
   static async findFormsByYearAndClass(department_code, year, class_name) {
     try {
@@ -78,11 +102,11 @@ class StudentFormFetch {
   }
 
   // Method to insert a new form into the database
-  static async insertForm(department_id, year, class_name, subject_id, faculty_id) {
+  static async insertForm(department_id, year, class_name, subject_id, faculty_id, student_count) {
     try {
       const [result] = await db.execute(
-        "INSERT INTO forms (faculty_id, subject_id, department_id, year, class) VALUES (?, ?, ?, ?, ?)",
-        [faculty_id, subject_id, department_id, year, class_name]
+        "INSERT INTO forms (faculty_id, subject_id, department_id, year, class, students_count) VALUES (?, ?, ?, ?, ?, ?)",
+        [faculty_id, subject_id, department_id, year, class_name, student_count]
       );
 
       return {
@@ -92,6 +116,7 @@ class StudentFormFetch {
         class_name,
         subject_id,
         faculty_id,
+        student_count
       };
     } catch (error) {
       console.error("Error inserting form:", error);

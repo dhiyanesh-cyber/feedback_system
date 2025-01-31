@@ -1,4 +1,5 @@
 import StudentFormFetch from '../models/studentFormFetchModel.js'
+import StudentForm from '../models/StudentFormsModel.js'
 import StudentResponse from '../models/studentResponseModel.js'
 
 // Fetch forms by department code, year, and class
@@ -22,7 +23,8 @@ export const createFormInDB = async (
   year,
   class_name,
   subject_id,
-  staff_id
+  staff_id,
+  student_count
 ) => {
   try {
     const newForm = await StudentFormFetch.insertForm(
@@ -30,7 +32,8 @@ export const createFormInDB = async (
       year,
       class_name,
       subject_id,
-      staff_id
+      staff_id,
+      student_count
     )
     return newForm
   } catch (error) {
@@ -41,8 +44,8 @@ export const createFormInDB = async (
 
 export const deleteFormById = async form_id => {
   try {
-    const deleteStudentResponse =
-      await StudentResponse.deleteStudentResponseByFormId(form_id)
+    const deleteStudentResponse = await StudentResponse.deleteStudentResponseByFormId(form_id)
+    await StudentForm.deleteFormByFormId(form_id);
     const deleteResponse = await StudentFormFetch.deleteForm(form_id)
     return deleteResponse
   } catch (error) {
@@ -56,7 +59,18 @@ export const getFormDetailsById = async form_id => {
     const form = await StudentFormFetch.getFormById(form_id)
     return form
   } catch (error) {
-    console.error('Error fetching forms: inga dha error : ', error)
+    console.error('Error fetching forms : ', error)
     throw error
   }
 }
+
+export const toggleFormStatusService = async (department_code, year, status_code) => {
+  try {
+    const form = await StudentFormFetch.toggleFormLiveStatus(department_code, year, status_code)
+    return form
+  } catch (error) {
+    console.error('Error toggling forms live status : ', error)
+    throw error
+  }
+}
+
