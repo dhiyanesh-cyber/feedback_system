@@ -10,6 +10,7 @@ import studentResponseRouter from "./routes/studentResponseRoutes.js"
 import subjectRouter from "./routes/subjectRoutes.js"
 import reportRouter from "./routes/reportRoutes.js"
 import studentRoutes from "./routes/studentRoutes.js"
+import subjectRoutes from './routes/subjectRoutes.js';
 import dotenv from "dotenv";
 import cors from "./config/corsConfig.js"
 import path from 'path';
@@ -45,6 +46,7 @@ app.use("/api/report", reportRouter)
 app.use('/api/departmentsetting', departmentRouter);
 app.use('/api/facultysettings', facultyRouter);
 app.use('/api/studentsettings', studentRoutes);
+app.use('/api/subjectsettings', subjectRoutes);
 
 
 
