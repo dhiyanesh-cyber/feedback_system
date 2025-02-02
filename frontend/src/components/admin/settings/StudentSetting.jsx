@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { toast, Toaster } from "react-hot-toast";
+import StudentTable from "./StudentSettingsComponent/StudentTable";
+import Pagination from "./StudentSettingsComponent/pagination";
 
 const StudentSetting = () => {
   // State Management
@@ -169,7 +171,7 @@ const StudentSetting = () => {
               value={departmentSearchTerm}
               onChange={(e) => setDepartmentSearchTerm(e.target.value)}
               className="border p-2 rounded w-full"
-              // onClick={(e) => e.stopPropagation()}
+            // onClick={(e) => e.stopPropagation()}
             />
           </div>
           {filteredDepartments.map((dept) => (
@@ -210,7 +212,7 @@ const StudentSetting = () => {
 
       if (response.ok) {
         console.log(result);
-        
+
         setUploadResult(result);
         fetchStudents();
         toast.success(`${result.summary.totalProcessed - result.summary.failedUploads - result.summary.invalidEntries} students uploaded successfully`);
@@ -572,138 +574,19 @@ const StudentSetting = () => {
         />
       </div>
 
-      {/* Students Table */}
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              {[
-                { key: "student_id", label: "ID" },
-                { key: "student_name", label: "Name" },
-                { key: "student_department", label: "Department" },
-                { key: "student_dob", label: "DOB" },
-                { key: "student_year", label: "Year" },
-                { key: "class", label: "Class" },
-              ].map(({ key, label }) => (
-                <th
-                  key={key}
-                  onClick={() =>
-                    setSortConfig({
-                      key,
-                      direction:
-                        sortConfig.key === key &&
-                          sortConfig.direction === "ascending"
-                          ? "descending"
-                          : "ascending",
-                    })
-                  }
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                >
-                  {label}
-                  {sortConfig.key === key && (
-                    <span>
-                      {sortConfig.direction === "ascending" ? " ▲" : " ▼"}
-                    </span>
-                  )}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {paginatedStudents.map((student) => (
-              <tr key={student.id}>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {student.student_id}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {student.student_name}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {student.student_department}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {new Date(student.student_dob).toLocaleDateString()}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {student.student_year}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">{student.class}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <StudentTable
+        students={students}
+        sortConfig={sortConfig}
+        setSortConfig={setSortConfig}
+        paginatedStudents={paginatedStudents}
+      />
+      <Pagination
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+        itemsPerPage={itemsPerPage}
+        processedStudents={processedStudents}  // Make sure this is defined
+      />
 
-      {/* Pagination */}
-      <div className="mt-4 flex justify-center items-center gap-2">
-        {/* Previous page arrow */}
-        <button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-          className={`px-3 py-1 rounded ${currentPage === 1
-              ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-              : "bg-gray-200 hover:bg-gray-300"
-            }`}
-        >
-          &lt;&lt;
-        </button>
-
-        {/* Page numbers */}
-        {Array.from({ length: Math.ceil(processedStudents.length / itemsPerPage) })
-          .map((_, index) => {
-            const pageNumber = index + 1;
-            // Show current page and 1 page before and after
-            if (
-              pageNumber === currentPage ||
-              pageNumber === currentPage - 1 ||
-              pageNumber === currentPage + 1 ||
-              pageNumber === 1 ||
-              pageNumber === Math.ceil(processedStudents.length / itemsPerPage)
-            ) {
-              return (
-                <button
-                  key={index}
-                  onClick={() => setCurrentPage(pageNumber)}
-                  className={`px-3 py-1 rounded ${currentPage === pageNumber
-                      ? "bg-black text-white"
-                      : "bg-gray-200 hover:bg-gray-300"
-                    }`}
-                >
-                  {pageNumber}
-                </button>
-              );
-            } else if (
-              pageNumber === currentPage - 2 ||
-              pageNumber === currentPage + 2
-            ) {
-              return (
-                <span key={index} className="px-2">
-                  ...
-                </span>
-              );
-            }
-            return null;
-          })
-          .filter(Boolean)}
-
-        {/* Next page arrow */}
-        <button
-          onClick={() =>
-            setCurrentPage((prev) =>
-              Math.min(prev + 1, Math.ceil(processedStudents.length / itemsPerPage))
-            )
-          }
-          disabled={
-            currentPage === Math.ceil(processedStudents.length / itemsPerPage)
-          }
-          className={`px-3 py-1 rounded ${currentPage === Math.ceil(processedStudents.length / itemsPerPage)
-              ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-              : "bg-gray-200 hover:bg-gray-300"
-            }`}
-        >
-          &gt;&gt;
-        </button>
-      </div>
     </div>
   );
 };
