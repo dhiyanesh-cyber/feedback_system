@@ -123,63 +123,22 @@ export const createSubject = async (req, res) => {
 // Update a subject
 
 export const updateSubject = async (req, res) => {
-
     try {
+        const oldSubCode = req.params.sub_code; // The existing subject code
+        const subjectData = req.body; // New data with updated code & name
 
-        const { sub_code } = req.params;
+        const result = await SubjectModel.update(oldSubCode, subjectData);
 
-        const { sub_name } = req.body;
-
-
-        // Validate required field
-
-        if (!sub_name) {
-
-            return res.status(400).json({
-
-                message: 'Subject name is required'
-
-            });
-
+        if (result.affectedRows > 0) {
+            res.status(200).json({ message: "Subject updated successfully" });
+        } else {
+            res.status(404).json({ message: "Subject not found" });
         }
-
-
-        // Check if subject exists
-
-        const existingSubject = await SubjectModel.findByCode(sub_code);
-
-        if (!existingSubject) {
-
-            return res.status(404).json({
-
-                message: 'Subject not found'
-
-            });
-
-        }
-
-
-        await SubjectModel.update(sub_code, { sub_name });
-
-        res.json({
-
-            message: 'Subject updated successfully'
-
-        });
-
     } catch (error) {
-
-        res.status(500).json({
-
-            message: 'Error updating subject',
-
-            error: error.message
-
-        });
-
+        res.status(500).json({ message: error.message });
     }
-
 };
+
 
 
 // Delete a subject

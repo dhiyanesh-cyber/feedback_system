@@ -2,70 +2,66 @@ import React, { useState, useEffect, useMemo } from "react";
 import { toast, Toaster } from "react-hot-toast";
 
 const SubjectSetting = () => {
-    // State Management
     const [subjects, setSubjects] = useState([]);
-    const [formData, setFormData] = useState({
-        sub_code: "",
-        sub_name: "",
-    });
+    const [formData, setFormData] = useState({ sub_code: "", sub_name: "" });
+    const [oldSubCode, setOldSubCode] = useState(""); // Store old subject code for updates
     const [action, setAction] = useState("add");
     const [loading, setLoading] = useState(false);
-
-    // Enhanced State
     const [searchTerm, setSearchTerm] = useState("");
-    const [sortConfig, setSortConfig] = useState({
-        key: "sub_code",
-        direction: "ascending",
-    });
+    const [dropdownSearchTerm, setDropdownSearchTerm] = useState(""); // For searching within the dropdown
+    const [sortConfig, setSortConfig] = useState({ key: "sub_code", direction: "ascending" });
     const [currentPage, setCurrentPage] = useState(1);
     const [validationErrors, setValidationErrors] = useState({});
+    const [dropdownOpen, setDropdownOpen] = useState(false); // Track if dropdown is open
 
-    // Configuration
     const endpoint = `${import.meta.env.VITE_API_BASE_URL}/subjectsettings`;
     const itemsPerPage = 10;
 
-    // Fetch Subjects
-    const fetchSubjects = async () => {
-        setLoading(true);
-        try {
-            const response = await fetch(endpoint);
-            if (!response.ok) throw new Error("Failed to fetch");
-            const data = await response.json();
-            setSubjects(data);
-        } catch (error) {
-            toast.error("Failed to fetch subjects");
-            console.error("Fetch error:", error);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    // Lifecycle
+    // Fetch subjects
     useEffect(() => {
+        const fetchSubjects = async () => {
+            setLoading(true);
+            try {
+                const response = await fetch(endpoint);
+                if (!response.ok) throw new Error("Failed to fetch");
+                const data = await response.json();
+                setSubjects(data);
+            } catch (error) {
+                toast.error("Failed to fetch subjects");
+                console.error("Fetch error:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
         fetchSubjects();
     }, []);
 
-    // Validation Function
+    // Validate form
     const validateForm = () => {
         const errors = {};
-
-        if (!formData.sub_code.trim()) {
-            errors.sub_code = "Subject code is required";
-        }
-        if (!formData.sub_name.trim()) {
-            errors.sub_name = "Subject name is required";
-        }
-
+        if (!formData.sub_code.trim()) errors.sub_code = "Subject code is required";
+        if (!formData.sub_name.trim()) errors.sub_name = "Subject name is required";
         return errors;
     };
 
-    // Handle Submit
+    // Handle subject selection
+    const handleSubjectSelect = (selectedCode) => {
+        const selected = subjects.find(subject => subject.sub_code === selectedCode);
+        if (selected) {
+            setOldSubCode(selected.sub_code); // Store previous code
+            setFormData(selected);
+        } else {
+            resetForm();
+        }
+    };
+
+    // Handle submit
     const handleSubmit = async () => {
         if (action !== "delete") {
             const errors = validateForm();
             if (Object.keys(errors).length > 0) {
                 setValidationErrors(errors);
-                toast.error("Please fix the validation errors");
+                toast.error("Please fix validation errors");
                 return;
             }
         }
@@ -79,16 +75,14 @@ const SubjectSetting = () => {
                     body: JSON.stringify(formData),
                 });
             } else if (action === "update") {
-                response = await fetch(`${endpoint}/${formData.sub_code}`, {
+                response = await fetch(`${endpoint}/${oldSubCode}`, { // Use oldSubCode
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(formData),
                 });
             } else if (action === "delete") {
                 if (window.confirm(`Are you sure you want to delete subject ${formData.sub_name}?`)) {
-                    response = await fetch(`${endpoint}/${formData.sub_code}`, {
-                        method: "DELETE",
-                    });
+                    response = await fetch(`${endpoint}/${formData.sub_code}`, { method: "DELETE" });
                 } else {
                     return;
                 }
@@ -97,7 +91,12 @@ const SubjectSetting = () => {
             if (response) {
                 const data = await response.json();
                 if (response.ok) {
-                    fetchSubjects();
+                    setSubjects(prev => {
+                        if (action === "add") return [...prev, formData];
+                        if (action === "update") return prev.map(s => s.sub_code === oldSubCode ? formData : s);
+                        if (action === "delete") return prev.filter(s => s.sub_code !== formData.sub_code);
+                        return prev;
+                    });
                     resetForm();
                     toast.success(data.message || "Action completed successfully");
                 } else {
@@ -110,34 +109,20 @@ const SubjectSetting = () => {
         }
     };
 
-    // Reset Form
+    // Reset form
     const resetForm = () => {
-        setFormData({
-            sub_code: "",
-            sub_name: "",
-        });
+        setFormData({ sub_code: "", sub_name: "" });
+        setOldSubCode("");
         setValidationErrors({});
+        setDropdownOpen(false); // Close the dropdown after reset
     };
 
-    // Handle Subject Selection
-    const handleSubjectSelect = (selectedCode) => {
-        const selected = subjects.find(
-            (subject) => subject.sub_code === selectedCode
-        );
-        if (selected) {
-            setFormData(selected);
-        } else {
-            resetForm();
-        }
-    };
-
-    // Filtered and Sorted Subjects
+    // Filtered & sorted subjects
     const processedSubjects = useMemo(() => {
         return subjects
-            .filter(
-                (subject) =>
-                    subject.sub_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    subject.sub_code.toLowerCase().includes(searchTerm.toLowerCase())
+            .filter(subject =>
+                subject.sub_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                subject.sub_code.toLowerCase().includes(searchTerm.toLowerCase())
             )
             .sort((a, b) => {
                 const aValue = a[sortConfig.key]?.toString().toLowerCase() || "";
@@ -148,14 +133,20 @@ const SubjectSetting = () => {
             });
     }, [subjects, searchTerm, sortConfig]);
 
+    // Filter subjects based on dropdown search term
+    const filteredSubjectsForDropdown = useMemo(() => {
+        return subjects.filter(subject =>
+            subject.sub_name.toLowerCase().includes(dropdownSearchTerm.toLowerCase()) ||
+            subject.sub_code.toLowerCase().includes(dropdownSearchTerm.toLowerCase())
+        );
+    }, [subjects, dropdownSearchTerm]);
+
     // Pagination
     const paginatedSubjects = useMemo(() => {
         const firstPageIndex = (currentPage - 1) * itemsPerPage;
-        const lastPageIndex = firstPageIndex + itemsPerPage;
-        return processedSubjects.slice(firstPageIndex, lastPageIndex);
+        return processedSubjects.slice(firstPageIndex, firstPageIndex + itemsPerPage);
     }, [processedSubjects, currentPage]);
 
-    // Calculate total pages
     const totalPages = Math.ceil(processedSubjects.length / itemsPerPage);
 
     return (
@@ -164,130 +155,73 @@ const SubjectSetting = () => {
 
             <h1 className="text-2xl font-bold mb-4">Subject Management</h1>
 
-            {/* Action Selector */}
+            {/* Action Buttons */}
             <div className="mb-6 flex gap-4">
-                {["add", "update", "delete"].map((currentAction) => (
+                {["add", "update", "delete"].map(currentAction => (
                     <button
                         key={currentAction}
-                        onClick={() => {
-                            setAction(currentAction);
-                            resetForm();
-                        }}
-                        className={`px-4 py-2 rounded capitalize ${action === currentAction ? "bg-black text-white" : "bg-gray-200"
-                            }`}
+                        onClick={() => { setAction(currentAction); resetForm(); }}
+                        className={`px-4 py-2 rounded capitalize ${action === currentAction ? "bg-black text-white" : "bg-gray-200"}`}
                     >
                         {currentAction} Subject
                     </button>
                 ))}
             </div>
 
-            {/* Form Section */}
-            <div className="mb-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {/* Subject Selection for Update/Delete */}
-                    {(action === "update" || action === "delete") && (
-                        <div className="col-span-full">
-                            <select
-                                onChange={(e) => handleSubjectSelect(e.target.value)}
-                                value={formData.sub_code || ""}
-                                className="border p-2 rounded w-full"
-                            >
-                                <option value="" disabled>
-                                    Select Subject
-                                </option>
-                                {subjects.map((subject) => (
-                                    <option
-                                        key={`subject-select-${subject.sub_code}`}
-                                        value={subject.sub_code}
-                                    >
-                                        {subject.sub_code} - {subject.sub_name}
-                                    </option>
-                                ))}
-                            </select>
+            {/* Form */}
+            <div className="mb-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {(action === "update" || action === "delete") && (
+                    <div className="relative">
+                        <div className="relative">
+                            <input
+                                type="text"
+                                placeholder="Search Subjects"
+                                value={dropdownSearchTerm}
+                                onChange={(e) => setDropdownSearchTerm(e.target.value)}
+                                onClick={() => setDropdownOpen(true)} // Open dropdown when clicked
+                                className="border p-2 rounded w-full mb-2"
+                            />
+                            {dropdownOpen && (
+                                <div className="absolute top-full left-0 right-0 bg-white border mt-1 rounded-md shadow-lg max-h-60 overflow-auto">
+                                    <ul>
+                                        {filteredSubjectsForDropdown.map(subject => (
+                                            <li
+                                                key={subject.sub_code}
+                                                onClick={() => { handleSubjectSelect(subject.sub_code); setDropdownOpen(false); }}
+                                                className="px-4 py-2 cursor-pointer hover:bg-gray-200"
+                                            >
+                                                {subject.sub_code} - {subject.sub_name}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
                         </div>
-                    )}
+                    </div>
+                )}
 
-                    {/* Input Fields */}
-                    {action !== "delete" && (
-                        <>
-                            <div>
-                                <input
-                                    type="text"
-                                    placeholder="Subject Code"
-                                    value={formData.sub_code}
-                                    onChange={(e) =>
-                                        setFormData((prev) => ({
-                                            ...prev,
-                                            sub_code: e.target.value,
-                                        }))
-                                    }
-                                    className={`border p-2 rounded w-full ${validationErrors.sub_code ? "border-red-500" : ""
-                                        }`}
-                                    maxLength={10}
-                                />
-                                {validationErrors.sub_code && (
-                                    <p className="text-red-500 text-sm mt-1">
-                                        {validationErrors.sub_code}
-                                    </p>
-                                )}
-                            </div>
-
-                            <div>
-                                <input
-                                    type="text"
-                                    placeholder="Subject Name"
-                                    value={formData.sub_name}
-                                    onChange={(e) =>
-                                        setFormData((prev) => ({
-                                            ...prev,
-                                            sub_name: e.target.value,
-                                        }))
-                                    }
-                                    className={`border p-2 rounded w-full ${validationErrors.sub_name ? "border-red-500" : ""
-                                        }`}
-                                    maxLength={100}
-                                />
-                                {validationErrors.sub_name && (
-                                    <p className="text-red-500 text-sm mt-1">
-                                        {validationErrors.sub_name}
-                                    </p>
-                                )}
-                            </div>
-                        </>
-                    )}
-                </div>
-
-                {/* Submit Buttons */}
-                <div className="mt-4 flex gap-2">
-                    <button
-                        onClick={handleSubmit}
-                        className={`px-4 py-2 rounded text-white ${action === "delete" ? "bg-red-500 hover:bg-red-600" : "bg-black hover:bg-gray-800"
-                            }`}
-                    >
-                        {action.charAt(0).toUpperCase() + action.slice(1)} Subject
-                    </button>
-                    <button
-                        onClick={resetForm}
-                        className="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300"
-                    >
-                        Clear
-                    </button>
-                </div>
+                {action !== "delete" && (
+                    <>
+                        <input type="text" placeholder="Subject Code" value={formData.sub_code}
+                            onChange={(e) => setFormData(prev => ({ ...prev, sub_code: e.target.value }))}
+                            className={`border p-2 rounded w-full ${validationErrors.sub_code ? "border-red-500" : ""}`} />
+                        <input type="text" placeholder="Subject Name" value={formData.sub_name}
+                            onChange={(e) => setFormData(prev => ({ ...prev, sub_name: e.target.value }))}
+                            className={`border p-2 rounded w-full ${validationErrors.sub_name ? "border-red-500" : ""}`} />
+                    </>
+                )}
             </div>
 
-            {/* Search */}
-            <div className="mb-4">
-                <input
-                    type="text"
-                    placeholder="Search subjects..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="border p-2 rounded w-full"
-                />
+            {/* Submit & Clear Buttons */}
+            <div className="mt-4 flex gap-2">
+                <button onClick={handleSubmit} className={`px-4 py-2 rounded text-white ${action === "delete" ? "bg-red-500" : "bg-black"}`}>
+                    {action.charAt(0).toUpperCase() + action.slice(1)} Subject
+                </button>
+                <button onClick={resetForm} className="bg-gray-200 px-4 py-2 rounded">Clear</button>
             </div>
 
             {/* Subjects Table */}
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto mt-6">
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                         <tr>
