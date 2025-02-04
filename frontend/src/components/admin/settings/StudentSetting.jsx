@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { toast, Toaster } from "react-hot-toast";
 import StudentTable from "./StudentSettingsComponent/StudentTable";
-import Pagination from "./StudentSettingsComponent/pagination";
+import Pagination from "./StudentSettingsComponent/Pagination";
+import StudentDropdown from "./StudentSettingsComponent/StudentDropdown";
+import DepartmentDropdown from "./StudentSettingsComponent/DepartmentDropdown";
 
 const StudentSetting = () => {
   // State Management
@@ -31,6 +33,8 @@ const StudentSetting = () => {
   const [departmentSearchTerm, setDepartmentSearchTerm] = useState("");
   const [isStudentDropdownOpen, setIsStudentDropdownOpen] = useState(false);
   const [isDepartmentDropdownOpen, setIsDepartmentDropdownOpen] = useState(false);
+  const [studentSearch, setStudentSearch] = useState("");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   // Configuration
   const endpoint = `${import.meta.env.VITE_API_BASE_URL}/studentsettings`;
@@ -112,84 +116,95 @@ const StudentSetting = () => {
   }, [departments, departmentSearchTerm]);
 
   // Custom Dropdown Component for Students
-  const StudentDropdown = () => (
-    <div className="relative">
-      <div
-        className="border p-2 rounded w-full cursor-pointer"
-        onClick={() => setIsStudentDropdownOpen(!isStudentDropdownOpen)}
-      >
-        {formData.student_id
-          ? `${formData.student_id} - ${formData.student_name}`
-          : "Select Student"}
-      </div>
+  // const StudentDropdown = () => (
+  //   <div className="relative">
+  //   <label className="font-medium text-md text-gray-900 mb-1">
+  //     Search Student
+  //   </label>
+  //   <input
+  //     type="text"
+  //     placeholder="Type to search student"
+  //     value={studentSearch}
+  //     onChange={(e) => {
+  //       setStudentSearch(e.target.value);
+  //       if (e.target.value.length > 0) {
+  //         setIsDropdownOpen(true);
+  //       }
+  //     }}
+  //     onFocus={() => setIsDropdownOpen(true)}
+  //     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300"
+  //   />
 
-      {isStudentDropdownOpen && (
-        <div className="absolute z-10 w-full bg-white border rounded-b shadow-lg max-h-60 overflow-y-auto">
-          <div className="sticky top-0 bg-white p-2">
-            <input
-              type="text"
-              placeholder="Search students..."
-              value={studentSearchTerm}
-              onChange={(e) => setStudentSearchTerm(e.target.value)}
-              className="border p-2 rounded w-full"
-              onClick={(e) => e.stopPropagation()}
-            />
-          </div>
-          {filteredStudentsForDropdown.map((student) => (
-            <div
-              key={student.student_id}
-              className="p-2 hover:bg-gray-100 cursor-pointer"
-              onClick={() => {
-                setFormData(student);
-                setIsStudentDropdownOpen(false);
-              }}
-            >
-              {student.student_id} - {student.student_name}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
+  //   {isDropdownOpen && studentSearch && (
+  //     <ul className="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-lg shadow-md max-h-40 overflow-y-auto z-10">
+  //       {students
+  //         .filter(
+  //           (student) =>
+  //             student.student_name
+  //               .toLowerCase()
+  //               .includes(studentSearch.toLowerCase()) ||
+  //             student.student_id.toString().includes(studentSearch.toLowerCase())
+  //         )
+  //         .map((student) => (
+  //           <li
+  //             key={student.student_id}
+  //             onMouseDown={(e) => e.preventDefault()} // Prevents losing focus when clicking an option
+  //             onClick={() => {
+  //               setFormData({
+  //                 student_id: student.student_id,
+  //                 student_name: student.student_name,
+  //               });
+  //               setStudentSearch(student.student_name);
+  //               setIsDropdownOpen(false);
+  //             }}
+  //             className="px-4 py-2 cursor-pointer hover:bg-gray-200"
+  //           >
+  //             {student.student_name} ({student.student_id})
+  //           </li>
+  //         ))}
+  //     </ul>
+  //   )}
+  // </div>
+  // );
 
   // Custom Dropdown Component for Departments
-  const DepartmentDropdown = () => (
-    <div className="relative">
-      <div
-        className="border p-2 rounded w-full cursor-pointer"
-        onClick={() => setIsDepartmentDropdownOpen(!isDepartmentDropdownOpen)}
-      >
-        {formData.student_department || "Select Department"}
-      </div>
+  // const DepartmentDropdown = () => (
+  //   <div className="relative">
+  //     <div
+  //       className="border p-2 rounded w-full cursor-pointer"
+  //       onClick={() => setIsDepartmentDropdownOpen(!isDepartmentDropdownOpen)}
+  //     >
+  //       {formData.student_department || "Select Department"}
+  //     </div>
 
-      {isDepartmentDropdownOpen && (
-        <div className="absolute z-10 w-full bg-white border rounded-b shadow-lg max-h-60 overflow-y-auto">
-          <div className="sticky top-0 bg-white p-2">
-            <input
-              type="text"
-              placeholder="Search departments..."
-              value={departmentSearchTerm}
-              onChange={(e) => setDepartmentSearchTerm(e.target.value)}
-              className="border p-2 rounded w-full"
-            // onClick={(e) => e.stopPropagation()}
-            />
-          </div>
-          {filteredDepartments.map((dept) => (
-            <div
-              key={dept}
-              className="p-2 hover:bg-gray-100 cursor-pointer"
-              onClick={() => {
-                setFormData((prev) => ({ ...prev, student_department: dept }));
-                setIsDepartmentDropdownOpen(false);
-              }}
-            >
-              {dept}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
+  //     {isDepartmentDropdownOpen && (
+  //       <div className="absolute z-10 w-full bg-white border rounded-b shadow-lg max-h-60 overflow-y-auto">
+  //         <div className="sticky top-0 bg-white p-2">
+  //           <input
+  //             type="text"
+  //             placeholder="Search departments..."
+  //             value={departmentSearchTerm}
+  //             onChange={(e) => setDepartmentSearchTerm(e.target.value)}
+  //             className="border p-2 rounded w-full"
+  //           // onClick={(e) => e.stopPropagation()}
+  //           />
+  //         </div>
+  //         {filteredDepartments.map((dept) => (
+  //           <div
+  //             key={dept}
+  //             className="p-2 hover:bg-gray-100 cursor-pointer"
+  //             onClick={() => {
+  //               setFormData((prev) => ({ ...prev, student_department: dept }));
+  //               setIsDepartmentDropdownOpen(false);
+  //             }}
+  //           >
+  //             {dept}
+  //           </div>
+  //         ))}
+  //       </div>
+  //     )}
+  //   </div>
+  // );
 
   // Handle CSV Upload
   const handleCsvUpload = async (e) => {
@@ -381,7 +396,7 @@ const StudentSetting = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {action !== "add" && (
               <div className="space-y-2">
-                <StudentDropdown />
+                <StudentDropdown students={students} setFormData={setFormData} />
               </div>
             )}
 
@@ -426,7 +441,7 @@ const StudentSetting = () => {
                   </p>
                 )}
 
-                <DepartmentDropdown />
+                <DepartmentDropdown departments={departments} setFormData={setFormData} />
 
                 <input
                   type="date"
