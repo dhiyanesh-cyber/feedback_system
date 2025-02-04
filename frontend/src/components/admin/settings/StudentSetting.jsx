@@ -1,5 +1,9 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { toast, Toaster } from "react-hot-toast";
+import StudentTable from "./StudentSettingsComponent/StudentTable";
+import Pagination from "./StudentSettingsComponent/Pagination";
+import StudentDropdown from "./StudentSettingsComponent/StudentDropdown";
+import DepartmentDropdown from "./StudentSettingsComponent/DepartmentDropdown";
 
 const StudentSetting = () => {
   // State Management
@@ -29,6 +33,8 @@ const StudentSetting = () => {
   const [departmentSearchTerm, setDepartmentSearchTerm] = useState("");
   const [isStudentDropdownOpen, setIsStudentDropdownOpen] = useState(false);
   const [isDepartmentDropdownOpen, setIsDepartmentDropdownOpen] = useState(false);
+  const [studentSearch, setStudentSearch] = useState("");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   // Configuration
   const endpoint = `${import.meta.env.VITE_API_BASE_URL}/studentsettings`;
@@ -110,84 +116,95 @@ const StudentSetting = () => {
   }, [departments, departmentSearchTerm]);
 
   // Custom Dropdown Component for Students
-  const StudentDropdown = () => (
-    <div className="relative">
-      <div
-        className="border p-2 rounded w-full cursor-pointer"
-        onClick={() => setIsStudentDropdownOpen(!isStudentDropdownOpen)}
-      >
-        {formData.student_id
-          ? `${formData.student_id} - ${formData.student_name}`
-          : "Select Student"}
-      </div>
+  // const StudentDropdown = () => (
+  //   <div className="relative">
+  //   <label className="font-medium text-md text-gray-900 mb-1">
+  //     Search Student
+  //   </label>
+  //   <input
+  //     type="text"
+  //     placeholder="Type to search student"
+  //     value={studentSearch}
+  //     onChange={(e) => {
+  //       setStudentSearch(e.target.value);
+  //       if (e.target.value.length > 0) {
+  //         setIsDropdownOpen(true);
+  //       }
+  //     }}
+  //     onFocus={() => setIsDropdownOpen(true)}
+  //     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300"
+  //   />
 
-      {isStudentDropdownOpen && (
-        <div className="absolute z-10 w-full bg-white border rounded-b shadow-lg max-h-60 overflow-y-auto">
-          <div className="sticky top-0 bg-white p-2">
-            <input
-              type="text"
-              placeholder="Search students..."
-              value={studentSearchTerm}
-              onChange={(e) => setStudentSearchTerm(e.target.value)}
-              className="border p-2 rounded w-full"
-              onClick={(e) => e.stopPropagation()}
-            />
-          </div>
-          {filteredStudentsForDropdown.map((student) => (
-            <div
-              key={student.student_id}
-              className="p-2 hover:bg-gray-100 cursor-pointer"
-              onClick={() => {
-                setFormData(student);
-                setIsStudentDropdownOpen(false);
-              }}
-            >
-              {student.student_id} - {student.student_name}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
+  //   {isDropdownOpen && studentSearch && (
+  //     <ul className="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-lg shadow-md max-h-40 overflow-y-auto z-10">
+  //       {students
+  //         .filter(
+  //           (student) =>
+  //             student.student_name
+  //               .toLowerCase()
+  //               .includes(studentSearch.toLowerCase()) ||
+  //             student.student_id.toString().includes(studentSearch.toLowerCase())
+  //         )
+  //         .map((student) => (
+  //           <li
+  //             key={student.student_id}
+  //             onMouseDown={(e) => e.preventDefault()} // Prevents losing focus when clicking an option
+  //             onClick={() => {
+  //               setFormData({
+  //                 student_id: student.student_id,
+  //                 student_name: student.student_name,
+  //               });
+  //               setStudentSearch(student.student_name);
+  //               setIsDropdownOpen(false);
+  //             }}
+  //             className="px-4 py-2 cursor-pointer hover:bg-gray-200"
+  //           >
+  //             {student.student_name} ({student.student_id})
+  //           </li>
+  //         ))}
+  //     </ul>
+  //   )}
+  // </div>
+  // );
 
   // Custom Dropdown Component for Departments
-  const DepartmentDropdown = () => (
-    <div className="relative">
-      <div
-        className="border p-2 rounded w-full cursor-pointer"
-        onClick={() => setIsDepartmentDropdownOpen(!isDepartmentDropdownOpen)}
-      >
-        {formData.student_department || "Select Department"}
-      </div>
+  // const DepartmentDropdown = () => (
+  //   <div className="relative">
+  //     <div
+  //       className="border p-2 rounded w-full cursor-pointer"
+  //       onClick={() => setIsDepartmentDropdownOpen(!isDepartmentDropdownOpen)}
+  //     >
+  //       {formData.student_department || "Select Department"}
+  //     </div>
 
-      {isDepartmentDropdownOpen && (
-        <div className="absolute z-10 w-full bg-white border rounded-b shadow-lg max-h-60 overflow-y-auto">
-          <div className="sticky top-0 bg-white p-2">
-            <input
-              type="text"
-              placeholder="Search departments..."
-              value={departmentSearchTerm}
-              onChange={(e) => setDepartmentSearchTerm(e.target.value)}
-              className="border p-2 rounded w-full"
-              // onClick={(e) => e.stopPropagation()}
-            />
-          </div>
-          {filteredDepartments.map((dept) => (
-            <div
-              key={dept}
-              className="p-2 hover:bg-gray-100 cursor-pointer"
-              onClick={() => {
-                setFormData((prev) => ({ ...prev, student_department: dept }));
-                setIsDepartmentDropdownOpen(false);
-              }}
-            >
-              {dept}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
+  //     {isDepartmentDropdownOpen && (
+  //       <div className="absolute z-10 w-full bg-white border rounded-b shadow-lg max-h-60 overflow-y-auto">
+  //         <div className="sticky top-0 bg-white p-2">
+  //           <input
+  //             type="text"
+  //             placeholder="Search departments..."
+  //             value={departmentSearchTerm}
+  //             onChange={(e) => setDepartmentSearchTerm(e.target.value)}
+  //             className="border p-2 rounded w-full"
+  //           // onClick={(e) => e.stopPropagation()}
+  //           />
+  //         </div>
+  //         {filteredDepartments.map((dept) => (
+  //           <div
+  //             key={dept}
+  //             className="p-2 hover:bg-gray-100 cursor-pointer"
+  //             onClick={() => {
+  //               setFormData((prev) => ({ ...prev, student_department: dept }));
+  //               setIsDepartmentDropdownOpen(false);
+  //             }}
+  //           >
+  //             {dept}
+  //           </div>
+  //         ))}
+  //       </div>
+  //     )}
+  //   </div>
+  // );
 
   // Handle CSV Upload
   const handleCsvUpload = async (e) => {
@@ -210,7 +227,7 @@ const StudentSetting = () => {
 
       if (response.ok) {
         console.log(result);
-        
+
         setUploadResult(result);
         fetchStudents();
         toast.success(`${result.summary.totalProcessed - result.summary.failedUploads - result.summary.invalidEntries} students uploaded successfully`);
@@ -379,7 +396,7 @@ const StudentSetting = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {action !== "add" && (
               <div className="space-y-2">
-                <StudentDropdown />
+                <StudentDropdown students={students} setFormData={setFormData} />
               </div>
             )}
 
@@ -424,7 +441,7 @@ const StudentSetting = () => {
                   </p>
                 )}
 
-                <DepartmentDropdown />
+                <DepartmentDropdown departments={departments} setFormData={setFormData} />
 
                 <input
                   type="date"
@@ -572,138 +589,19 @@ const StudentSetting = () => {
         />
       </div>
 
-      {/* Students Table */}
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              {[
-                { key: "student_id", label: "ID" },
-                { key: "student_name", label: "Name" },
-                { key: "student_department", label: "Department" },
-                { key: "student_dob", label: "DOB" },
-                { key: "student_year", label: "Year" },
-                { key: "class", label: "Class" },
-              ].map(({ key, label }) => (
-                <th
-                  key={key}
-                  onClick={() =>
-                    setSortConfig({
-                      key,
-                      direction:
-                        sortConfig.key === key &&
-                          sortConfig.direction === "ascending"
-                          ? "descending"
-                          : "ascending",
-                    })
-                  }
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                >
-                  {label}
-                  {sortConfig.key === key && (
-                    <span>
-                      {sortConfig.direction === "ascending" ? " ▲" : " ▼"}
-                    </span>
-                  )}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {paginatedStudents.map((student) => (
-              <tr key={student.id}>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {student.student_id}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {student.student_name}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {student.student_department}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {new Date(student.student_dob).toLocaleDateString()}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {student.student_year}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">{student.class}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <StudentTable
+        students={students}
+        sortConfig={sortConfig}
+        setSortConfig={setSortConfig}
+        paginatedStudents={paginatedStudents}
+      />
+      <Pagination
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+        itemsPerPage={itemsPerPage}
+        processedStudents={processedStudents}  // Make sure this is defined
+      />
 
-      {/* Pagination */}
-      <div className="mt-4 flex justify-center items-center gap-2">
-        {/* Previous page arrow */}
-        <button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-          className={`px-3 py-1 rounded ${currentPage === 1
-              ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-              : "bg-gray-200 hover:bg-gray-300"
-            }`}
-        >
-          &lt;&lt;
-        </button>
-
-        {/* Page numbers */}
-        {Array.from({ length: Math.ceil(processedStudents.length / itemsPerPage) })
-          .map((_, index) => {
-            const pageNumber = index + 1;
-            // Show current page and 1 page before and after
-            if (
-              pageNumber === currentPage ||
-              pageNumber === currentPage - 1 ||
-              pageNumber === currentPage + 1 ||
-              pageNumber === 1 ||
-              pageNumber === Math.ceil(processedStudents.length / itemsPerPage)
-            ) {
-              return (
-                <button
-                  key={index}
-                  onClick={() => setCurrentPage(pageNumber)}
-                  className={`px-3 py-1 rounded ${currentPage === pageNumber
-                      ? "bg-black text-white"
-                      : "bg-gray-200 hover:bg-gray-300"
-                    }`}
-                >
-                  {pageNumber}
-                </button>
-              );
-            } else if (
-              pageNumber === currentPage - 2 ||
-              pageNumber === currentPage + 2
-            ) {
-              return (
-                <span key={index} className="px-2">
-                  ...
-                </span>
-              );
-            }
-            return null;
-          })
-          .filter(Boolean)}
-
-        {/* Next page arrow */}
-        <button
-          onClick={() =>
-            setCurrentPage((prev) =>
-              Math.min(prev + 1, Math.ceil(processedStudents.length / itemsPerPage))
-            )
-          }
-          disabled={
-            currentPage === Math.ceil(processedStudents.length / itemsPerPage)
-          }
-          className={`px-3 py-1 rounded ${currentPage === Math.ceil(processedStudents.length / itemsPerPage)
-              ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-              : "bg-gray-200 hover:bg-gray-300"
-            }`}
-        >
-          &gt;&gt;
-        </button>
-      </div>
     </div>
   );
 };
