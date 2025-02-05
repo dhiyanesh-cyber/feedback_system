@@ -22,6 +22,13 @@ class StudentModel {
     const [result] = await db.query(query, [year, class_no, department_code]);
     return result;
   }
+
+  static async getStudentsByYearAndClass( year, class_no) {
+    const query =
+      "SELECT * FROM student_details WHERE student_year = ? AND class = ?";
+    const [result] = await db.query(query, [year, class_no]);
+    return result;
+  }
 }
 
 export default StudentModel;

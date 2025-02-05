@@ -28,7 +28,7 @@ const StudentPanel = () => {
       try {
         // First check the live status
         const isClassLive = await checkLiveStatus(
-          userDetails.department, // Make sure these fields exist in userDetails
+          userDetails.department,
           userDetails.year,
           userDetails.class
         );
@@ -43,8 +43,6 @@ const StudentPanel = () => {
 
 
 
-        const data = await formResponsePopulate(userDetails);
-        setForms(data);
         await new Promise(resolve => setTimeout(resolve, 100));
         setLoading(false);
         setVisibility('visible');
@@ -138,45 +136,61 @@ const StudentPanel = () => {
 
               <Divider />
 
-              <CardBody className="p-2">
-                {/* Not-Filled Forms Section */}
-                <div className="mb-6">
-                  <CardHeader className="flex flex-col gap-2">
-                    <h2 className="text-md text-left w-full font-semibold sm:text-xl">
-                      Yet to fill :
-                    </h2>
-                  </CardHeader>
-                  <CardBody>
-                    {notFilledForms.length > 0 ? (
-                      <div className="space-y-4">
-                        {notFilledForms.map((form) => (
-                          <FormCard key={form.form_id} form={form} />
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-gray-600">All forms are filled.</p>
-                    )}
-                  </CardBody>
-                </div>
-
-                {/* Filled Forms Section */}
-                {filledForms.length > 0 && (
-                  <div>
+              {forms.length === 0 ?
+                <CardBody className="p-2">
+                  {/* Not-Filled Forms Section */}
+                  <div className="mb-6">
                     <CardHeader className="flex flex-col gap-2">
                       <h2 className="text-md text-left w-full font-semibold sm:text-xl">
-                        Filled Forms :
+                        No Forms for you yet.
+                      </h2>
+                    </CardHeader>
+                  </div>
+                </CardBody>
+                :
+
+                <CardBody className="p-2">
+                  {/* Not-Filled Forms Section */}
+                  <div className="mb-6">
+                    <CardHeader className="flex flex-col gap-2">
+                      <h2 className="text-md text-left w-full font-semibold sm:text-xl">
+                        Yet to fill :
                       </h2>
                     </CardHeader>
                     <CardBody>
-                      <div className="space-y-4">
-                        {filledForms.map((form) => (
-                          <FormCard key={form.form_id} form={form} />
-                        ))}
-                      </div>
+                      {notFilledForms.length > 0 ? (
+                        <div className="space-y-4">
+                          {notFilledForms.map((form) => (
+                            <FormCard key={form.form_id} form={form} />
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-gray-600">All forms are filled.</p>
+                      )}
                     </CardBody>
                   </div>
-                )}
-              </CardBody>
+
+                  {/* Filled Forms Section */}
+                  {filledForms.length > 0 && (
+                    <div>
+                      <CardHeader className="flex flex-col gap-2">
+                        <h2 className="text-md text-left w-full font-semibold sm:text-xl">
+                          Filled Forms :
+                        </h2>
+                      </CardHeader>
+                      <CardBody>
+                        <div className="space-y-4">
+                          {filledForms.map((form) => (
+                            <FormCard key={form.form_id} form={form} />
+                          ))}
+                        </div>
+                      </CardBody>
+                    </div>
+                  )}
+                </CardBody>
+              }
+
+
             </Card>
           </div>
         </div>

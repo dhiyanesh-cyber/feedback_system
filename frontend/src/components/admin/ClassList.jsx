@@ -12,7 +12,6 @@ const ClassList = () => {
   useEffect(() => {
     const fetchClasses = async () => {
       try {
-        console.log(department_id);
 
         const response = await fetch(
           `${import.meta.env.VITE_API_BASE_URL}/class/${department_id}/${year_id}`
@@ -44,7 +43,7 @@ const ClassList = () => {
   return (
     <>
       <Navbar />
-      <div className="flex flex-col items-center justify-start pt-32 min-h-screen bg-gray-50">
+      <div className="flex flex-col items-center justify-start pt-14 min-h-screen bg-gray-50 pb-10">
         <div className="w-full max-w-lg bg-white rounded-xl border-2 border-gray-300x p-8">
           <h2 className="text-xl font-normal text-center text-black opacity-90 mb-6">Select Class</h2>
           <ul className="space-y-4 flex flex-col">

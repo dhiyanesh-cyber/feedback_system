@@ -33,7 +33,9 @@ const AdminFormsPage = () => {
         const formData = await fetchForms(department_id, year_id, class_id);
         setForms(formData);
 
+        
         const studentsData = await getStudents(department_id, year_id, class_id);
+
         setStudents(studentsData);
 
         const facultyData = await getAllFaculty();
@@ -140,7 +142,7 @@ const AdminFormsPage = () => {
     const filteredStudents = students.filter(
       (student) =>
         student.student_name.toLowerCase().includes(studentSearch.toLowerCase()) ||
-        student.student_id.includes(studentSearch.toLowerCase())
+        student.student_id.toString().includes(studentSearch.toLowerCase())
     );
 
     return (
@@ -177,7 +179,7 @@ const AdminFormsPage = () => {
               <input
                 type="checkbox"
                 id={`student-${student.student_id}`}
-                checked={selectedStudents.includes(student.student_id)}
+                checked={selectedStudents.toString().includes(student.student_id)}
                 onChange={() => handleStudentSelection(student.student_id)}
                 className="mr-2 h-4 w-4 text-gray-600 focus:ring-gray-500 border-gray-300 rounded"
               />
