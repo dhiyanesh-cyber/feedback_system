@@ -12,6 +12,7 @@ import { getDepartmentByCode } from "./departmentServices.js";
 import { getQuestionnById } from "./questionServices.js";
 import { getSemesterInNumber } from "../utils/getSemesterInNumber.js";
 import Semester from "../models/semesterModel.js";
+import { createCanvas, Image } from "canvas";
 
 
 
@@ -124,7 +125,7 @@ export const generateDepartmentReport = async (department_id) => {
       classDetail.forms = forms
 
     }
-    // console.log(classDetails);
+    // console.log("Class details : ", classDetails);
 
 
     for (const classDetail of classDetails) {
@@ -174,7 +175,7 @@ export const generateDepartmentReport = async (department_id) => {
     const semester = await Semester.findSemester();
 
 
-    return generatePDF(classDetails, semester); // Generate the PDF with the report data
+    return await generatePDF(classDetails, semester); // Generate the PDF with the report data
   } catch (error) {
     throw new Error('Error generating report: ' + error.message);
   }
@@ -192,149 +193,157 @@ function calculateScores(studentResponses) {
   return totalScore.toFixed(2);
 }
 
-// Function to generate PDF
-function generatePDF(data, semester) {
 
+
+
+// Function to generate PDF
+async function generatePDF(data, semester) {
   const doc = new jsPDF();
 
+  // console.log(data);
+  let dept = "";
 
-  // doc.addImage("https://i.ibb.co/7yZzQ1V/logo.png", "PNG", 10, 10, 20, 20);
+  if (data[0].department_code === 'S&H') {
+    dept = data[0].departmentName;
+  } else {
+    dept = data[0].departmentName.split(" ").slice(1).join(" ");
+  }
 
 
-  // Add title
 
-  doc.setFontSize(15.5);
-  doc.setFont("times", "bold");
-  doc.text("SSM INSTITUTE OF ENGINEERING AND TECHNOLOGY", 105, 15, {
-    align: "center",
-  });
+  try {
+    const response = await fetch('https://ssmiet.ac.in/images/ssmlogo.png');
+    const arrayBuffer = await response.arrayBuffer();
+    const base64 = Buffer.from(arrayBuffer).toString('base64');
 
-  doc.setFontSize(12.5);
-  doc.setFont("times", "bold");
-  doc.text("(An Autonomous Institution)", 105, 20, {
-    align: "center",
-  });
+    doc.addImage(`data:image/png;base64,${base64}`, 'PNG', 10, 12, 21, 20);
 
-  doc.setFont("times", "normal");
-  doc.setFontSize(10.3);
-  doc.text(
-    "(Approved by AICTE, New Delhi / Affiliated to Anna University, Chennai / Accredited by NAAC)",
-    105,
-    25,
-    { align: "center" }
-  );
-  doc.setFont("times", "bold");
-  doc.setFontSize(10.5);
-  doc.text("Dindigul – Palani Highway, Dindigul – 624 002", 105, 30, {
-    align: "center",
-  });
-
-  doc.setFont("times", "bold");
-  doc.setFontSize(14);
-  doc.text("Department of Computer Science and Engineering", 105, 37, {
-    align: "center",
-  });
-
-  // Add a horizontal line below the content
-  doc.setDrawColor(238, 59, 59); // RGB values for orange
-  doc.setLineWidth(0.5); // Adjust line thickness (default is 0.2)
-  doc.line(10, 41, 200, 41); // Adjust x1, y1, x2, y2 as needed
-
-  // Set the font size and add the text
-  doc.setFont("times", "bold");
-  doc.setFontSize(15);
-  doc.text(`Feedback Consolidation for the ${semester} semester 2023-24`, 105, 53, {
-    align: "center",
-  });
-
-  // Calculate the text width to position the underline correctly
-  const textWidth = doc.getTextWidth(
-    `Feedback Consolidation for the ${semester} semester 2022-23`
-  );
-  const textX = 105 - textWidth / 2; // Center the text
-  const textY = 54; // Slightly below the text
-
-  // Draw the underline
-  doc.setDrawColor(0, 0, 0); // Black color for the underline
-  doc.setLineWidth(0.5); // Adjust thickness
-  doc.line(textX, textY, textX + textWidth, textY); // From the start to the end of the text
-
-  let currentY = 65; // Starting Y position for the tables
-
-  // Iterate through class details
-  data.forEach((classDetail, classIndex) => {
-    console.log(classDetail);
-    // Add header for each class
+    // Add title
+    doc.setFontSize(15.5);
     doc.setFont("times", "bold");
-    doc.setFontSize(12);
-    doc.text(
-      `Department: ${classDetail.departmentName} , Year: ${classDetail.year} / Class: ${classDetail.class} , Sem: ${getSemesterInNumber(classDetail.year, semester)}`,
-      10,
-      currentY
-    );
-
-    // Prepare table data
-    let tableBody = [];
-    if (classDetail.reports && classDetail.reports.length > 0) {
-      tableBody = classDetail.reports.map((report, reportIndex) => [
-        reportIndex + 1,
-        `${report.subject_name} , ${report.faculty_name}`,
-        `${report.totalResponses}/${report.maxResponse}`,
-        report.scoreOutOf25.toFixed(2),
-      ]);
-    } else {
-      // Add a placeholder row if no data is available
-      tableBody = [["-", "No data available", "-", "-"]];
-    }
-
-    doc.autoTable({
-      startY: currentY + 10, // Adjust table placement
-      head: [
-        [
-          "S.No.",
-          "Subject Name & Faculty Name",
-          "Total Responses",
-          "Score Out of 25",
-        ],
-      ],
-      body: tableBody,
-      theme: "grid",
-      styles: {
-        font: "times",
-        fontSize: 12,
-        cellPadding: 4,
-        halign: "left", // Align the content to the left for readability
-        valign: "middle", // Vertically align the content
-        overflow: "linebreak", // Ensure content wraps properly
-        lineWidth: 0.1,
-        lineColor: [0, 0, 0], // Thin black border for cells
-      },
-      headStyles: {
-        font: "times",
-        fontStyle: "bold",
-        fontSize: 13,
-        textColor: [0, 0, 0], // Black text color for headers
-        fillColor: [255, 200, 145], // Light orange background
-        lineWidth: 0.2, // Slightly thicker border for the header
-        halign: "center", // Center-align headers
-      },
-      bodyStyles: {
-        font: "times",
-        fontSize: 12,
-        textColor: [0, 0, 0], // Black text
-        fillColor: [255, 255, 255], // White background for cells
-      },
-      alternateRowStyles: {
-        fillColor: [240, 240, 240], // Light gray background for alternate rows
-      },
+    doc.text("SSM INSTITUTE OF ENGINEERING AND TECHNOLOGY", 112, 15, {
+      align: "center",
     });
 
-    // Adjust currentY for the next class
-    currentY = doc.lastAutoTable.finalY + 15;
-  });
+    doc.setFontSize(12.5);
+    doc.setFont("times", "bold");
+    doc.text("(An Autonomous Institution)", 112, 20, {
+      align: "center",
+    });
 
-  // Save the PDF
-  // doc.save("ClassReports.pdf");
-  return doc;
+    doc.setFont("times", "normal");
+    doc.setFontSize(10.3);
+    doc.text(
+      "(Approved by AICTE, New Delhi / Affiliated to Anna University, Chennai / Accredited by NAAC)",
+      112,
+      25,
+      { align: "center" }
+    );
+
+    doc.setFont("times", "bold");
+    doc.setFontSize(10.5);
+    doc.text("Dindigul – Palani Highway, Dindigul – 624 002", 112, 30, {
+      align: "center",
+    });
+
+    doc.setFont("times", "bold");
+    doc.setFontSize(14);
+    doc.text("Department of " + dept, 112, 37, {
+      align: "center",
+    });
+
+    // Add horizontal line
+    doc.setDrawColor(238, 59, 59);
+    doc.setLineWidth(0.5);
+    doc.line(10, 41, 200, 41);
+
+    doc.setFont("times", "bold");
+    doc.setFontSize(15);
+    doc.text(`Feedback Consolidation for the ${semester} semester 2024 - 25`, 105, 53, {
+      align: "center",
+    });
+
+    const textWidth = doc.getTextWidth(
+      `Feedback Consolidation for the ${semester} semester 2022-23`
+    );
+    const textX = 105 - textWidth / 2;
+    const textY = 54;
+
+    doc.setDrawColor(0, 0, 0);
+    doc.setLineWidth(0.5);
+    doc.line(textX, textY, textX + textWidth, textY);
+
+    let currentY = 65;
+
+    data.forEach((classDetail, classIndex) => {
+      doc.setFont("times", "bold");
+      doc.setFontSize(12);
+      doc.text(
+        `Department: ${classDetail.departmentName} , Year: ${classDetail.year} / Class: ${classDetail.class} , Sem: ${getSemesterInNumber(classDetail.year, semester)}`,
+        10,
+        currentY
+      );
+
+      let tableBody = [];
+      if (classDetail.reports && classDetail.reports.length > 0) {
+        tableBody = classDetail.reports.map((report, reportIndex) => [
+          reportIndex + 1,
+          `${report.subject_name} , ${report.faculty_name}`,
+          `${report.totalResponses}/${report.maxResponse}`,
+          report.scoreOutOf25.toFixed(2),
+        ]);
+      } else {
+        tableBody = [["-", "No data available", "-", "-"]];
+      }
+
+      doc.autoTable({
+        startY: currentY + 10,
+        head: [
+          [
+            "S.No.",
+            "Subject Name & Faculty Name",
+            "Total Responses",
+            "Score Out of 25",
+          ],
+        ],
+        body: tableBody,
+        theme: "grid",
+        styles: {
+          font: "times",
+          fontSize: 12,
+          cellPadding: 4,
+          halign: "left",
+          valign: "middle",
+          overflow: "linebreak",
+          lineWidth: 0.1,
+          lineColor: [0, 0, 0],
+        },
+        headStyles: {
+          font: "times",
+          fontStyle: "bold",
+          fontSize: 13,
+          textColor: [0, 0, 0],
+          fillColor: [255, 200, 145],
+          lineWidth: 0.2,
+          halign: "center",
+        },
+        bodyStyles: {
+          font: "times",
+          fontSize: 12,
+          textColor: [0, 0, 0],
+          fillColor: [255, 255, 255],
+        },
+        alternateRowStyles: {
+          fillColor: [240, 240, 240],
+        },
+      });
+
+      currentY = doc.lastAutoTable.finalY + 15;
+    });
+
+    return doc;
+  } catch (error) {
+    throw new Error(`Error loading logo: ${error.message}`);
+  }
 }
 
