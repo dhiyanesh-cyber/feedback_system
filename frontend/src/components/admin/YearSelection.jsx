@@ -10,11 +10,20 @@ const YearSelection = () => {
   const [toggleStates, setToggleStates] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
-  const years = [
-    { id: 2, name: "2nd Year" },
-    { id: 3, name: "3rd Year" },
-    { id: 4, name: "4th Year" },
-  ];
+
+  let years = [];
+
+  if (department_id == "S&H") {
+    years = [
+      { id: 1, name: "1st Year" },
+    ];
+  } else {
+    years = [
+      { id: 2, name: "2nd Year" },
+      { id: 3, name: "3rd Year" },
+      { id: 4, name: "4th Year" },
+    ];
+  }
 
   // Fetch initial toggle states
   useEffect(() => {

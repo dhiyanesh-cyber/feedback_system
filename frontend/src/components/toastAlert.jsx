@@ -21,7 +21,7 @@ const ToastAlert = ({ message, type = 'success', duration = 3000 }) => {
   };
 
   return (
-    <div 
+    <div
       className={`fixed bottom-4 right-4 ${typeStyles[type]} text-white p-4 rounded-lg shadow-lg transform transition-all duration-300 ease-in-out animate-slide-in-right z-50`}
     >
       {message}

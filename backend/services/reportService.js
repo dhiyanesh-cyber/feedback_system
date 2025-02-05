@@ -194,9 +194,12 @@ function calculateScores(studentResponses) {
 
 // Function to generate PDF
 function generatePDF(data, semester) {
-  console.log("Data : ", data);
 
   const doc = new jsPDF();
+
+
+  // doc.addImage("https://i.ibb.co/7yZzQ1V/logo.png", "PNG", 10, 10, 20, 20);
+
 
   // Add title
 

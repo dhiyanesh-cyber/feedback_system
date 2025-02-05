@@ -5,6 +5,11 @@ const getClasses = async (code, year) => {
     return class_details;
 }
 
+const getClassesByYear = async (year) => {
+    const class_details = await Class.getClassDetailsByYear(year);
+    return class_details;
+}
+
 
 const setLiveStatusService = async (code, year, status_code) => {
     // Convert status_code to 1 if true, or 0 if false
@@ -24,5 +29,5 @@ const setLiveStatusService = async (code, year, status_code) => {
 
 
 export {
-    getClasses, setLiveStatusService
+    getClasses, setLiveStatusService, getClassesByYear
 };

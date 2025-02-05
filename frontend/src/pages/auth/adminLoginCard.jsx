@@ -33,7 +33,6 @@ const AdminLoginCard = ({ toggle }) => {
 
 
   const navigateUser = async (adminDetails) => {
-    console.log(adminDetails);
 
     if (adminDetails.admin.role.toLowerCase() === "admin") {
       navigate("/admin/departments");
@@ -55,7 +54,6 @@ const AdminLoginCard = ({ toggle }) => {
     try {
       const adminDetails = await validateAdminOtp(email, otp);
       localStorage.setItem("userDetails", JSON.stringify(adminDetails.admin));
-      alert("Login successful!");
       navigateUser(adminDetails);
     } catch (error) {
       setErrorMessage(error.response?.data?.message || "Invalid OTP. Try again.");

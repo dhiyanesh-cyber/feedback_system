@@ -1,4 +1,4 @@
-import  db  from '../config/database.js';
+import db from '../config/database.js';
 
 class Class {
 
@@ -7,6 +7,14 @@ class Class {
     const [classes] = await db.execute(
       'SELECT * FROM class_details WHERE department_code = ? and year = ?',
       [code, year]
+    );
+    return classes;
+  }
+
+  static async getClassDetailsByYear( year) {
+    const [classes] = await db.execute(
+      'SELECT * FROM class_details WHERE year = ?',
+      [ year]
     );
     return classes;
   }

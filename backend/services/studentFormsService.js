@@ -40,4 +40,16 @@ const getStudentService = async (department_code, year, class_no) => {
     }
 }
 
-export { getForm, createStudentForm, getStudentService };
+
+const getStudentsByYearAndClassService = async (year, class_no) => {
+    try {
+        const students = await StudentModel.getStudentsByYearAndClass(year, class_no);
+        return students;
+    } catch (error) {
+        console.error('Error fetching students:', error)
+        throw error
+    }
+}
+
+
+export { getForm, createStudentForm, getStudentService, getStudentsByYearAndClassService };

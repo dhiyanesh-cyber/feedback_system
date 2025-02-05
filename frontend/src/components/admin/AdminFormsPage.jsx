@@ -33,7 +33,9 @@ const AdminFormsPage = () => {
         const formData = await fetchForms(department_id, year_id, class_id);
         setForms(formData);
 
+        
         const studentsData = await getStudents(department_id, year_id, class_id);
+
         setStudents(studentsData);
 
         const facultyData = await getAllFaculty();
