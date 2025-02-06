@@ -203,7 +203,7 @@ async function generatePDF(data, semester) {
   // console.log(data);
   let dept = "";
 
-  if (data[0].department_code === 'S&H') {
+  if (data[0].department_code === 'SH') {
     dept = data[0].departmentName;
   } else {
     dept = data[0].departmentName.split(" ").slice(1).join(" ");

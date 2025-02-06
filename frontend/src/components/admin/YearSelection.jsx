@@ -13,7 +13,7 @@ const YearSelection = () => {
 
   let years = [];
 
-  if (department_id == "S&H") {
+  if (department_id == "SH") {
     years = [
       { id: 1, name: "1st Year" },
     ];
