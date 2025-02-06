@@ -5,6 +5,8 @@ import { postStudentResponse } from "../services/responseSubmissionApi";
 import Navbar from "../components/Nabvbar";
 import { Card, CardHeader, CardBody, CardFooter, Divider, Link, Image, useDisclosure } from "@nextui-org/react";
 import CustomModal from "./customModal";
+import { AiOutlineInfoCircle } from "react-icons/ai";
+
 
 
 
@@ -87,13 +89,19 @@ const Questionnaire = () => {
   return (
     <>
       <Navbar isLogin={false} />
-      <div className="h-[40rem] w-full dark:bg-black bg-white dark:bg-dot-white/[0.2] bg-dot-black/[0.2] relative flex items-start pt-6 sm:pt-32 justify-center">
+      <div className="h-[40rem] w-full dark:bg-black bg-white dark:bg-dot-white/[0.2] bg-dot-black/[0.2] relative flex items-start pt-6 sm:pt-12 justify-center">
         <div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
         <div className="flex flex-col w-full px-6 items-center justify-start sm:py-0  sm:px-0">
           <div className="w-full sm:w-1/2 flex flex-col items-center justify-center space-y-5 ">
-            <Card className="w-full ">
-              <CardHeader className="flex gap-3">
 
+            <div className="flex justify-between items-center gap-3 bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded-xl relative">
+              <AiOutlineInfoCircle size={54} className="block sm:hidden" /> {/* Display on mobile */}
+              <AiOutlineInfoCircle size={34} className="hidden sm:block" /> {/* Display on desktop */}
+              <span className="block sm:inline">This form is secure. Nobody can see the score you are giving, so kindly give honest feedback to all questions.</span>
+            </div>
+
+            <Card className="w-full ">
+              <CardHeader className="flex flex-col items-start gap-3">
                 <div className="flex flex-col">
                   <p className="text-md ">{facultyDetails.faculty_name}</p>
                   <p className="text-small text-default-500">{subjectDetails.sub_name}</p>
