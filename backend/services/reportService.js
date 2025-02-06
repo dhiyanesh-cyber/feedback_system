@@ -200,7 +200,6 @@ function calculateScores(studentResponses) {
 async function generatePDF(data, semester) {
   const doc = new jsPDF();
 
-  // console.log(data);
   let dept = "";
 
   if (data[0].department_code === 'SH') {
@@ -208,8 +207,6 @@ async function generatePDF(data, semester) {
   } else {
     dept = data[0].departmentName.split(" ").slice(1).join(" ");
   }
-
-
 
   try {
     const response = await fetch('https://ssmiet.ac.in/images/ssmlogo.png');
@@ -264,7 +261,7 @@ async function generatePDF(data, semester) {
     });
 
     const textWidth = doc.getTextWidth(
-      `Feedback Consolidation for the ${semester} semester 2022-23`
+      `Feedback Consolidation for the ${semester} semester 2024 - 25`
     );
     const textX = 105 - textWidth / 2;
     const textY = 54;
@@ -276,13 +273,10 @@ async function generatePDF(data, semester) {
     let currentY = 65;
 
     data.forEach((classDetail, classIndex) => {
+      // Add department text
       doc.setFont("times", "bold");
       doc.setFontSize(12);
-      doc.text(
-        `Department: ${classDetail.departmentName} , Year: ${classDetail.year} / Class: ${classDetail.class} , Sem: ${getSemesterInNumber(classDetail.year, semester)}`,
-        10,
-        currentY
-      );
+      const departmentText = `Department: ${classDetail.departmentName} , Year: ${classDetail.year} / Class: ${classDetail.class} , Sem: ${getSemesterInNumber(classDetail.year, semester)}`;
 
       let tableBody = [];
       if (classDetail.reports && classDetail.reports.length > 0) {
@@ -295,6 +289,18 @@ async function generatePDF(data, semester) {
       } else {
         tableBody = [["-", "No data available", "-", "-"]];
       }
+
+      // Calculate table height dynamically
+      const rowHeight = 10;
+      const tableHeight = tableBody.length * rowHeight + 40;
+
+      // Check if the table fits on the current page
+      if (currentY + tableHeight > doc.internal.pageSize.height - 20) {
+        doc.addPage();
+        currentY = 20;
+      }
+
+      doc.text(departmentText, 10, currentY);
 
       doc.autoTable({
         startY: currentY + 10,
@@ -336,14 +342,48 @@ async function generatePDF(data, semester) {
         alternateRowStyles: {
           fillColor: [240, 240, 240],
         },
+        didParseCell: function(data) {
+          // Ensure consistent cell padding
+          data.cell.styles.cellPadding = 4;
+        },
+        willDrawCell: function(data) {
+          // Prevent cells from being split across pages
+          if (data.row.raw && data.row.raw.length > 0) {
+            if (data.cursor.y + data.row.height > doc.internal.pageSize.height - 20) {
+              doc.addPage();
+              data.cursor.y = 20;
+            }
+          }
+        },
       });
 
       currentY = doc.lastAutoTable.finalY + 15;
     });
+
+    const addPrincipalSignature = () => {
+      const pageHeight = doc.internal.pageSize.height;
+      const marginBottom = 30; // Space from bottom of page
+      const signatureHeight = 25; // Height needed for signature text
+      
+      // Check if there's enough space on the current page
+      if (currentY + signatureHeight > pageHeight - marginBottom) {
+        doc.addPage();
+        currentY = pageHeight - marginBottom; // Position at bottom of new page
+      } else {
+        currentY = pageHeight - marginBottom; // Position at bottom of current page
+      }
+  
+      // Add Principal text
+      doc.setFont("times", "bold");
+      doc.setFontSize(12);
+      doc.text("Principal", 170, currentY, { align: "center" });
+      
+    };
+  
+    addPrincipalSignature();
 
     return doc;
   } catch (error) {
     throw new Error(`Error loading logo: ${error.message}`);
   }
 }
-
