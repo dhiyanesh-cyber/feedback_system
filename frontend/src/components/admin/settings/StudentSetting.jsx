@@ -40,6 +40,24 @@ const StudentSetting = () => {
   const endpoint = `${import.meta.env.VITE_API_BASE_URL}/studentsettings`;
   const itemsPerPage = 10;
 
+  const processedStudents = useMemo(() => {
+    return students
+      .filter(
+        (student) =>
+          student.student_id.toString().includes(searchTerm.toLowerCase()) ||
+          student.student_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          student.student_department.toLowerCase().includes(searchTerm.toLowerCase()) || // Search by department
+          student.student_year.toString().includes(searchTerm.toLowerCase()) ||
+          student.class.toString().includes(searchTerm.toLowerCase())
+      )
+      .sort((a, b) => {
+        const aValue = a[sortConfig.key]?.toString().toLowerCase() || "";
+        const bValue = b[sortConfig.key]?.toString().toLowerCase() || "";
+        return sortConfig.direction === "ascending"
+          ? aValue.localeCompare(bValue)
+          : bValue.localeCompare(aValue);
+      });
+  }, [students, searchTerm, sortConfig]);
   // Fetch students
   const fetchStudents = async () => {
     setLoading(true);
@@ -115,96 +133,6 @@ const StudentSetting = () => {
     );
   }, [departments, departmentSearchTerm]);
 
-  // Custom Dropdown Component for Students
-  // const StudentDropdown = () => (
-  //   <div className="relative">
-  //   <label className="font-medium text-md text-gray-900 mb-1">
-  //     Search Student
-  //   </label>
-  //   <input
-  //     type="text"
-  //     placeholder="Type to search student"
-  //     value={studentSearch}
-  //     onChange={(e) => {
-  //       setStudentSearch(e.target.value);
-  //       if (e.target.value.length > 0) {
-  //         setIsDropdownOpen(true);
-  //       }
-  //     }}
-  //     onFocus={() => setIsDropdownOpen(true)}
-  //     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300"
-  //   />
-
-  //   {isDropdownOpen && studentSearch && (
-  //     <ul className="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-lg shadow-md max-h-40 overflow-y-auto z-10">
-  //       {students
-  //         .filter(
-  //           (student) =>
-  //             student.student_name
-  //               .toLowerCase()
-  //               .includes(studentSearch.toLowerCase()) ||
-  //             student.student_id.toString().includes(studentSearch.toLowerCase())
-  //         )
-  //         .map((student) => (
-  //           <li
-  //             key={student.student_id}
-  //             onMouseDown={(e) => e.preventDefault()} // Prevents losing focus when clicking an option
-  //             onClick={() => {
-  //               setFormData({
-  //                 student_id: student.student_id,
-  //                 student_name: student.student_name,
-  //               });
-  //               setStudentSearch(student.student_name);
-  //               setIsDropdownOpen(false);
-  //             }}
-  //             className="px-4 py-2 cursor-pointer hover:bg-gray-200"
-  //           >
-  //             {student.student_name} ({student.student_id})
-  //           </li>
-  //         ))}
-  //     </ul>
-  //   )}
-  // </div>
-  // );
-
-  // Custom Dropdown Component for Departments
-  // const DepartmentDropdown = () => (
-  //   <div className="relative">
-  //     <div
-  //       className="border p-2 rounded w-full cursor-pointer"
-  //       onClick={() => setIsDepartmentDropdownOpen(!isDepartmentDropdownOpen)}
-  //     >
-  //       {formData.student_department || "Select Department"}
-  //     </div>
-
-  //     {isDepartmentDropdownOpen && (
-  //       <div className="absolute z-10 w-full bg-white border rounded-b shadow-lg max-h-60 overflow-y-auto">
-  //         <div className="sticky top-0 bg-white p-2">
-  //           <input
-  //             type="text"
-  //             placeholder="Search departments..."
-  //             value={departmentSearchTerm}
-  //             onChange={(e) => setDepartmentSearchTerm(e.target.value)}
-  //             className="border p-2 rounded w-full"
-  //           // onClick={(e) => e.stopPropagation()}
-  //           />
-  //         </div>
-  //         {filteredDepartments.map((dept) => (
-  //           <div
-  //             key={dept}
-  //             className="p-2 hover:bg-gray-100 cursor-pointer"
-  //             onClick={() => {
-  //               setFormData((prev) => ({ ...prev, student_department: dept }));
-  //               setIsDepartmentDropdownOpen(false);
-  //             }}
-  //           >
-  //             {dept}
-  //           </div>
-  //         ))}
-  //       </div>
-  //     )}
-  //   </div>
-  // );
 
   // Handle CSV Upload
   const handleCsvUpload = async (e) => {
@@ -334,23 +262,6 @@ const StudentSetting = () => {
   };
 
   // Filtered and Sorted Students
-  const processedStudents = useMemo(() => {
-    return students
-      .filter(
-        (student) =>
-          student.student_name
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase()) ||
-          student.student_id.toString().includes(searchTerm.toLowerCase())
-      )
-      .sort((a, b) => {
-        const aValue = a[sortConfig.key]?.toString().toLowerCase() || "";
-        const bValue = b[sortConfig.key]?.toString().toLowerCase() || "";
-        return sortConfig.direction === "ascending"
-          ? aValue.localeCompare(bValue)
-          : bValue.localeCompare(aValue);
-      });
-  }, [students, searchTerm, sortConfig]);
 
   // Pagination
   const paginatedStudents = useMemo(() => {
@@ -588,6 +499,7 @@ const StudentSetting = () => {
           className="border p-2 rounded w-full"
         />
       </div>
+
 
       <StudentTable
         students={students}
