@@ -5,6 +5,7 @@ import StudentSetting from "./StudentSetting";
 import FacultySetting from "./FacultySetting";
 import SemesterComponent from "./SemesterComponent";
 import SubjectSetting from "./SubjectSetting";
+import TransferPage from "./TransferSetting";
 
 const SettingsPage = () => {
   const [activeTab, setActiveTab] = useState("departments");
@@ -57,6 +58,15 @@ const SettingsPage = () => {
         </svg>
       )
     },
+    {
+      id: "transfer",
+      label: "Transfer",
+      icon: (
+        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M20 10L4 10L9.5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+          <path d="M4 14L20 14L14.5 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g>
+        </svg>
+      )
+    }
   ];
 
   const renderContent = () => {
@@ -71,6 +81,8 @@ const SettingsPage = () => {
         return <SubjectSetting />;
       case "semester":
         return <SemesterComponent />;
+      case "transfer":
+        return <TransferPage />;
       default:
         return (
           <div className="flex items-center justify-center h-full">
