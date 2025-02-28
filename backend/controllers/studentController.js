@@ -151,7 +151,7 @@ export const bulkUploadStudents = async (req, res) => {
 
         const students = await parseCSV(req.file.path);
 
-        console.log("students", students);
+        // console.log("students", students);
 
 
         // Validate students

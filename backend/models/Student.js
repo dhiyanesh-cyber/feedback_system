@@ -40,6 +40,8 @@ class Student {
         const connection = await db.getConnection();
 
         try {
+            // console.log(students);
+
             // Start transaction
             await connection.beginTransaction();
 
@@ -48,6 +50,7 @@ class Student {
 
             for (const student of students) {
                 try {
+
                     const [result] = await connection.query(
                         'INSERT INTO student_details (student_id, student_name, student_department, student_dob, student_year, class) VALUES (?, ?, ?, ?, ?, ?)',
                         [
@@ -59,6 +62,8 @@ class Student {
                             student.class
                         ]
                     );
+
+                    console.log(student.student_name, 'inserted');
                     successfulInserts.push(student);
                 } catch (insertError) {
                     failedInserts.push({ student, error: insertError.message });
@@ -122,30 +127,30 @@ class Student {
     static async delete(id) {
         const connection = await db.getConnection();
         try {
-          await connection.beginTransaction();
-      
-          // Step 1: Delete related records in student_forms
-          await connection.query(
-            'DELETE FROM student_forms WHERE student_forms_student_id = ?',
-            [id]
-          );
-      
-          // Step 2: Delete the student from student_details
-          const [result] = await connection.query(
-            'DELETE FROM student_details WHERE student_id = ?',
-            [id]
-          );
-      
-          await connection.commit();
-          return result;
+            await connection.beginTransaction();
+
+            // Step 1: Delete related records in student_forms
+            await connection.query(
+                'DELETE FROM student_forms WHERE student_forms_student_id = ?',
+                [id]
+            );
+
+            // Step 2: Delete the student from student_details
+            const [result] = await connection.query(
+                'DELETE FROM student_details WHERE student_id = ?',
+                [id]
+            );
+
+            await connection.commit();
+            return result;
         } catch (error) {
-          await connection.rollback();
-          console.error('Delete Student Error:', error);
-          throw error;
+            await connection.rollback();
+            console.error('Delete Student Error:', error);
+            throw error;
         } finally {
-          connection.release();
+            connection.release();
         }
-      }
+    }
 
     // Bulk delete students
     static async bulkDelete(year, department) {

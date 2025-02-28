@@ -342,11 +342,11 @@ async function generatePDF(data, semester) {
         alternateRowStyles: {
           fillColor: [240, 240, 240],
         },
-        didParseCell: function(data) {
+        didParseCell: function (data) {
           // Ensure consistent cell padding
           data.cell.styles.cellPadding = 4;
         },
-        willDrawCell: function(data) {
+        willDrawCell: function (data) {
           // Prevent cells from being split across pages
           if (data.row.raw && data.row.raw.length > 0) {
             if (data.cursor.y + data.row.height > doc.internal.pageSize.height - 20) {
@@ -362,24 +362,24 @@ async function generatePDF(data, semester) {
 
     const addPrincipalSignature = () => {
       const pageHeight = doc.internal.pageSize.height;
-      const marginBottom = 30; // Space from bottom of page
-      const signatureHeight = 25; // Height needed for signature text
-      
+      const marginBottom = 15; // Space from bottom of page
+      const signatureHeight = 20; // Height needed for signature text
+
       // Check if there's enough space on the current page
-      if (currentY + signatureHeight > pageHeight - marginBottom) {
+      if (currentY + signatureHeight > pageHeight ) {
         doc.addPage();
         currentY = pageHeight - marginBottom; // Position at bottom of new page
       } else {
         currentY = pageHeight - marginBottom; // Position at bottom of current page
       }
-  
+
       // Add Principal text
       doc.setFont("times", "bold");
       doc.setFontSize(12);
       doc.text("Principal", 170, currentY, { align: "center" });
-      
+
     };
-  
+
     addPrincipalSignature();
 
     return doc;
